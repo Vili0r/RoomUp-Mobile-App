@@ -42,7 +42,7 @@ function BottomTabNavigator() {
   return (
     <Tab.Navigator initialRouteName="Search">
       <Tab.Screen
-        name="Search"
+        name="Search Screen"
         component={SearchScreen}
         options={{
           headerShown: false,
@@ -53,7 +53,7 @@ function BottomTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Saved"
+        name="Saved Screen"
         component={SavedScreen}
         options={{
           headerShown: false,
@@ -64,7 +64,7 @@ function BottomTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="History"
+        name="History Screen"
         component={HistoryScreen}
         options={{
           headerShown: false,
@@ -75,7 +75,7 @@ function BottomTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Message"
+        name="Message Screen"
         component={MessageScreen}
         options={{
           headerShown: false,
@@ -86,7 +86,7 @@ function BottomTabNavigator() {
         }}
       />
       <Tab.Screen
-        name="Account"
+        name="Account Screen"
         component={AccountScreen}
         options={{
           headerShown: false,

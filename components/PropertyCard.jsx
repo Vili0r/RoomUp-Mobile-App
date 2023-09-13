@@ -12,7 +12,6 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import moment from "moment";
-import { useRouter, Link } from "expo-router";
 const LISTMARGIN = 10;
 const WIDTH = Dimensions.get("screen").width - LISTMARGIN * 2;
 
@@ -60,124 +59,101 @@ const PropertyCard = ({ item: property }) => {
   return (
     <View className="flex flex-row mb-8 group">
       <View className="flex flex-col w-full gap-2">
-        <Link
-          href={{
-            pathname: "/property-details",
-            // /* 1. Navigate to the details route with query params */
-            params: {
-              id: property.id,
-              model: property.model,
-              index: activeIndex,
-            },
-          }}
-        >
-          <View className="relative w-full overflow-hidden aspect-square rounded-xl">
-            <FlatList
-              ref={(ref) => (flatListRef.current = ref)}
-              keyExtractor={(item, index) => index.toString()}
-              data={property.images}
-              viewabilityConfig={viewConfig}
-              onViewableItemsChanged={onViewRef.current}
-              renderItem={({ item }) => (
-                <Image
-                  style={{
-                    width: WIDTH,
-                  }}
-                  className="h-full aspect-3/2"
-                  source={
-                    imageUrl
-                      ? { uri: `http://127.0.0.1:8000/storage/${item}` }
-                      : require("../assets/HousePlaceholder.jpeg")
-                  }
-                />
-              )}
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              snapToAlignment="center"
-            />
-            <Pressable
-              style={{ position: "absolute", top: 185, left: 5 }}
-              onPress={handlePressLeft}
-            >
-              <Ionicons size={36} name="chevron-back" color="white" />
-            </Pressable>
-            <Pressable
-              style={{ position: "absolute", top: 185, right: 5 }}
-              onPress={handlePressRight}
-            >
-              <Ionicons size={36} name="chevron-forward" color="white" />
-            </Pressable>
-
-            <View className="absolute top-3 right-3">
-              <Pressable
-                onPress={(e) => addToWishlist(e, property.id, property.model)}
-                className="relative transition hover:opacity-80"
-              >
-                <FontAwesome size={28} name="heart-o" color="white" />
-                <View className="fill-white absolute top-[2px] right-[2px]">
-                  {property.favouritedBy ? (
-                    <FontAwesome size={24} name="heart" color="red" />
-                  ) : (
-                    <FontAwesome
-                      size={24}
-                      name="heart"
-                      color="rgba(128, 128, 128, 0.7)"
-                    />
-                  )}
-                </View>
-              </Pressable>
-            </View>
-          </View>
-        </Link>
-        <View className="flex flex-row items-start justify-between mt-4">
-          <Link
-            href={{
-              pathname: "/property-details",
-              // /* 1. Navigate to the details route with query params */
-              params: {
-                id: property.id,
-                model: property.model,
-                index: activeIndex,
-              },
-            }}
+        <View className="relative w-full overflow-hidden aspect-square rounded-xl">
+          <FlatList
+            ref={(ref) => (flatListRef.current = ref)}
+            keyExtractor={(item, index) => index.toString()}
+            data={property.images}
+            viewabilityConfig={viewConfig}
+            onViewableItemsChanged={onViewRef.current}
+            renderItem={({ item }) => (
+              <Image
+                style={{
+                  width: WIDTH,
+                }}
+                className="h-full aspect-3/2"
+                source={
+                  imageUrl
+                    ? { uri: `http://127.0.0.1:8000/storage/${item}` }
+                    : require("../assets/images/HousePlaceholder.jpeg")
+                }
+              />
+            )}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            snapToAlignment="center"
+          />
+          <Pressable
+            style={{ position: "absolute", top: 185, left: 5 }}
+            onPress={handlePressLeft}
           >
-            <View>
-              <Text className="text-sm font-bold text-gray-800">
-                {property.owner
-                  ? property.owner.address.address_1
-                  : property.address.address_1}
-                ,
-                {property.owner
-                  ? property.owner.address.area
-                  : property.address.area}
+            <Ionicons size={36} name="chevron-back" color="white" />
+          </Pressable>
+          <Pressable
+            style={{ position: "absolute", top: 185, right: 5 }}
+            onPress={handlePressRight}
+          >
+            <Ionicons size={36} name="chevron-forward" color="white" />
+          </Pressable>
+
+          <View className="absolute top-3 right-3">
+            <Pressable
+              onPress={(e) => addToWishlist(e, property.id, property.model)}
+              className="relative transition hover:opacity-80"
+            >
+              <FontAwesome size={28} name="heart-o" color="white" />
+              <View className="fill-white absolute top-[2px] right-[2px]">
+                {property.favouritedBy ? (
+                  <FontAwesome size={24} name="heart" color="red" />
+                ) : (
+                  <FontAwesome
+                    size={24}
+                    name="heart"
+                    color="rgba(128, 128, 128, 0.7)"
+                  />
+                )}
+              </View>
+            </Pressable>
+          </View>
+        </View>
+        <View className="flex flex-row items-start justify-between mt-4">
+          <View>
+            <Text className="text-sm font-bold text-gray-800">
+              {property.owner
+                ? property.owner.address.address_1
+                : property.address.address_1}
+              ,
+              {property.owner
+                ? property.owner.address.area
+                : property.address.area}
+            </Text>
+            <Text className="text-sm text-gray-800">
+              {property.model === "room"
+                ? property.sub_title === null
+                  ? property.owner.title
+                  : `${property.sub_title} in a ${property.owner.title}`
+                : property.title}
+            </Text>
+            <Text className="text-sm text-gray-800">
+              Available from{" "}
+              <Text className="font-semibold">
+                {moment(
+                  property.availability
+                    ? property.availability.available_from
+                    : property.available_from
+                ).format("MMM DD, YYYY")}
               </Text>
-              <Text className="text-sm text-gray-800">
-                {property.model === "room"
-                  ? property.sub_title === null
-                    ? property.owner.title
-                    : `${property.sub_title} in a ${property.owner.title}`
-                  : property.title}
-              </Text>
-              <Text className="text-sm text-gray-800">
-                Available from{" "}
-                <Text className="font-semibold">
-                  {moment(
-                    property.availability
-                      ? property.availability.available_from
-                      : property.available_from
-                  ).format("MMM DD, YYYY")}
-                </Text>
-              </Text>
-              <Text className="mt-2 text-sm text-gray-800">
-                {" "}
-                <Text>
-                  ${property.owner ? property.room_cost : property.cost}
-                </Text>{" "}
-                /month
-              </Text>
-            </View>
-          </Link>
+            </Text>
+            <Text className="mt-2 text-sm text-gray-800">
+              {" "}
+              <Text>
+                ${property.owner ? property.room_cost : property.cost}
+              </Text>{" "}
+              /month
+            </Text>
+          </View>
+
           <View className="flex flex-row items-center">
             <Text className="flex items-center text-indigo-600 dark:text-indigo-400">
               <Feather

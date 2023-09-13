@@ -1,25 +1,12 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Platform,
-  StatusBar,
-  Text,
-  Button,
-  View,
-} from "react-native";
+import { SafeAreaView, StyleSheet, Platform, StatusBar } from "react-native";
 import React from "react";
+import { AllProperties } from "../components";
 
 const SearchScreen = () => {
   return (
     <SafeAreaView style={styles.container} className="flex-1 bg-white">
-      <StatusBar />
-      <View className="items-center justify-center flex-1">
-        <Text>Search!</Text>
-        <Button
-          title="Go to Home"
-          onPress={() => navigation.navigate("Home")}
-        />
-      </View>
+      <StatusBar barStyle="dark-content" />
+      <AllProperties />
     </SafeAreaView>
   );
 };

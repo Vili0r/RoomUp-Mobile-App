@@ -1,10 +1,9 @@
 import React, { useLayoutEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import { Stack, useRouter, useNavigation } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import moment from "moment";
 import ParallaxScrollView from "./ParallaxScrollView";
 import AdvertisedBy from "./AdvertisedBy";
@@ -13,7 +12,6 @@ import PropertyDetailsAmenities from "./PropertyDetailsAmenities";
 
 const SinglePropertyDetails = ({ property, imageIndex }) => {
   const navigation = useNavigation();
-  const router = useRouter();
   const imageUrl =
     property.images[imageIndex] &&
     `http://127.0.0.1:8000/storage/${property.images[imageIndex]}`;
@@ -58,7 +56,7 @@ const SinglePropertyDetails = ({ property, imageIndex }) => {
             source={
               imageUrl
                 ? { uri: imageUrl }
-                : require("../assets/HousePlaceholder.jpeg")
+                : require("../assets/images/HousePlaceholder.jpeg")
             }
           />
         )}
