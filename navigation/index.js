@@ -1,29 +1,68 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import {
-  SearchScreen,
-  AccountScreen,
-  SavedScreen,
-  HistoryScreen,
-  MessageScreen,
-} from "../screens";
+import SearchScreen from "../screens/SearchScreen";
+import AccountScreen from "../screens/AccountScreen";
+import SavedScreen from "../screens/SavedScreen";
+import HistoryScreen from "../screens/HistoryScreen";
+import MessageScreen from "../screens/MessageScreen";
+import * as SecureStore from "expo-secure-store";
+import { View, Text, ActivityIndicator } from "react-native";
+import { AuthContext } from "../context/AuthProvider";
+import Login from "../screens/Auth/LoginScreen";
+import LoginScreen from "../screens/Auth/LoginScreen";
+import RegisterScreen from "../screens/Auth/RegisterScreen";
 
 export default Navigation = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const { user, setUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    //check if user is logged in
+    //Check securestore for the user object/token
+    SecureStore.getItemAsync("user")
+      .then((userString) => {
+        if (userString) {
+          setUser(JSON.parse(userString));
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+      });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <ActivityIndicator size="large" color="gray" />
+      </View>
+    );
+  }
+
   return (
-    <NavigationContainer>
-      <RootNavigator />
-    </NavigationContainer>
+    <>
+      {user ? (
+        <NavigationContainer>
+          <RootNavigator />
+        </NavigationContainer>
+      ) : (
+        <NavigationContainer>
+          <AuthNavigator />
+        </NavigationContainer>
+      )}
+    </>
   );
 };
 
 const Stack = createNativeStackNavigator();
 
-function RootNavigator() {
+const RootNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -34,11 +73,11 @@ function RootNavigator() {
       <Stack.Group screenOptions={{ presentation: "modal" }}></Stack.Group>
     </Stack.Navigator>
   );
-}
+};
 
 const Tab = createBottomTabNavigator();
 
-function BottomTabNavigator() {
+const BottomTabNavigator = () => {
   return (
     <Tab.Navigator initialRouteName="Search">
       <Tab.Screen
@@ -98,4 +137,30 @@ function BottomTabNavigator() {
       />
     </Tab.Navigator>
   );
-}
+};
+
+const AuthNavigator = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        headerBackTitleVisible: false,
+      }}
+    >
+      <Stack.Screen
+        name="Login Screen"
+        component={LoginScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Register Screen"
+        component={RegisterScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};

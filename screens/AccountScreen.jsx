@@ -4,12 +4,14 @@ import {
   Platform,
   StatusBar,
   Text,
+  View,
+  TouchableOpacity,
 } from "react-native";
 import React, { useContext } from "react";
 import LottieView from "lottie-react-native";
 import { AuthContext } from "../context/AuthProvider";
 import axiosConfig from "../helpers/axiosConfig";
-import navigation from "../navigation";
+import { useNavigation } from "@react-navigation/native";
 
 const fetchFavouriteProperties = async (userId, token) => {
   const response = await axiosConfig.get(`/users/${userId}/favourites`, {
@@ -21,6 +23,8 @@ const fetchFavouriteProperties = async (userId, token) => {
 };
 
 const AccountScreen = () => {
+  const navigation = useNavigation();
+  const { user, logout } = useContext(AuthContext);
   return (
     <SafeAreaView
       style={styles.container}
