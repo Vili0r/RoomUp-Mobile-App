@@ -21,6 +21,7 @@ const AllProperties = () => {
   const [isAtEndOfScrolling, setIsAtEndOfScrolling] = useState(false);
   const [nextPage, setNextPage] = useState("");
   const [search, setSearch] = useState("");
+  const [mapShow, setMapShow] = useState(false);
 
   useEffect(() => {
     getProperties();
@@ -136,6 +137,8 @@ const AllProperties = () => {
         <View className="bg-white">
           {isLoading ? (
             <ActivityIndicator className="mt-2" size="large" color="gray" />
+          ) : mapShow ? (
+            <Map />
           ) : (
             <FlatList
               data={data}
@@ -158,7 +161,10 @@ const AllProperties = () => {
             />
           )}
           {!isLoading && (
-            <TouchableOpacity className="absolute bottom-[100px] right-[150px] items-center justify-center px-3 py-3 bg-gray-800 rounded-full">
+            <TouchableOpacity
+              onPress={() => setMapShow(true)}
+              className="absolute bottom-[100px] right-[150px] items-center justify-center px-3 py-3 bg-gray-800 rounded-full"
+            >
               <View className="flex flex-row space-x-2">
                 <Feather name="map" size={26} stroke="gray" color="white" />
                 <Text className="text-base font-semibold text-white">Map</Text>

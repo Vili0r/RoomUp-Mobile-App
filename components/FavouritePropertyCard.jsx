@@ -58,6 +58,10 @@ const PropertyCard = ({ item: property }) => {
     });
   };
 
+  const handleClick = () => {
+    navigation.navigate("Message Screen");
+  };
+
   const gotoSingleProperty = () => {
     navigation.navigate("Tweet Screen", {
       id: property.id,
@@ -65,6 +69,7 @@ const PropertyCard = ({ item: property }) => {
       index: activeIndex,
     });
   };
+
   return (
     <View className="flex flex-row mb-8 group">
       <View className="flex flex-col w-full gap-2">
@@ -132,37 +137,18 @@ const PropertyCard = ({ item: property }) => {
           <TouchableOpacity onPress={() => gotoSingleProperty()}>
             <View>
               <Text className="text-sm font-bold text-gray-800">
-                {property.owner
-                  ? property.owner.address.address_1
-                  : property.address.address_1}
-                ,
-                {property.owner
-                  ? property.owner.address.area
-                  : property.address.area}
+                {property.address_1}, {property.area}
               </Text>
-              <Text className="text-sm text-gray-800">
-                {property.model === "room"
-                  ? property.sub_title === null
-                    ? property.owner.title
-                    : `${property.sub_title} in a ${property.owner.title}`
-                  : property.title}
-              </Text>
+              <Text className="text-sm text-gray-800">{property.title}</Text>
               <Text className="text-sm text-gray-800">
                 Available from{" "}
                 <Text className="font-semibold">
-                  {moment(
-                    property.availability
-                      ? property.availability.available_from
-                      : property.available_from
-                  ).format("MMM DD, YYYY")}
+                  {moment(property.available_from).format("MMM DD, YYYY")}
                 </Text>
               </Text>
               <Text className="mt-2 text-sm text-gray-800">
                 {" "}
-                <Text>
-                  ${property.owner ? property.room_cost : property.cost}
-                </Text>{" "}
-                /month
+                <Text>${property.cost}</Text> /month
               </Text>
             </View>
           </TouchableOpacity>
@@ -176,6 +162,16 @@ const PropertyCard = ({ item: property }) => {
               <Text className="text-lg">({property.views})</Text>
             </Text>
           </View>
+        </View>
+        <View className="p-6 pt-3">
+          <TouchableOpacity
+            onPress={handleClick}
+            className="flex w-full select-none rounded-full bg-yellow-400 py-3.5 px-7 text-center justify-center shadow-md shadow-yellow-500/20"
+          >
+            <Text className="text-sm font-semibold text-center text-black font-base">
+              Message {property.first_name}
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
