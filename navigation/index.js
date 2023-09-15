@@ -1,4 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
+import * as SecureStore from "expo-secure-store";
+import { View, Text, ActivityIndicator } from "react-native";
+import { AuthContext } from "../context/AuthProvider";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -10,16 +13,15 @@ import AccountScreen from "../screens/AccountScreen";
 import SavedScreen from "../screens/SavedScreen";
 import HistoryScreen from "../screens/HistoryScreen";
 import MessageScreen from "../screens/MessageScreen";
-import * as SecureStore from "expo-secure-store";
-import { View, Text, ActivityIndicator } from "react-native";
-import { AuthContext } from "../context/AuthProvider";
-import Login from "../screens/Auth/LoginScreen";
+import PropertyDetailsScreen from "../screens/PropertyDetailsScreen";
 import LoginScreen from "../screens/Auth/LoginScreen";
 import RegisterScreen from "../screens/Auth/RegisterScreen";
+import ForgotPasswordScreen from "../screens/Auth/ForgotPasswordScreen";
+import ResetPasswordScreen from "../screens/Auth/ResetPasswordScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { user, setUser } = useContext(AuthContext);
+  const { setUser } = useContext(AuthContext);
 
   useEffect(() => {
     //check if user is logged in
@@ -46,17 +48,9 @@ export default Navigation = () => {
   }
 
   return (
-    <>
-      {user ? (
-        <NavigationContainer>
-          <RootNavigator />
-        </NavigationContainer>
-      ) : (
-        <NavigationContainer>
-          <AuthNavigator />
-        </NavigationContainer>
-      )}
-    </>
+    <NavigationContainer>
+      <RootNavigator />
+    </NavigationContainer>
   );
 };
 
@@ -70,7 +64,33 @@ const RootNavigator = () => {
         component={BottomTabNavigator}
         options={{ headerShown: false }}
       />
-      <Stack.Group screenOptions={{ presentation: "modal" }}></Stack.Group>
+      <Stack.Group screenOptions={{ presentation: "modal" }}>
+        <Stack.Screen
+          name="Login Screen"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register Screen"
+          component={RegisterScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Reset Password Screen"
+          component={ResetPasswordScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Forgot Password Screen"
+          component={ForgotPasswordScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Property Details Screen"
+          component={PropertyDetailsScreen}
+          options={{ headerShown: true }}
+        />
+      </Stack.Group>
     </Stack.Navigator>
   );
 };

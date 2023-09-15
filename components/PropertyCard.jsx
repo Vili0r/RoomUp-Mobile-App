@@ -58,17 +58,18 @@ const PropertyCard = ({ item: property }) => {
     });
   };
 
-  const gotoSingleProperty = () => {
-    navigation.navigate("Tweet Screen", {
-      id: property.id,
-      model: property.model,
-      index: activeIndex,
-    });
-  };
   return (
     <View className="flex flex-row mb-8 group">
       <View className="flex flex-col w-full gap-2">
-        <TouchableOpacity onPress={() => gotoSingleProperty()}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Property Details Screen", {
+              id: property.id,
+              model: property.model,
+              index: activeIndex,
+            })
+          }
+        >
           <View className="relative w-full overflow-hidden aspect-square rounded-xl">
             <FlatList
               ref={(ref) => (flatListRef.current = ref)}
@@ -129,7 +130,15 @@ const PropertyCard = ({ item: property }) => {
           </View>
         </TouchableOpacity>
         <View className="flex flex-row items-start justify-between mt-4">
-          <TouchableOpacity onPress={() => gotoSingleProperty()}>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Property Details Screen", {
+                id: property.id,
+                model: property.model,
+                index: activeIndex,
+              })
+            }
+          >
             <View>
               <Text className="text-sm font-bold text-gray-800">
                 {property.owner

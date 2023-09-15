@@ -1,4 +1,11 @@
-import { View, Text, Image, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import React, { useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../context/AuthProvider";
@@ -11,7 +18,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 const Profile = () => {
   const navigation = useNavigation();
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout, isLoading } = useContext(AuthContext);
 
   const profileButtons = [
     {
@@ -76,9 +83,10 @@ const Profile = () => {
       icon: <Ionicons name="settings-outline" size={28} color="gray" />,
     },
     {
-      label: "Logout",
-      onPress: () => logout,
-      icon: <MaterialIcons name="logout" size={28} color="gray" />,
+      label: "Reset Password",
+      onPress: () =>
+        navigation.navigate("Reset Password Screen", { token: user.token }),
+      icon: <MaterialCommunityIcons name="lock-reset" size={28} color="gray" />,
     },
   ];
   return (
@@ -98,12 +106,24 @@ const Profile = () => {
         </View>
       </View>
       <View className="mt-4 border-b-2 border-b-gray-200"></View>
-      <View className="mt-4 mb-4">
+      <View className="mt-4 mb-8">
         <ButtonList data={profileButtons} header={"Renting Made Easy"} />
         <ButtonList data={supportButtons} header={"Support"} />
         <ButtonList data={rentingButtons} header={"Renting tools"} />
         <ButtonList data={accountButtons} header={"Account"} />
       </View>
+      <TouchableOpacity
+        onPress={() => logout()}
+        className="flex flex-row justify-center py-3 mb-6 space-x-3 bg-yellow-400 rounded-xl"
+      >
+        {isLoading && (
+          <ActivityIndicator className="mr-2" size="small" color="white" />
+        )}
+        <MaterialIcons name="logout" size={28} color="black" />
+        <Text className="text-xl font-bold text-center text-gray-700">
+          Logout
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };

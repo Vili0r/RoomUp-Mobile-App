@@ -9,10 +9,11 @@ import {
   TextInput,
   Button,
 } from "react-native";
-import { PropertyCard } from "../components";
+import PropertyCard from "./PropertyCard";
 import Feather from "@expo/vector-icons/Feather";
 import axiosConfig from "../helpers/axiosConfig";
 import axios from "axios";
+import MapView from "react-native-maps";
 
 const AllProperties = () => {
   const [data, setData] = useState([]);
@@ -138,7 +139,9 @@ const AllProperties = () => {
           {isLoading ? (
             <ActivityIndicator className="mt-2" size="large" color="gray" />
           ) : mapShow ? (
-            <Map />
+            <View className="flex-1 overflow-hidden">
+              <MapView style={{ height: "100%", width: "100%" }} />
+            </View>
           ) : (
             <FlatList
               data={data}
@@ -162,13 +165,24 @@ const AllProperties = () => {
           )}
           {!isLoading && (
             <TouchableOpacity
-              onPress={() => setMapShow(true)}
+              onPress={() => setMapShow(!mapShow)}
               className="absolute bottom-[100px] right-[150px] items-center justify-center px-3 py-3 bg-gray-800 rounded-full"
             >
-              <View className="flex flex-row space-x-2">
-                <Feather name="map" size={26} stroke="gray" color="white" />
-                <Text className="text-base font-semibold text-white">Map</Text>
-              </View>
+              {!mapShow ? (
+                <View className="flex flex-row space-x-2">
+                  <Feather name="map" size={26} stroke="gray" color="white" />
+                  <Text className="text-base font-semibold text-white">
+                    Map
+                  </Text>
+                </View>
+              ) : (
+                <View className="flex flex-row space-x-2">
+                  <Feather name="menu" size={26} stroke="gray" color="white" />
+                  <Text className="text-base font-semibold text-white">
+                    List
+                  </Text>
+                </View>
+              )}
             </TouchableOpacity>
           )}
         </View>

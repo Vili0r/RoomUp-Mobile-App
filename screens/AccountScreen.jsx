@@ -6,6 +6,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import React, { useContext } from "react";
 import LottieView from "lottie-react-native";
@@ -19,7 +20,7 @@ const AccountScreen = () => {
   return (
     <SafeAreaView style={styles.container} className="flex-1 bg-white">
       <StatusBar />
-      <>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {user ? (
           <Profile />
         ) : (
@@ -56,7 +57,7 @@ const AccountScreen = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => navigation.navigate("Register Screen")}
-                className="flex flex-row justify-center py-3 mt-10 border-2 border-yellow-400 rounded-xl"
+                className="flex flex-row justify-center py-3 mt-5 border-2 border-yellow-400 rounded-xl"
               >
                 <Text className="text-xl font-bold text-center text-gray-700">
                   Register
@@ -65,7 +66,7 @@ const AccountScreen = () => {
             </View>
           </View>
         )}
-      </>
+      </ScrollView>
     </SafeAreaView>
   );
 };

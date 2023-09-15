@@ -1,5 +1,4 @@
 import React, { useLayoutEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
@@ -9,6 +8,7 @@ import ParallaxScrollView from "./ParallaxScrollView";
 import AdvertisedBy from "./AdvertisedBy";
 import SinglePropertyFooter from "./SinglePropertyFooter";
 import PropertyDetailsAmenities from "./PropertyDetailsAmenities";
+import { useNavigation } from "@react-navigation/native";
 
 const SinglePropertyDetails = ({ property, imageIndex }) => {
   const navigation = useNavigation();
@@ -48,7 +48,7 @@ const SinglePropertyDetails = ({ property, imageIndex }) => {
         backgroundColor={"#fff"}
         style={{ flex: 1 }}
         parallaxHeaderHeight={300}
-        stickyHeaderHeight={120}
+        stickyHeaderHeight={65}
         contentBackgroundColor={"#fff"}
         renderBackground={() => (
           <Image
@@ -61,34 +61,18 @@ const SinglePropertyDetails = ({ property, imageIndex }) => {
           />
         )}
         renderStickyHeader={() => (
-          <View className="flex flex-row justify-between">
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              className="w-[40px] h-[40px] mt-14 rounded-[20px] bg-white justify-center items-center"
-            >
-              <Ionicons name="arrow-back" size={24} color="#F1C40F" />
-            </TouchableOpacity>
-            <View
-              key="sticky-header"
-              className="bg-white h-[100px]"
-              style={{
-                justifyContent: "flex-end",
-              }}
-            >
-              <Text className="m-[10px] text-lg font-medium">
-                {property.model === "room"
-                  ? property.owner.title
-                  : property.title}
-              </Text>
-            </View>
-            <View className="flex-row items-center justify-center gap-1 mt-12">
-              <TouchableOpacity className="w-[40px] h-[40px] rounded-[20px] bg-white justify-center items-center">
-                <Ionicons name="share-outline" size={24} color="#F1C40F" />
-              </TouchableOpacity>
-              <TouchableOpacity className="w-[40px] h-[40px] rounded-[20px] bg-white justify-center items-center">
-                <Ionicons name="search-outline" size={24} color="#F1C40F" />
-              </TouchableOpacity>
-            </View>
+          <View
+            key="sticky-header"
+            className="bg-white ml-[100px] mt-1"
+            style={{
+              justifyContent: "flex-end",
+            }}
+          >
+            <Text className="m-[10px] text-lg font-medium">
+              {property.model === "room"
+                ? property.owner.title
+                : property.title}
+            </Text>
           </View>
         )}
       >
@@ -172,13 +156,13 @@ const SinglePropertyDetails = ({ property, imageIndex }) => {
               Availability
             </Text>
             <View className="flex flex-col gap-2 font-[450px] mt-2 text-neutral-500 text-base">
-              <Text className="flex gap-2 capitalize ">
+              <Text className="flex items-center gap-2 capitalize">
                 <Feather name="minimize" size={20} />
-
                 {property.owner
                   ? property.minimum_stay
                   : property.availability?.minimum_stay}
               </Text>
+
               <Text className="flex gap-2 capitalize">
                 <Feather name="maximize" size={20} />
 

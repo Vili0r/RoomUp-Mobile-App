@@ -1,14 +1,18 @@
 import React from "react";
 import { View, Text, ActivityIndicator } from "react-native";
-import axios from "axios";
+import axiosConfig from "../helpers/axiosConfig";
 import { useQuery } from "react-query";
 import { SinglePropertyDetails } from "../components";
+import { useRoute } from "@react-navigation/native";
 
-const SinglePropertyScreen = ({ route }) => {
+const PropertyDetailsScreen = () => {
+  const route = useRoute();
+  const model = route.params?.model;
+  const id = route.params?.id;
+  const index = route.params?.index;
+
   const { isLoading, error, data } = useQuery("property", () =>
-    axios(
-      `http://roomup.test/api/property/${route.params.model}/${route.params.id}`
-    )
+    axiosConfig.get(`/property/${model}/${id}`)
   );
 
   return (
@@ -18,13 +22,10 @@ const SinglePropertyScreen = ({ route }) => {
       ) : error ? (
         <Text>Something went wrong</Text>
       ) : (
-        <SinglePropertyDetails
-          property={data.data}
-          imageIndex={route.params.index}
-        />
+        <SinglePropertyDetails property={data.data} imageIndex={index} />
       )}
     </View>
   );
 };
 
-export default SinglePropertyScreen;
+export default PropertyDetailsScreen;
