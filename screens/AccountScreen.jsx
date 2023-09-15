@@ -10,50 +10,20 @@ import {
 import React, { useContext } from "react";
 import LottieView from "lottie-react-native";
 import { AuthContext } from "../context/AuthProvider";
-import axiosConfig from "../helpers/axiosConfig";
 import { useNavigation } from "@react-navigation/native";
-
-const fetchFavouriteProperties = async (userId, token) => {
-  const response = await axiosConfig.get(`/users/${userId}/favourites`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data.data;
-};
+import Profile from "../components/Profile";
 
 const AccountScreen = () => {
   const navigation = useNavigation();
-  const { user, logout } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   return (
-    <SafeAreaView
-      style={styles.container}
-      className="items-center justify-center flex-1 bg-white"
-    >
+    <SafeAreaView style={styles.container} className="flex-1 bg-white">
       <StatusBar />
-      <View className="items-center justify-center flex-1 bg-white">
+      <>
         {user ? (
-          <>
-            <View className="items-center justify-center">
-              <LottieView
-                autoPlay
-                style={{ height: 400, width: 400, alignSelf: "center" }}
-                source={require("../assets/lotties/Profile.json")}
-              />
-              <View className="">
-                <TouchableOpacity
-                  onPress={logout}
-                  className="flex flex-row justify-center px-3 py-3 mt-10 bg-yellow-400 rounded-xl"
-                >
-                  <Text className="text-xl font-bold text-center text-gray-700">
-                    Logout as {user.first_name}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </>
+          <Profile />
         ) : (
-          <View className="items-center justify-center">
+          <View className="items-center justify-center flex-1 bg-white">
             <LottieView
               autoPlay
               style={{ height: 400, width: 400, alignSelf: "center" }}
@@ -61,13 +31,20 @@ const AccountScreen = () => {
             />
             <View className="">
               <Text className="text-lg font-semibold text-center text-gray-700">
-                You are not logged in. Find your dream home
+                Renting has never been easier!
               </Text>
               <Text
                 appearance={"hint"}
                 className="mt-2 text-xl font-light text-center text-gray-700"
               >
-                or RoomUp your property
+                Are you property owner or tenant?
+              </Text>
+              <Text
+                appearance={"hint"}
+                className="mt-2 text-xl font-light text-center text-gray-700"
+              >
+                Navigate through the properties and start receiving applications
+                in minutes
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate("Login Screen")}
@@ -77,10 +54,18 @@ const AccountScreen = () => {
                   Login
                 </Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Register Screen")}
+                className="flex flex-row justify-center py-3 mt-10 border-2 border-yellow-400 rounded-xl"
+              >
+                <Text className="text-xl font-bold text-center text-gray-700">
+                  Register
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         )}
-      </View>
+      </>
     </SafeAreaView>
   );
 };
