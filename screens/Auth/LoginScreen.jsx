@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthProvider";
-import { ModalHeader } from "../../components/ModalHeader";
+import { ModalHeader } from "../../components";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const LoginScreen = ({ navigation }) => {

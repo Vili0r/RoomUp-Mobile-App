@@ -2,7 +2,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-export const ModalHeader = ({ xShown, text, onPress }) => {
+const ModalHeader = ({ xShown, text, onPress }) => {
   const navigation = useNavigation();
 
   if (text) {
@@ -28,3 +28,5 @@ export const ModalHeader = ({ xShown, text, onPress }) => {
     </View>
   );
 };
+
+export default ModalHeader;

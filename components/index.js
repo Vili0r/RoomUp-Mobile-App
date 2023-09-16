@@ -8,3 +8,5 @@ export { default as SinglePropertyFooter } from "./SinglePropertyFooter";
 export { default as ViewedProperties } from "./ViewedProperties";
 export { default as Map } from "./Map";
 export { default as FavouriteProperties } from "./FavouriteProperties";
+export { default as ModalHeader } from "./ModalHeader";
+export { default as CustomInput } from "./CustomInput";

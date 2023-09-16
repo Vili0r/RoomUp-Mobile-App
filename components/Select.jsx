@@ -3,7 +3,7 @@ import { ViewStyle, View, StyleSheet, Platform, Text } from "react-native";
 
 const Select = ({
   label,
-  item,
+  value,
   items,
   onItemChange,
   style,
@@ -19,7 +19,7 @@ const Select = ({
         {label}
       </Text>
       <Picker
-        item={item}
+        item={value}
         items={items}
         onItemChange={onItemChange}
         onClose={onClose}
@@ -28,7 +28,7 @@ const Select = ({
         containerStyle={[
           styles.container,
           {
-            borderColor: error ? ["color-danger-500"] : ["color-light-gray"],
+            borderColor: error ? ["#f15c5c"] : ["#ebcfcf"],
           },
         ]}
         textInputStyle={styles.textInput}
@@ -54,5 +54,5 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginTop: 5,
   },
-  errorText: { color: ["color-danger-500"] },
+  errorText: { color: "#f15c5c" },
 });

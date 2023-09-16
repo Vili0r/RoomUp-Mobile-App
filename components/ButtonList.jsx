@@ -18,7 +18,7 @@ export const ButtonList = ({ data, header }) => {
         <>
           <Pressable
             className="flex-row items-center justify-start mt-4 space-x-4"
-            key={item.label}
+            key={index}
             onPress={item.onPress}
           >
             {item.icon}
