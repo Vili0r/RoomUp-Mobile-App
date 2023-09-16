@@ -10,11 +10,45 @@ import React, { useState, useContext } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 import { ModalHeader } from "../../components";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import axiosConfig from "../../helpers/axiosConfig";
+import * as SecureStore from "expo-secure-store";
 
 const LoginScreen = ({ navigation }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, error, isLoading } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
+
+  const handleLogin = async () => {
+    setIsLoading(true);
+    await axiosConfig
+      .post("/login", {
+        email,
+        password,
+        device_name: "mobile",
+      })
+      .then((res) => {
+        const userResponse = {
+          token: res.data.token,
+          id: res.data.user.id,
+          first_name: res.data.user.first_name,
+          email: res.data.user.email,
+          avatar: res.data.user.avatar,
+        };
+        setUser(userResponse);
+        setError(null);
+        SecureStore.setItemAsync("user", JSON.stringify(userResponse));
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        setError(error.response.data.message);
+        setIsLoading(false);
+        const key = Object.keys(error.response.data.errors)[0];
+        setError(error.response.data.errors[key][0]);
+      });
+    navigation.goBack();
+  };
 
   return (
     <KeyboardAwareScrollView
@@ -67,7 +101,7 @@ const LoginScreen = ({ navigation }) => {
               <Text className="mb-5 text-gray-700">Forgot Password?</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => login(email, password)}
+              onPress={() => handleLogin()}
               className="flex flex-row justify-center py-3 bg-yellow-400 rounded-xl"
             >
               {isLoading && (

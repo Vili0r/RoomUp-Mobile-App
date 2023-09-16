@@ -22,6 +22,7 @@ const Profile = () => {
 
   const profileButtons = [
     {
+      id: 1,
       label: "Add a Property",
       onPress: () => console.log("add a property"),
       icon: (
@@ -33,6 +34,7 @@ const Profile = () => {
       ),
     },
     {
+      id: 2,
       label: "View My Properties",
       onPress: () => console.log("view my properties"),
       icon: (
@@ -44,6 +46,7 @@ const Profile = () => {
       ),
     },
     {
+      id: 3,
       label: "Roommate listing",
       onPress: () => console.log("flatmate"),
       icon: (
@@ -58,11 +61,13 @@ const Profile = () => {
 
   const supportButtons = [
     {
+      id: 4,
       label: "Help Center",
       onPress: () => console.log("help center"),
       icon: <Feather name="help-circle" size={28} color="gray" />,
     },
     {
+      id: 5,
       label: "Terms and Conditions",
       onPress: () => console.log("terms"),
       icon: <Entypo name="open-book" size={28} color="gray" />,
@@ -71,6 +76,7 @@ const Profile = () => {
 
   const rentingButtons = [
     {
+      id: 6,
       label: "Favourite Properties",
       onPress: () => navigation.navigate("Root", { screen: "Saved" }),
       icon: <MaterialCommunityIcons name="home-heart" size={28} color="gray" />,
@@ -78,11 +84,13 @@ const Profile = () => {
   ];
   const accountButtons = [
     {
+      id: 7,
       label: "Account Settings",
       onPress: () => console.log("view my properties"),
       icon: <Ionicons name="settings-outline" size={28} color="gray" />,
     },
     {
+      id: 8,
       label: "Reset Password",
       onPress: () =>
         navigation.navigate("Reset Password Screen", { token: user.token }),

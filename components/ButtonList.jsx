@@ -14,11 +14,10 @@ export const ButtonList = ({ data, header }) => {
   return (
     <View className="px-4 mt-2">
       {getListHeaderComponent()}
-      {data.map((item, index) => (
-        <>
+      {data.map((item) => (
+        <View key={item.id}>
           <Pressable
             className="flex-row items-center justify-start mt-4 space-x-4"
-            key={index}
             onPress={item.onPress}
           >
             {item.icon}
@@ -27,7 +26,7 @@ export const ButtonList = ({ data, header }) => {
             </Text>
           </Pressable>
           <View className="mt-3 border-b-2 border-b-gray-100"></View>
-        </>
+        </View>
       ))}
     </View>
   );
