@@ -91,9 +91,8 @@ const Profile = () => {
     },
     {
       id: 8,
-      label: "Reset Password",
-      onPress: () =>
-        navigation.navigate("Reset Password Screen", { token: user.token }),
+      label: "Update Password",
+      onPress: () => navigation.navigate("Update Password Screen"),
       icon: <MaterialCommunityIcons name="lock-reset" size={28} color="gray" />,
     },
   ];

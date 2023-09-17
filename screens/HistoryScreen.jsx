@@ -15,32 +15,25 @@ import LottieView from "lottie-react-native";
 import { ViewedProperties } from "../components";
 import { useNavigation } from "@react-navigation/native";
 
-const fetchViewedProperties = async (userId, token) => {
-  const response = await axiosConfig.get(`/users/${userId}/viewed`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
-};
-
 const HistoryScreen = () => {
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
 
   //Use useQuery to fetch user data with the token
   const {
-    data: properties,
     isLoading,
-    isError,
     error,
-  } = useQuery(
-    ["properties", user?.id, user?.token], // Specify a unique query key
-    () => fetchViewedProperties(user?.id, user?.token), // Pass the function that fetches user data
-    {
-      enabled: !!user, // Only execute the query if userId and token are available
-    }
-  );
+    data: properties,
+  } = useQuery("viewed", async () => {
+    const response = await axiosConfig.get(`/users/${user.id}/viewed`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+
+    // Access the data from response.data
+    return response.data;
+  });
   return (
     <SafeAreaView
       style={styles.container}
@@ -69,7 +62,7 @@ const HistoryScreen = () => {
                       Click the image to navigate to the property
                     </Text>
                     <TouchableOpacity
-                      onPress={() => router.push("/(tabs)")}
+                      onPress={() => navigation.navigate("Search Screen")}
                       className="flex flex-row justify-center py-3 mt-10 bg-yellow-400 rounded-xl"
                     >
                       <Text className="text-xl font-bold text-center text-gray-700">

@@ -13,7 +13,6 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import React, { useState, useEffect, useContext } from "react";
 import axiosConfig from "../../helpers/axiosConfig";
 import Feather from "@expo/vector-icons/Feather";
-import { useNavigation } from "@react-navigation/native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useForm, Controller } from "react-hook-form";
 import { Select, ModalHeader, CustomInput } from "../../components";
@@ -21,8 +20,13 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as ImagePicker from "expo-image-picker";
 import { AuthContext } from "../../context/AuthProvider";
+import * as SecureStore from "expo-secure-store";
 
 const genders = [
+  {
+    label: "",
+    value: "",
+  },
   {
     label: "Male",
     value: "Male",
@@ -39,6 +43,10 @@ const genders = [
 
 const lookingFor = [
   {
+    label: "",
+    value: "",
+  },
+  {
     label: "I am looking for a flat or a house share",
     value: "I am looking for a flat or a house share",
   },
@@ -52,7 +60,7 @@ const lookingFor = [
   },
 ];
 
-const RegisterScreen = () => {
+const RegisterScreen = ({ navigation }) => {
   const stepOneSchema = yup.object().shape({
     first_name: yup.string().required("First Name is required"),
     last_name: yup.string().required("last Name is required"),
@@ -76,8 +84,7 @@ const RegisterScreen = () => {
     gender: yup.string().required("Gender is required"),
     looking_for: yup.string().required("Looking for is required"),
   });
-  const navigation = useNavigation();
-  const { login } = useContext(AuthContext);
+  const { setUser } = useContext(AuthContext);
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [date, setDate] = useState(new Date());
@@ -94,6 +101,31 @@ const RegisterScreen = () => {
         resolver: yupResolver(stepOneSchema),
       }
     );
+
+  const handleLogin = async (email, password) => {
+    setIsLoading(true);
+    await axiosConfig
+      .post("/login", {
+        email,
+        password,
+        device_name: "mobile",
+      })
+      .then((res) => {
+        const userResponse = {
+          token: res.data.token,
+          id: res.data.user.id,
+          first_name: res.data.user.first_name,
+          email: res.data.user.email,
+          avatar: res.data.user.avatar,
+        };
+        setUser(userResponse);
+        SecureStore.setItemAsync("user", JSON.stringify(userResponse));
+        navigation.navigate("Account Screen"); // Go back to the previous screen
+      })
+      .catch((error) => {
+        navigation.navigate("Login Screen"); // Go back to the previous screen
+      });
+  };
 
   const onSubmit = async (data) => {
     if (step === 1) {
@@ -126,13 +158,22 @@ const RegisterScreen = () => {
         formData.append("gender", data.gender.value);
         formData.append("birthdate", formattedDate);
         formData.append("looking_for", data.looking_for.value);
-        formData.append("avatar", avatar);
+        formData.append("avatar", {
+          type: avatar.type,
+          uri: avatar.uri,
+          name: avatar.fileName,
+        });
 
         await axiosConfig
-          .post("/register", formData)
+          .post("/register", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              // You may also need to include any authorization headers if required
+            },
+          })
           .then((response) => {
-            Alert.alert("User created! Please login.");
-            // login(email, password)
+            Alert.alert("User created successfully!");
+            handleLogin(data.email, data.password);
           })
           .catch((error) => {
             if (error.response.status === 422) {
@@ -177,6 +218,7 @@ const RegisterScreen = () => {
   };
 
   const handleBack = () => {
+    setServerErrors({});
     setStep(step - 1);
   };
 
@@ -190,7 +232,7 @@ const RegisterScreen = () => {
     });
 
     if (!result.canceled) {
-      setAvatar(result.assets[0].uri);
+      setAvatar(result.assets[0]);
     }
   };
 
@@ -301,17 +343,19 @@ const RegisterScreen = () => {
 
           {step == "2" && (
             <>
-              <View className="flex flex-row">
-                {serverErrors &&
-                  serverErrors.map((error, index) => (
+              <View className="flex flex-col">
+                {Object.entries(serverErrors).map(([fieldName, fieldErrors]) =>
+                  fieldErrors.map((error, index) => (
                     <Text
-                      key={index}
+                      key={`${fieldName}_${index}`}
                       className="mt-2 ml-4 text-sm text-red-500"
                     >
                       {error}
                     </Text>
-                  ))}
+                  ))
+                )}
               </View>
+
               <View className="space-y-2 form">
                 <Text className="ml-4 text-gray-700 ">Birthdate</Text>
                 {showPicker && (
@@ -441,7 +485,7 @@ const RegisterScreen = () => {
                   />
                   {avatar && (
                     <Image
-                      source={{ uri: avatar }}
+                      source={{ uri: avatar.uri }}
                       style={{ width: 200, height: 200 }}
                     />
                   )}

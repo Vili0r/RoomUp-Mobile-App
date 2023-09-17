@@ -16,6 +16,34 @@ export const AuthProvider = ({ children }) => {
         setUser,
         error,
         isLoading,
+        login: (email, password) => {
+          setIsLoading(true);
+          axiosConfig
+            .post("/login", {
+              email,
+              password,
+              device_name: "mobile",
+            })
+            .then((res) => {
+              const userResponse = {
+                token: res.data.token,
+                id: res.data.user.id,
+                first_name: res.data.user.first_name,
+                email: res.data.user.email,
+                avatar: res.data.user.avatar,
+              };
+              setUser(userResponse);
+              setError(null);
+              SecureStore.setItemAsync("user", JSON.stringify(userResponse));
+              setIsLoading(false);
+            })
+            .catch((erorr) => {
+              setError(erorr.response.data.message);
+              setIsLoading(false);
+              const key = Object.keys(error.response.data.errors)[0];
+              setError(error.response.data.errors[key][0]);
+            });
+        },
         logout: () => {
           setIsLoading(true);
           axiosConfig.defaults.headers.common[

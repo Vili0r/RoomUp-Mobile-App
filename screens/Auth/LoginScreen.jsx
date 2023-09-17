@@ -18,7 +18,7 @@ const LoginScreen = ({ navigation }) => {
   const [error, setError] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user, setUser } = useContext(AuthContext);
+  const { setUser } = useContext(AuthContext);
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -40,6 +40,8 @@ const LoginScreen = ({ navigation }) => {
         setError(null);
         SecureStore.setItemAsync("user", JSON.stringify(userResponse));
         setIsLoading(false);
+
+        navigation.goBack(); // Go back to the previous screen
       })
       .catch((error) => {
         setError(error.response.data.message);
@@ -47,7 +49,6 @@ const LoginScreen = ({ navigation }) => {
         const key = Object.keys(error.response.data.errors)[0];
         setError(error.response.data.errors[key][0]);
       });
-    navigation.goBack();
   };
 
   return (

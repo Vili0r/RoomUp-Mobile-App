@@ -10,20 +10,28 @@ import React, { useState } from "react";
 import { ModalHeader } from "../../components";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import axiosConfig from "../../helpers/axiosConfig";
+import { useRoute } from "@react-navigation/native";
 
-const ForgotPasswordScreen = () => {
+const UpdatePasswordScreen = () => {
+  const route = useRoute();
+  const token = route.params?.token;
   const [error, setError] = useState(null);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(route.params?.email);
+  const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [status, setStatus] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleForgotPassword = async () => {
+  const handleResetPassword = async () => {
     setIsLoading(true);
     setStatus(null);
 
     try {
-      const response = await axiosConfig.post("/forgot-password", {
+      const response = await axiosConfig.post("/reset-password", {
+        token,
         email,
+        password,
+        password_confirmation: passwordConfirmation,
       });
       setStatus(response.data.status);
       setIsLoading(false);
@@ -31,9 +39,11 @@ const ForgotPasswordScreen = () => {
       if (error.response.status === 422) {
         setError(error.response.data.errors);
       }
+      console.log(error);
       setIsLoading(false);
     }
   };
+
   return (
     <KeyboardAwareScrollView
       bounces={false}
@@ -42,7 +52,7 @@ const ForgotPasswordScreen = () => {
       showsVerticalScrollIndicator={false}
     >
       <View className="flex-1 bg-white" style={{ backgroundColor: "#877dfa" }}>
-        <ModalHeader text="Forgot my password" xShown />
+        <ModalHeader text="Reset my password" xShown />
 
         <View className="flex-row justify-center">
           <Image
@@ -65,11 +75,6 @@ const ForgotPasswordScreen = () => {
               {status}
             </Text>
           )}
-          <Text className="mb-4 text-sm text-gray-600">
-            Forgot your password? No problem. Just let us know your email
-            address and we will email you a password reset link that will allow
-            you to choose a new one.
-          </Text>
           <View className="space-y-2 form">
             <Text className="ml-4 text-gray-700">Email Address</Text>
             <TextInput
@@ -82,9 +87,33 @@ const ForgotPasswordScreen = () => {
               keyboardType="email-address"
               autoCapitalize="none"
             />
+            <Text className="ml-4 text-gray-700">Password</Text>
+            <TextInput
+              className="p-4 text-gray-700 bg-gray-100 rounded-2xl"
+              onChangeText={setPassword}
+              value={password}
+              placeholder="Password"
+              placeholderTextColor="gray"
+              autoCapitalize="none"
+              secureTextEntry={true}
+            />
+            <View className="mt-3">
+              <Text className="mt-4 ml-4 text-gray-700">
+                Password Confirmation
+              </Text>
+              <TextInput
+                className="p-4 mb-8 text-gray-700 bg-gray-100 rounded-2xl"
+                onChangeText={setPasswordConfirmation}
+                value={passwordConfirmation}
+                placeholder="Password"
+                placeholderTextColor="gray"
+                autoCapitalize="none"
+                secureTextEntry={true}
+              />
+            </View>
 
             <TouchableOpacity
-              onPress={() => handleForgotPassword()}
+              onPress={() => handleResetPassword()}
               className="flex flex-row justify-center py-3 bg-yellow-400 rounded-xl"
             >
               {isLoading && (
@@ -95,7 +124,7 @@ const ForgotPasswordScreen = () => {
                 />
               )}
               <Text className="text-xl font-bold text-center text-gray-700">
-                Send Link
+                Reset Password
               </Text>
             </TouchableOpacity>
           </View>
@@ -105,4 +134,4 @@ const ForgotPasswordScreen = () => {
   );
 };
 
-export default ForgotPasswordScreen;
+export default UpdatePasswordScreen;

@@ -17,7 +17,7 @@ import PropertyDetailsScreen from "../screens/PropertyDetailsScreen";
 import LoginScreen from "../screens/Auth/LoginScreen";
 import RegisterScreen from "../screens/Auth/RegisterScreen";
 import ForgotPasswordScreen from "../screens/Auth/ForgotPasswordScreen";
-import ResetPasswordScreen from "../screens/Auth/ResetPasswordScreen";
+import UpdatePasswordScreen from "../screens/Auth/UpdatePasswordScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -76,8 +76,8 @@ const RootNavigator = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Reset Password Screen"
-          component={ResetPasswordScreen}
+          name="Update Password Screen"
+          component={UpdatePasswordScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen

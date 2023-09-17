@@ -13,32 +13,28 @@ import { AuthContext } from "../context/AuthProvider";
 import { useQuery } from "react-query";
 import axiosConfig from "../helpers/axiosConfig";
 import { FavouriteProperties } from "../components";
-
-const fetchFavouriteProperties = async (userId, token) => {
-  const response = await axiosConfig.get(`/users/${userId}/favourites`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data.data;
-};
+import { useNavigation } from "@react-navigation/native";
 
 const SavedScreen = () => {
   const { user } = useContext(AuthContext);
+  const navigation = useNavigation();
 
   //Use useQuery to fetch user data with the token
   const {
-    data: properties,
     isLoading,
-    isError,
     error,
-  } = useQuery(
-    ["properties", user?.id, user?.token], // Specify a unique query key
-    () => fetchFavouriteProperties(user?.id, user?.token), // Pass the function that fetches user data
-    {
-      enabled: !!user, // Only execute the query if userId and token are available
-    }
-  );
+    data: properties,
+  } = useQuery("favourites", async () => {
+    const response = await axiosConfig.get(`/users/${user.id}/favourites`, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+
+    // Access the data from response.data
+    return response.data.data;
+  });
+
   return (
     <SafeAreaView
       style={styles.container}
