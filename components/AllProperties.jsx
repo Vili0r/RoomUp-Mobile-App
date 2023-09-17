@@ -91,12 +91,13 @@ const AllProperties = () => {
     { label: "room", onPress: () => console.log("room") },
     { label: "property", onPress: () => console.log("property") },
     { label: "flatmate", onPress: () => console.log("flatmate") },
+    { lasticon: "menu", onPress: () => setMapShow(!mapShow) },
   ];
 
   return (
     <>
-      <View className="flex-row items-center px-6 pb-2 space-x-2">
-        <View className="flex-row items-center flex-1 p-3 border border-gray-300 rounded-full">
+      <View className="">
+        <View className="flex-row items-center p-3 mx-3 border border-gray-300 rounded-full">
           <Feather name="search" size={24} stroke="gray" />
           <TextInput
             value={search}
@@ -109,39 +110,64 @@ const AllProperties = () => {
             placeholderTextColor="black"
           />
         </View>
-      </View>
-      <View className="flex-row">
-        {filterButtons.map((button, index) => (
-          <View key={index}>
-            {button.iconName ? (
-              <Pressable
-                className="items-center py-2 w-[50px] mx-3 border-2 border-yellow-400 rounded-full"
-                onPress={button.onPress}
-              >
-                <Feather name={button.iconName} size={20} color="black" />
-              </Pressable>
-            ) : (
-              <Pressable
-                className="items-center py-2 w-[80px] mx-3 border-2 border-yellow-400 rounded-full"
-                onPress={button.onPress}
-              >
-                <Text className="text-sm font-normal capitalize">
-                  {button.label}
-                </Text>
-              </Pressable>
-            )}
-          </View>
-        ))}
+
+        <FlatList
+          data={filterButtons}
+          horizontal
+          style={{ marginTop: 10 }}
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item, index }) => {
+            if (item.iconName) {
+              return (
+                <Pressable
+                  className="items-center py-2 w-[50px] h-[40px] mx-3 border-2 border-yellow-400 rounded-full"
+                  onPress={item.onPress}
+                >
+                  <Feather name={item.iconName} size={20} color="black" />
+                </Pressable>
+              );
+            }
+
+            if (item.label) {
+              return (
+                <Pressable
+                  className="items-center py-2 w-[80px] h-[40px] mx-3 border-2 border-yellow-400 rounded-full"
+                  onPress={item.onPress}
+                >
+                  <Text className="text-sm font-normal capitalize">
+                    {item.label}
+                  </Text>
+                </Pressable>
+              );
+            }
+            return (
+              mapShow && (
+                <Pressable
+                  className="items-center py-2 w-[50px] h-[40px] mx-3 border-2 border-yellow-400 rounded-full"
+                  onPress={item.onPress}
+                >
+                  <Feather
+                    name={item.lasticon}
+                    size={20}
+                    stroke="gray"
+                    color="black"
+                  />
+                </Pressable>
+              )
+            );
+          }}
+          keyExtractor={(_, index) => index.toString()}
+        />
       </View>
 
-      <View className="p-4">
-        <View className="bg-white">
+      {mapShow ? (
+        <View className="flex-1 mt-4 overflow-hidden">
+          <MapView style={{ height: "100%", width: "100%" }}></MapView>
+        </View>
+      ) : (
+        <View className="p-4">
           {isLoading ? (
             <ActivityIndicator className="mt-2" size="large" color="gray" />
-          ) : mapShow ? (
-            <View className="flex-1 overflow-hidden">
-              <MapView style={{ height: "100%", width: "100%" }} />
-            </View>
           ) : (
             <FlatList
               data={data}
@@ -163,30 +189,19 @@ const AllProperties = () => {
               }
             />
           )}
-          {!isLoading && (
-            <TouchableOpacity
-              onPress={() => setMapShow(!mapShow)}
-              className="absolute bottom-[100px] right-[150px] items-center justify-center px-3 py-3 bg-gray-800 rounded-full"
-            >
-              {!mapShow ? (
-                <View className="flex flex-row space-x-2">
-                  <Feather name="map" size={26} stroke="gray" color="white" />
-                  <Text className="text-base font-semibold text-white">
-                    Map
-                  </Text>
-                </View>
-              ) : (
-                <View className="flex flex-row space-x-2">
-                  <Feather name="menu" size={26} stroke="gray" color="white" />
-                  <Text className="text-base font-semibold text-white">
-                    List
-                  </Text>
-                </View>
-              )}
-            </TouchableOpacity>
-          )}
         </View>
-      </View>
+      )}
+      {!isLoading && !mapShow && (
+        <TouchableOpacity
+          onPress={() => setMapShow(!mapShow)}
+          className="absolute bottom-[20px] right-[150px] items-center justify-center px-3 py-3 bg-gray-800 rounded-full"
+        >
+          <View className="flex flex-row space-x-2">
+            <Feather name="map" size={26} stroke="gray" color="white" />
+            <Text className="text-base font-semibold text-white">Map</Text>
+          </View>
+        </TouchableOpacity>
+      )}
     </>
   );
 };

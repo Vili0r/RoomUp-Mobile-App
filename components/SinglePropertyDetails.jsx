@@ -9,6 +9,7 @@ import AdvertisedBy from "./AdvertisedBy";
 import SinglePropertyFooter from "./SinglePropertyFooter";
 import PropertyDetailsAmenities from "./PropertyDetailsAmenities";
 import { useNavigation } from "@react-navigation/native";
+import MapView from "react-native-maps";
 
 const SinglePropertyDetails = ({ property, imageIndex }) => {
   const navigation = useNavigation();
