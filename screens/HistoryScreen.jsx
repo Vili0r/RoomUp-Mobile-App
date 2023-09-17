@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthProvider";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axiosConfig from "../helpers/axiosConfig";
 import LottieView from "lottie-react-native";
 import { ViewedProperties } from "../components";
@@ -18,22 +18,21 @@ import { useNavigation } from "@react-navigation/native";
 const HistoryScreen = () => {
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
-
-  //Use useQuery to fetch user data with the token
-  const {
-    isLoading,
-    error,
-    data: properties,
-  } = useQuery("viewed", async () => {
+  const fetchViewedProperties = async () => {
     const response = await axiosConfig.get(`/users/${user.id}/viewed`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     });
-
-    // Access the data from response.data
     return response.data;
-  });
+  };
+
+  //Use useQuery to fetch user data with the token
+  const { isLoading, data } = useQuery(
+    ["viewedProperties"],
+    fetchViewedProperties
+  );
+
   return (
     <SafeAreaView
       style={styles.container}
@@ -44,7 +43,7 @@ const HistoryScreen = () => {
         {user ? (
           <>
             <View className="items-center justify-center">
-              {!properties ? (
+              {!data || data.length === 0 ? (
                 <>
                   <LottieView
                     autoPlay
@@ -72,10 +71,7 @@ const HistoryScreen = () => {
                   </View>
                 </>
               ) : (
-                <ViewedProperties
-                  properties={properties}
-                  isLoading={isLoading}
-                />
+                <ViewedProperties properties={data} isLoading={isLoading} />
               )}
             </View>
           </>

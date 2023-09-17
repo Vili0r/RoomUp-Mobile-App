@@ -18,6 +18,7 @@ import LoginScreen from "../screens/Auth/LoginScreen";
 import RegisterScreen from "../screens/Auth/RegisterScreen";
 import ForgotPasswordScreen from "../screens/Auth/ForgotPasswordScreen";
 import UpdatePasswordScreen from "../screens/Auth/UpdatePasswordScreen";
+import AccountSettingsScreen from "../screens/AccountSettingsScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -91,6 +92,11 @@ const RootNavigator = () => {
           options={{ headerShown: true }}
         />
       </Stack.Group>
+      <Stack.Screen
+        name="Account Settings Screen"
+        component={AccountSettingsScreen}
+        options={{ headerShown: true, title: "Change Personal Information" }}
+      />
     </Stack.Navigator>
   );
 };

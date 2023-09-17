@@ -86,7 +86,11 @@ const Profile = () => {
     {
       id: 7,
       label: "Account Settings",
-      onPress: () => console.log("view my properties"),
+      onPress: () =>
+        navigation.navigate("Account Settings Screen", {
+          id: user.id,
+          token: user.token,
+        }),
       icon: <Ionicons name="settings-outline" size={28} color="gray" />,
     },
     {

@@ -2,46 +2,63 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   TextInput,
+  Image,
   ActivityIndicator,
+  Alert,
 } from "react-native";
-import React, { useState } from "react";
-import { ModalHeader } from "../../components";
+import React, { useState, useContext } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import axiosConfig from "../../helpers/axiosConfig";
-import { useRoute } from "@react-navigation/native";
+import { AuthContext } from "../../context/AuthProvider";
+import { ModalHeader } from "../../components";
 
-const UpdatePasswordScreen = () => {
-  const route = useRoute();
-  const token = route.params?.token;
+const UpdatePasswordScreen = ({ navigation }) => {
+  const { user } = useContext(AuthContext);
   const [error, setError] = useState(null);
-  const [email, setEmail] = useState(route.params?.email);
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [status, setStatus] = useState(null);
+  const [currentPassword, setCurrentPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleResetPassword = async () => {
+  const handlePasswordUpdate = async () => {
     setIsLoading(true);
-    setStatus(null);
 
     try {
-      const response = await axiosConfig.post("/reset-password", {
-        token,
-        email,
-        password,
-        password_confirmation: passwordConfirmation,
-      });
-      setStatus(response.data.status);
-      setIsLoading(false);
+      await axiosConfig
+        .put(
+          `/users/${user.id}/password`,
+          {
+            current_password: currentPassword,
+            password,
+            password_confirmation: passwordConfirmation,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        )
+        .then((response) => {
+          setPassword("");
+          setPasswordConfirmation("");
+          setCurrentPassword("");
+          setIsLoading(false);
+          Alert.alert("Password updated!");
+          navigation.goBack();
+        });
     } catch (error) {
-      if (error.response.status === 422) {
-        setError(error.response.data.errors);
+      setError(error.response.data.errors);
+      if (error.response.data.errors.password) {
+        setPassword("");
+        setPasswordConfirmation("");
       }
-      console.log(error);
+      if (error.response.data.errors.current_password) {
+        setCurrentPassword("");
+      }
       setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   return (
@@ -52,7 +69,7 @@ const UpdatePasswordScreen = () => {
       showsVerticalScrollIndicator={false}
     >
       <View className="flex-1 bg-white" style={{ backgroundColor: "#877dfa" }}>
-        <ModalHeader text="Reset my password" xShown />
+        <ModalHeader text="Update your password" xShown />
 
         <View className="flex-row justify-center">
           <Image
@@ -60,33 +77,44 @@ const UpdatePasswordScreen = () => {
             style={{ width: 200, height: 200 }}
           />
         </View>
-
         <View
           style={{ borderTopLeftRadius: 50, borderTopRightRadius: 50 }}
           className="px-8 pt-8 bg-white"
         >
           {error && (
-            <Text className="mb-3 text-base font-semibold text-red-500">
-              {error}
-            </Text>
+            <View className="flex flex-col">
+              {Object.entries(error).map(([fieldName, fieldErrors]) =>
+                fieldErrors.map((error, index) => (
+                  <Text
+                    key={`${fieldName}_${index}`}
+                    className="mt-2 ml-4 text-sm text-red-500"
+                  >
+                    {error}
+                  </Text>
+                ))
+              )}
+            </View>
           )}
-          {status && (
-            <Text className="mb-3 text-base font-semibold text-green-500">
-              {status}
-            </Text>
-          )}
+
+          <Text className="text-lg font-medium text-gray-900">
+            Update Password
+          </Text>
+
+          <Text className="mt-1 text-sm text-gray-600">
+            Ensure your account is using a long, random password to stay secure.
+          </Text>
           <View className="space-y-2 form">
-            <Text className="ml-4 text-gray-700">Email Address</Text>
+            <Text className="mt-8 ml-4 text-gray-700">Current Password</Text>
             <TextInput
               className="p-4 mb-3 text-gray-700 bg-gray-100 rounded-2xl"
-              onChangeText={setEmail}
-              value={email}
-              placeholder="Email"
+              onChangeText={setCurrentPassword}
+              value={currentPassword}
+              placeholder="Password"
               placeholderTextColor="gray"
-              textContentType="emailAddress"
-              keyboardType="email-address"
               autoCapitalize="none"
+              secureTextEntry={true}
             />
+
             <Text className="ml-4 text-gray-700">Password</Text>
             <TextInput
               className="p-4 text-gray-700 bg-gray-100 rounded-2xl"
@@ -97,12 +125,13 @@ const UpdatePasswordScreen = () => {
               autoCapitalize="none"
               secureTextEntry={true}
             />
+
             <View className="mt-3">
               <Text className="mt-4 ml-4 text-gray-700">
                 Password Confirmation
               </Text>
               <TextInput
-                className="p-4 mb-8 text-gray-700 bg-gray-100 rounded-2xl"
+                className="p-4 mt-3 mb-8 text-gray-700 bg-gray-100 rounded-2xl"
                 onChangeText={setPasswordConfirmation}
                 value={passwordConfirmation}
                 placeholder="Password"
@@ -113,7 +142,7 @@ const UpdatePasswordScreen = () => {
             </View>
 
             <TouchableOpacity
-              onPress={() => handleResetPassword()}
+              onPress={() => handlePasswordUpdate()}
               className="flex flex-row justify-center py-3 bg-yellow-400 rounded-xl"
             >
               {isLoading && (
@@ -124,7 +153,7 @@ const UpdatePasswordScreen = () => {
                 />
               )}
               <Text className="text-xl font-bold text-center text-gray-700">
-                Reset Password
+                Update Password
               </Text>
             </TouchableOpacity>
           </View>

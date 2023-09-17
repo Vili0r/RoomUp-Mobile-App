@@ -10,3 +10,5 @@ export { default as Map } from "./Map";
 export { default as FavouriteProperties } from "./FavouriteProperties";
 export { default as ModalHeader } from "./ModalHeader";
 export { default as CustomInput } from "./CustomInput";
+export { default as UpdateProfileInformation } from "./UpdateProfileInformation";
+export { default as DeleteUser } from "./DeleteUser";

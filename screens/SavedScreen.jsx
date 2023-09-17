@@ -10,7 +10,7 @@ import {
 import React, { useContext } from "react";
 import LottieView from "lottie-react-native";
 import { AuthContext } from "../context/AuthProvider";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axiosConfig from "../helpers/axiosConfig";
 import { FavouriteProperties } from "../components";
 import { useNavigation } from "@react-navigation/native";
@@ -18,22 +18,20 @@ import { useNavigation } from "@react-navigation/native";
 const SavedScreen = () => {
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
-
-  //Use useQuery to fetch user data with the token
-  const {
-    isLoading,
-    error,
-    data: properties,
-  } = useQuery("favourites", async () => {
+  const fetchFavouriteProperties = async () => {
     const response = await axiosConfig.get(`/users/${user.id}/favourites`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     });
-
-    // Access the data from response.data
     return response.data.data;
-  });
+  };
+
+  //Use useQuery to fetch user data with the token
+  const { isLoading, error, data, refetch } = useQuery(
+    ["savedProperties"],
+    fetchFavouriteProperties
+  );
 
   return (
     <SafeAreaView
@@ -45,7 +43,7 @@ const SavedScreen = () => {
         {user ? (
           <>
             <View className="items-center justify-center">
-              {!properties ? (
+              {!data || data.length === 0 ? (
                 <>
                   <LottieView
                     autoPlay
@@ -73,10 +71,7 @@ const SavedScreen = () => {
                   </View>
                 </>
               ) : (
-                <FavouriteProperties
-                  properties={properties}
-                  isLoading={isLoading}
-                />
+                <FavouriteProperties properties={data} isLoading={isLoading} />
               )}
             </View>
           </>

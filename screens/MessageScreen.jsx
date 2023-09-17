@@ -7,40 +7,21 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import LottieView from "lottie-react-native";
 import { AuthContext } from "../context/AuthProvider";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import axiosConfig from "../helpers/axiosConfig";
 import { FavouriteProperties } from "../components";
 import { useNavigation } from "@react-navigation/native";
 
-const fetchFavouriteProperties = async (userId, token) => {
-  const response = await axiosConfig.get(`/users/${userId}/favourites`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data.data;
-};
-
 const MessageScreen = () => {
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
+  const [properties, setProperties] = useState(null);
 
   //Use useQuery to fetch user data with the token
-  const {
-    data: properties,
-    isLoading,
-    isError,
-    error,
-  } = useQuery(
-    ["properties", user?.id, user?.token], // Specify a unique query key
-    () => fetchFavouriteProperties(user?.id, user?.token), // Pass the function that fetches user data
-    {
-      enabled: !!user, // Only execute the query if userId and token are available
-    }
-  );
+
   return (
     <SafeAreaView
       style={styles.container}
