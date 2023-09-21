@@ -19,7 +19,7 @@ const SavedScreen = () => {
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
   const fetchFavouriteProperties = async () => {
-    const response = await axiosConfig.get(`/users/${user.id}/favourites`, {
+    const response = await axiosConfig.get(`/favourites`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },

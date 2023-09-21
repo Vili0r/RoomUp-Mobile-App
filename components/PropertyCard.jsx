@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import {
   View,
   Text,
@@ -15,8 +15,11 @@ import moment from "moment";
 const LISTMARGIN = 10;
 const WIDTH = Dimensions.get("screen").width - LISTMARGIN * 2;
 import { useNavigation } from "@react-navigation/native";
+import axiosConfig from "../helpers/axiosConfig";
+import { AuthContext } from "../context/AuthProvider";
 
-const PropertyCard = ({ item: property }) => {
+const PropertyCard = ({ item: property, toggleFavourite }) => {
+  const { user } = useContext(AuthContext);
   const navigation = useNavigation();
   const flatListRef = useRef(null);
   const viewConfig = { viewAreaCoveragePercentThreshold: 95 };
@@ -29,9 +32,23 @@ const PropertyCard = ({ item: property }) => {
   const imageUrl =
     property.images[0] && `http://127.0.0.1:8000/storage/${property.images[0]}`;
 
-  const addToWishlist = (e, id, model) => {
-    e.preventDefault();
-    console.log(id, model);
+  const handleToggleFavorite = async (id, model) => {
+    if (!user) {
+      navigation.navigate("Login Screen");
+      return;
+    }
+    await axiosConfig
+      .post(`/favourite/${model}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((response) => {
+        toggleFavourite(id);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handlePressLeft = () => {
@@ -110,7 +127,9 @@ const PropertyCard = ({ item: property }) => {
 
             <View className="absolute top-3 right-3">
               <Pressable
-                onPress={(e) => addToWishlist(e, property.id, property.model)}
+                onPress={() =>
+                  handleToggleFavorite(property.id, property.model)
+                }
                 className="relative transition hover:opacity-80"
               >
                 <FontAwesome size={28} name="heart-o" color="white" />

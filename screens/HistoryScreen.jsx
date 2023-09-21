@@ -19,7 +19,7 @@ const HistoryScreen = () => {
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
   const fetchViewedProperties = async () => {
-    const response = await axiosConfig.get(`/users/${user.id}/viewed`, {
+    const response = await axiosConfig.get(`/viewed`, {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },

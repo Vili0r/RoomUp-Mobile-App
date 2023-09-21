@@ -7,20 +7,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import LottieView from "lottie-react-native";
 import { AuthContext } from "../context/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import axiosConfig from "../helpers/axiosConfig";
 import { FavouriteProperties } from "../components";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 const MessageScreen = () => {
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
   const [properties, setProperties] = useState(null);
-
-  //Use useQuery to fetch user data with the token
 
   return (
     <SafeAreaView

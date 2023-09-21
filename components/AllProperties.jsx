@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -14,8 +14,10 @@ import Feather from "@expo/vector-icons/Feather";
 import axiosConfig from "../helpers/axiosConfig";
 import axios from "axios";
 import MapView from "react-native-maps";
+import { AuthContext } from "../context/AuthProvider";
 
 const AllProperties = () => {
+  const { user } = useContext(AuthContext);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -24,11 +26,23 @@ const AllProperties = () => {
   const [search, setSearch] = useState("");
   const [mapShow, setMapShow] = useState(false);
 
+  const setAuthToken = () => {
+    if (user && user.token) {
+      axiosConfig.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${user.token}`;
+    } else {
+      delete axiosConfig.defaults.headers.common["Authorization"];
+    }
+  };
+
   useEffect(() => {
     getProperties();
-  }, []);
+  }, [user?.token]);
 
   const getProperties = () => {
+    setAuthToken();
+
     axiosConfig
       .get("/home-search")
       .then((response) => {
@@ -46,8 +60,16 @@ const AllProperties = () => {
 
   const getNextPageProperties = () => {
     if (nextPage) {
+      const authConfig = {};
+
+      if (user && user.token) {
+        authConfig.headers = {
+          Authorization: `Bearer ${user.token}`,
+        };
+      }
+
       axios
-        .get(nextPage)
+        .get(nextPage, authConfig)
         .then((response) => {
           setData((prevData) => [...prevData, ...response.data.data]);
 
@@ -76,6 +98,8 @@ const AllProperties = () => {
   };
 
   const handleSearch = async (text) => {
+    setAuthToken();
+
     await axiosConfig
       .get(`home-search/?search=${encodeURIComponent(text)}`)
       .then((response) => {
@@ -93,6 +117,17 @@ const AllProperties = () => {
     { label: "flatmate", onPress: () => console.log("flatmate") },
     { lasticon: "menu", onPress: () => setMapShow(!mapShow) },
   ];
+
+  const toggleFavourite = (propertyId) => {
+    // Update the favorite status in the main component's state
+    setData((prevData) =>
+      prevData.map((property) =>
+        property.id === propertyId
+          ? { ...property, favouritedBy: !property.favouritedBy }
+          : property
+      )
+    );
+  };
 
   return (
     <>
@@ -171,7 +206,9 @@ const AllProperties = () => {
           ) : (
             <FlatList
               data={data}
-              renderItem={(props) => <PropertyCard {...props} />}
+              renderItem={(props) => (
+                <PropertyCard {...props} toggleFavourite={toggleFavourite} />
+              )}
               keyExtractor={(item, index) => index.toString()}
               refreshing={isRefreshing}
               onRefresh={handleRefresh}

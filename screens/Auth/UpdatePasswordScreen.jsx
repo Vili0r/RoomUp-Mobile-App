@@ -27,7 +27,7 @@ const UpdatePasswordScreen = ({ navigation }) => {
     try {
       await axiosConfig
         .put(
-          `/users/${user.id}/password`,
+          `/password`,
           {
             current_password: currentPassword,
             password,

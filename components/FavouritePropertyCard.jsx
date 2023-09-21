@@ -114,7 +114,7 @@ const PropertyCard = ({ item: property }) => {
 
             <View className="absolute top-3 right-3">
               <Pressable
-                onPress={(e) => addToWishlist(e, property.id, property.model)}
+                onPress={(e) => addToWishlist(property.id, property.model)}
                 className="relative transition hover:opacity-80"
               >
                 <FontAwesome size={28} name="heart-o" color="white" />

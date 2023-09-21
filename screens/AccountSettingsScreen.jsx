@@ -6,14 +6,11 @@ import axiosConfig from "../helpers/axiosConfig";
 
 const AccountSettingsScreen = ({ route }) => {
   const fetchPersonalInformation = async () => {
-    const response = await axiosConfig.get(
-      `/users/${route.params.id}/profile`,
-      {
-        headers: {
-          Authorization: `Bearer ${route.params.token}`,
-        },
-      }
-    );
+    const response = await axiosConfig.get(`/profile`, {
+      headers: {
+        Authorization: `Bearer ${route.params.token}`,
+      },
+    });
     // Access the data from response.data using object destructuring
     return response.data;
   };

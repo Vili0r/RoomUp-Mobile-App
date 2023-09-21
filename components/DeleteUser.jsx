@@ -22,7 +22,7 @@ const DeleteUser = () => {
     setIsLoading(true);
     await axiosConfig
       .delete(
-        `/users/${user.id}/profile`,
+        `/profile`,
         {
           password,
         },

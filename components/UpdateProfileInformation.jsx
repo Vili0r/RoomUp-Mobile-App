@@ -25,7 +25,7 @@ const UpdateProfileInformation = ({ user, mustVerifyEmail, status, token }) => {
     setIsLoading(true);
     await axiosConfig
       .put(
-        `/users/${user.id}/profile`,
+        `/profile`,
         {
           email,
           first_name: firstName,
