@@ -19,6 +19,7 @@ import RegisterScreen from "../screens/Auth/RegisterScreen";
 import ForgotPasswordScreen from "../screens/Auth/ForgotPasswordScreen";
 import UpdatePasswordScreen from "../screens/Auth/UpdatePasswordScreen";
 import AccountSettingsScreen from "../screens/AccountSettingsScreen";
+import AdvancedFilterScreen from "../screens/AdvancedFilterScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -89,6 +90,11 @@ const RootNavigator = () => {
         <Stack.Screen
           name="Property Details Screen"
           component={PropertyDetailsScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="Advanced Filter Screen"
+          component={AdvancedFilterScreen}
           options={{ headerShown: true }}
         />
       </Stack.Group>

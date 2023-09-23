@@ -1,8 +1,9 @@
-import React, { useLayoutEffect } from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import React, { useLayoutEffect, useContext, useState, useMemo } from "react";
+import { View, Text, Image, TouchableOpacity, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import moment from "moment";
 import ParallaxScrollView from "./ParallaxScrollView";
 import AdvertisedBy from "./AdvertisedBy";
@@ -85,6 +86,7 @@ const SinglePropertyDetails = ({ property, imageIndex }) => {
                 : `${property.sub_title} in a ${property.owner.title}`
               : property.title}
           </Text>
+
           <View className="flex items-start mt-2 space-y-1">
             <Text className="text-base font-semibold">
               £{property.owner ? property.room_cost : property.cost}

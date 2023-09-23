@@ -160,12 +160,16 @@ const PropertyCard = ({ item: property, toggleFavourite }) => {
           >
             <View>
               <Text className="text-sm font-bold text-gray-800">
-                {property.owner
-                  ? property.owner.address.address_1
+                {property.budget
+                  ? property.area
+                  : property.owner
+                  ? property.owner.address?.address_1
                   : property.address.address_1}
                 ,
-                {property.owner
-                  ? property.owner.address.area
+                {property.budget
+                  ? property.city
+                  : property.owner
+                  ? property.owner.address?.area
                   : property.address.area}
               </Text>
               <Text className="text-sm text-gray-800">
@@ -185,10 +189,23 @@ const PropertyCard = ({ item: property, toggleFavourite }) => {
                   ).format("MMM DD, YYYY")}
                 </Text>
               </Text>
+              {property.searching_for && (
+                <Text className="text-sm text-gray-800">
+                  Searching for{" "}
+                  <Text className="font-semibold">
+                    {property.searching_for}
+                  </Text>
+                </Text>
+              )}
               <Text className="mt-2 text-sm text-gray-800">
                 {" "}
                 <Text>
-                  ${property.owner ? property.room_cost : property.cost}
+                  $
+                  {property.budget
+                    ? property.budget
+                    : property.owner
+                    ? property.room_cost
+                    : property.cost}
                 </Text>{" "}
                 /month
               </Text>

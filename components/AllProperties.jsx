@@ -15,8 +15,10 @@ import axiosConfig from "../helpers/axiosConfig";
 import axios from "axios";
 import MapView from "react-native-maps";
 import { AuthContext } from "../context/AuthProvider";
+import { useNavigation } from "@react-navigation/native";
 
 const AllProperties = () => {
+  const navigation = useNavigation();
   const { user } = useContext(AuthContext);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,6 +27,7 @@ const AllProperties = () => {
   const [nextPage, setNextPage] = useState("");
   const [search, setSearch] = useState("");
   const [mapShow, setMapShow] = useState(false);
+  const [selectedFilters, setSelectedFilters] = useState(null);
 
   const setAuthToken = () => {
     if (user && user.token) {
@@ -50,6 +53,7 @@ const AllProperties = () => {
         setIsLoading(false);
         setIsRefreshing(false);
         setNextPage(response.data.next_page_url);
+        setSelectedFilters(null);
       })
       .catch((err) => {
         console.log(err);
@@ -73,12 +77,19 @@ const AllProperties = () => {
         .then((response) => {
           setData((prevData) => [...prevData, ...response.data.data]);
 
-          if (!response.data.next_page_url) {
+          if (
+            !response.data.next_page_url ||
+            !response.data.pagination.links.next
+          ) {
             setIsAtEndOfScrolling(true);
           }
           setIsLoading(false);
           setIsRefreshing(false);
-          setNextPage(response.data.next_page_url);
+          if (response.data.pagination) {
+            setNextPage(response.data.pagination.links.next);
+          } else {
+            setNextPage(response.data.next_page_url);
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -90,6 +101,7 @@ const AllProperties = () => {
 
   const handleRefresh = () => {
     setIsRefreshing(true);
+    setSelectedFilters(null);
     getProperties();
   };
 
@@ -107,14 +119,40 @@ const AllProperties = () => {
         setNextPage(response.data.next_page_url);
         setIsRefreshing(false);
         setIsLoading(false);
+        setSelectedFilters(null);
       });
   };
 
   const filterButtons = [
-    { iconName: "sliders", onPress: () => console.log("filter") },
-    { label: "room", onPress: () => console.log("room") },
-    { label: "property", onPress: () => console.log("property") },
-    { label: "flatmate", onPress: () => console.log("flatmate") },
+    {
+      iconName: "sliders",
+      onPress: () => navigation.navigate("Advanced Filter Screen"),
+    },
+    {
+      filterId: "shareds",
+      label: "room",
+      onPress: () => getFilteredProperties("shareds"),
+    },
+    {
+      filterId: "1",
+      label: "apartment",
+      onPress: () => getFilteredProperties(1),
+    },
+    {
+      filterId: "2",
+      label: "full house",
+      onPress: () => getFilteredProperties(2),
+    },
+    {
+      filterId: "3",
+      label: "property",
+      onPress: () => getFilteredProperties(3),
+    },
+    {
+      filterId: "roommate",
+      label: "flatmate",
+      onPress: () => getFilteredProperties("roommate"),
+    },
     { lasticon: "menu", onPress: () => setMapShow(!mapShow) },
   ];
 
@@ -127,6 +165,57 @@ const AllProperties = () => {
           : property
       )
     );
+  };
+
+  const getFilteredProperties = (propertyType) => {
+    setAuthToken();
+
+    if (propertyType === 1 || propertyType === 2 || propertyType === 3) {
+      axiosConfig
+        .get(`/header-filter?filter[type]=${propertyType}`)
+        .then((response) => {
+          setData(response.data.data);
+          setIsLoading(false);
+          setIsRefreshing(false);
+          setNextPage(response.data.pagination.links.next);
+          setSelectedFilters(response.data.selectedPropertyQueries);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false);
+          setIsRefreshing(false);
+        });
+    } else if (propertyType === "shareds") {
+      axiosConfig
+        .get(`/header-filter?search_type=${propertyType}`)
+        .then((response) => {
+          setData(response.data.data);
+          setIsLoading(false);
+          setIsRefreshing(false);
+          setNextPage(response.data.pagination.links.next);
+          setSelectedFilters(response.data.selectedPropertyQueries);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false);
+          setIsRefreshing(false);
+        });
+    } else if (propertyType === "roommate") {
+      axiosConfig
+        .get(`/header-filter?search_type=${propertyType}`)
+        .then((response) => {
+          setData(response.data.data);
+          setIsLoading(false);
+          setIsRefreshing(false);
+          setNextPage(response.data.pagination.links.next);
+          setSelectedFilters(response.data.selectedPropertyQueries);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false);
+          setIsRefreshing(false);
+        });
+    }
   };
 
   return (
@@ -166,10 +255,22 @@ const AllProperties = () => {
             if (item.label) {
               return (
                 <Pressable
-                  className="items-center py-2 w-[80px] h-[40px] mx-3 border-2 border-yellow-400 rounded-full"
+                  className={`${
+                    selectedFilters?.filter?.type === item.filterId ||
+                    selectedFilters?.search_type === item.filterId
+                      ? "bg-black w-[95px]"
+                      : "border-2 border-yellow-400 w-[85px]"
+                  } items-center py-2 h-[40px] mx-3 rounded-full`}
                   onPress={item.onPress}
                 >
-                  <Text className="text-sm font-normal capitalize">
+                  <Text
+                    className={`${
+                      selectedFilters?.filter?.type === item.filterId ||
+                      selectedFilters?.search_type === item.filterId
+                        ? "text-white text-base font-semibold"
+                        : "text-sm font-normal"
+                    }  capitalize`}
+                  >
                     {item.label}
                   </Text>
                 </Pressable>
