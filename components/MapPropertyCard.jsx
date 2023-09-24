@@ -18,7 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import axiosConfig from "../helpers/axiosConfig";
 import { AuthContext } from "../context/AuthProvider";
 
-const PropertyCard = ({ item: property, toggleFavourite, style }) => {
+const MapPropertyCard = ({ property, toggleFavourite }) => {
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
   const flatListRef = useRef(null);
@@ -76,8 +76,8 @@ const PropertyCard = ({ item: property, toggleFavourite, style }) => {
   };
 
   return (
-    <View className="flex flex-row mb-8 group" style={[style]}>
-      <View className="flex flex-col w-full gap-2">
+    <View className="absolute mx-[10px] bg-white bottom-3 rounded-xl">
+      <View className="w-full gap-2">
         <TouchableOpacity
           onPress={() =>
             navigation.navigate("Property Details Screen", {
@@ -87,7 +87,7 @@ const PropertyCard = ({ item: property, toggleFavourite, style }) => {
             })
           }
         >
-          <View className="relative w-full overflow-hidden aspect-square rounded-xl">
+          <View className="relative -mr-2 overflow-hidden rounded-t-xl">
             <FlatList
               ref={(ref) => (flatListRef.current = ref)}
               keyExtractor={(item, index) => index.toString()}
@@ -99,7 +99,7 @@ const PropertyCard = ({ item: property, toggleFavourite, style }) => {
                   style={{
                     width: WIDTH,
                   }}
-                  className="h-full aspect-3/2"
+                  className="h-[200px] aspect-3/2"
                   source={
                     imageUrl
                       ? { uri: `http://127.0.0.1:8000/storage/${item}` }
@@ -113,13 +113,13 @@ const PropertyCard = ({ item: property, toggleFavourite, style }) => {
               snapToAlignment="center"
             />
             <Pressable
-              style={{ position: "absolute", top: 185, left: 5 }}
+              style={{ position: "absolute", top: 85, left: 5 }}
               onPress={handlePressLeft}
             >
               <Ionicons size={36} name="chevron-back" color="white" />
             </Pressable>
             <Pressable
-              style={{ position: "absolute", top: 185, right: 5 }}
+              style={{ position: "absolute", top: 85, right: 5 }}
               onPress={handlePressRight}
             >
               <Ionicons size={36} name="chevron-forward" color="white" />
@@ -148,7 +148,7 @@ const PropertyCard = ({ item: property, toggleFavourite, style }) => {
             </View>
           </View>
         </TouchableOpacity>
-        <View className="flex flex-row items-start justify-between mt-4">
+        <View className="flex flex-row items-start justify-between px-2 pb-2">
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("Property Details Screen", {
@@ -158,7 +158,7 @@ const PropertyCard = ({ item: property, toggleFavourite, style }) => {
               })
             }
           >
-            <View>
+            <View className="">
               <Text className="text-sm font-bold text-gray-800">
                 {property.budget
                   ? property.area
@@ -227,4 +227,4 @@ const PropertyCard = ({ item: property, toggleFavourite, style }) => {
   );
 };
 
-export default PropertyCard;
+export default MapPropertyCard;

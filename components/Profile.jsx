@@ -24,7 +24,10 @@ const Profile = () => {
     {
       id: 1,
       label: "Add a Property",
-      onPress: () => console.log("add a property"),
+      onPress: () =>
+        navigation.navigate("Add Property Screen", {
+          token: user.token,
+        }),
       icon: (
         <MaterialCommunityIcons
           name="home-plus-outline"
@@ -36,7 +39,10 @@ const Profile = () => {
     {
       id: 2,
       label: "View My Properties",
-      onPress: () => console.log("view my properties"),
+      onPress: () =>
+        navigation.navigate("My Properties Screen", {
+          token: user.token,
+        }),
       icon: (
         <MaterialCommunityIcons
           name="home-search-outline"

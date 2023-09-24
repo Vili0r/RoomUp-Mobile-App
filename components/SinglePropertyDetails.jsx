@@ -10,7 +10,7 @@ import AdvertisedBy from "./AdvertisedBy";
 import SinglePropertyFooter from "./SinglePropertyFooter";
 import PropertyDetailsAmenities from "./PropertyDetailsAmenities";
 import { useNavigation } from "@react-navigation/native";
-import MapView from "react-native-maps";
+import PropertyLocation from "./PropertyLocation";
 
 const SinglePropertyDetails = ({ property, imageIndex }) => {
   const navigation = useNavigation();
@@ -65,7 +65,7 @@ const SinglePropertyDetails = ({ property, imageIndex }) => {
         renderStickyHeader={() => (
           <View
             key="sticky-header"
-            className="bg-white ml-[100px] mt-1"
+            className="bg-white ml-[85px] mt-1"
             style={{
               justifyContent: "flex-end",
             }}
@@ -148,11 +148,11 @@ const SinglePropertyDetails = ({ property, imageIndex }) => {
             )}
           </View>
 
-          <View className="flex border-0 border-t-2 mt-7 border-t-gray-200">
-            <Text className="mt-5 text-xl font-bold text-gray-700">
-              Where will you live
-            </Text>
-          </View>
+          {property.owner ? (
+            <PropertyLocation address={property.owner.address} />
+          ) : (
+            <PropertyLocation address={property.address} />
+          )}
 
           <View className="flex border-0 border-t-2 mt-7 border-t-gray-200">
             <Text className="mt-5 text-xl font-bold text-gray-700">

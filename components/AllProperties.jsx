@@ -10,10 +10,10 @@ import {
   Button,
 } from "react-native";
 import PropertyCard from "./PropertyCard";
+import Map from "./Map";
 import Feather from "@expo/vector-icons/Feather";
 import axiosConfig from "../helpers/axiosConfig";
 import axios from "axios";
-import MapView from "react-native-maps";
 import { AuthContext } from "../context/AuthProvider";
 import { useNavigation } from "@react-navigation/native";
 
@@ -79,14 +79,14 @@ const AllProperties = () => {
 
           if (
             !response.data.next_page_url ||
-            !response.data.pagination.links.next
+            !response.data?.pagination?.links.next
           ) {
             setIsAtEndOfScrolling(true);
           }
           setIsLoading(false);
           setIsRefreshing(false);
-          if (response.data.pagination) {
-            setNextPage(response.data.pagination.links.next);
+          if (response.data?.pagination) {
+            setNextPage(response.data?.pagination?.links.next);
           } else {
             setNextPage(response.data.next_page_url);
           }
@@ -297,11 +297,9 @@ const AllProperties = () => {
       </View>
 
       {mapShow ? (
-        <View className="flex-1 mt-4 overflow-hidden">
-          <MapView style={{ height: "100%", width: "100%" }}></MapView>
-        </View>
+        <Map properties={data} />
       ) : (
-        <View className="p-4">
+        <View className="p-4 mb-14">
           {isLoading ? (
             <ActivityIndicator className="mt-2" size="large" color="gray" />
           ) : (

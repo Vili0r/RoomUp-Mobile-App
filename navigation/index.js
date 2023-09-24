@@ -20,6 +20,8 @@ import ForgotPasswordScreen from "../screens/Auth/ForgotPasswordScreen";
 import UpdatePasswordScreen from "../screens/Auth/UpdatePasswordScreen";
 import AccountSettingsScreen from "../screens/AccountSettingsScreen";
 import AdvancedFilterScreen from "../screens/AdvancedFilterScreen";
+import MyPropertiesScreen from "../screens/MyPropertiesScreen";
+import AddPropertyScreen from "../screens/AddPropertyScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -102,6 +104,16 @@ const RootNavigator = () => {
         name="Account Settings Screen"
         component={AccountSettingsScreen}
         options={{ headerShown: true, title: "Change Personal Information" }}
+      />
+      <Stack.Screen
+        name="My Properties Screen"
+        component={MyPropertiesScreen}
+        options={{ headerShown: true, title: "My Property Listings" }}
+      />
+      <Stack.Screen
+        name="Add Property Screen"
+        component={AddPropertyScreen}
+        options={{ headerShown: true, title: "Add a Listing" }}
       />
     </Stack.Navigator>
   );
