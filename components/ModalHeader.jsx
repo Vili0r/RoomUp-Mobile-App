@@ -2,12 +2,15 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const ModalHeader = ({ xShown, text, onPress }) => {
+const ModalHeader = ({ xShown, text, onPress, style }) => {
   const navigation = useNavigation();
 
   if (text) {
     return (
-      <View className="flex-row items-center justify-center p-4 border-b-2 border-b-[#7d72f2]">
+      <View
+        className="flex-row items-center justify-center p-4 border-b-[1px]"
+        style={[style]}
+      >
         {xShown ? (
           <MaterialCommunityIcons
             onPress={onPress ? onPress : navigation.goBack}

@@ -15,6 +15,7 @@ import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -87,10 +88,16 @@ const Profile = () => {
       onPress: () => navigation.navigate("Root", { screen: "Saved" }),
       icon: <MaterialCommunityIcons name="home-heart" size={28} color="gray" />,
     },
+    {
+      id: 7,
+      label: "Messages",
+      onPress: () => navigation.navigate("Incoming Messages Screen"),
+      icon: <AntDesign name="message1" size={28} color="gray" />,
+    },
   ];
   const accountButtons = [
     {
-      id: 7,
+      id: 8,
       label: "Account Settings",
       onPress: () =>
         navigation.navigate("Account Settings Screen", {
@@ -100,7 +107,7 @@ const Profile = () => {
       icon: <Ionicons name="settings-outline" size={28} color="gray" />,
     },
     {
-      id: 8,
+      id: 9,
       label: "Update Password",
       onPress: () => navigation.navigate("Update Password Screen"),
       icon: <MaterialCommunityIcons name="lock-reset" size={28} color="gray" />,

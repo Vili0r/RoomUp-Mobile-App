@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import SearchScreen from "../screens/SearchScreen";
 import AccountScreen from "../screens/AccountScreen";
 import SavedScreen from "../screens/SavedScreen";
@@ -22,6 +23,8 @@ import AccountSettingsScreen from "../screens/AccountSettingsScreen";
 import AdvancedFilterScreen from "../screens/AdvancedFilterScreen";
 import MyPropertiesScreen from "../screens/MyPropertiesScreen";
 import AddPropertyScreen from "../screens/AddPropertyScreen";
+import MessageAdvertiserScreen from "../screens/MessageAdvertiserScreen";
+import IncomingMessagesScreen from "../screens/IncomingMessagesScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -99,6 +102,16 @@ const RootNavigator = () => {
           component={AdvancedFilterScreen}
           options={{ headerShown: true }}
         />
+        <Stack.Screen
+          name="Message Advertiser Screen"
+          component={MessageAdvertiserScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Incoming Messages Screen"
+          component={IncomingMessagesScreen}
+          options={{ headerShown: false }}
+        />
       </Stack.Group>
       <Stack.Screen
         name="Account Settings Screen"
@@ -162,9 +175,9 @@ const BottomTabNavigator = () => {
         component={MessageScreen}
         options={{
           headerShown: false,
-          tabBarLabel: "Message",
+          tabBarLabel: "Inbox",
           tabBarIcon: ({ color, size }) => (
-            <AntDesign name="message1" size={size} color={color} />
+            <Feather name="message-square" size={size} color={color} />
           ),
         }}
       />

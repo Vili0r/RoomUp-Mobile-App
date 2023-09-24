@@ -59,7 +59,11 @@ const LoginScreen = ({ navigation }) => {
       showsVerticalScrollIndicator={false}
     >
       <View className="flex-1 bg-white" style={{ backgroundColor: "#877dfa" }}>
-        <ModalHeader text="Login to RoomUp" xShown />
+        <ModalHeader
+          text="Login to RoomUp"
+          xShown
+          style={{ borderBottom: "1px solid #7d72f2" }}
+        />
 
         <View className="flex-row justify-center">
           <Image

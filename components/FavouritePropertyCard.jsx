@@ -59,7 +59,10 @@ const PropertyCard = ({ item: property }) => {
   };
 
   const handleClick = () => {
-    navigation.navigate("Message Screen");
+    navigation.navigate("Message Advertiser Screen", {
+      id: property.id,
+      type: property.model,
+    });
   };
 
   const gotoPropertyDetails = () => {

@@ -1,14 +1,10 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { callPhoneNumber } from "../helpers/callPhoneNumber";
 
-const AdvertisedBy = ({ id, model, advertiser, occupation }) => {
-  // const { data, get } = useForm({
-  //     id: id,
-  //     type: model,
-  // });
-
+const AdvertisedBy = ({ advertiser, occupation }) => {
   return (
     <View className="flex border-0 border-t-2 mt-7 border-t-gray-200">
       <Text className="mt-5 text-xl font-bold text-gray-700 font-popp">
@@ -27,10 +23,15 @@ const AdvertisedBy = ({ id, model, advertiser, occupation }) => {
             {advertiser.first_name}
           </Text>
           <Text className="text-sm text-gray-500 font-popp">{occupation}</Text>
-          <Text className="text-sm text-gray-500 font-popp">
-            Tel:{" "}
-            {advertiser.display_telephone ? advertiser.telephone : "Message Me"}
-          </Text>
+          {advertiser.display_telephone && (
+            <TouchableOpacity
+              onPress={() => callPhoneNumber(advertiser.telephone)}
+            >
+              <Text className="text-sm text-gray-500 font-popp">
+                Tel: {advertiser.telephone}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
 

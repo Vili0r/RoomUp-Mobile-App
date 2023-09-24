@@ -14,7 +14,6 @@ import { useQuery } from "@tanstack/react-query";
 import axiosConfig from "../helpers/axiosConfig";
 import { FavouriteProperties } from "../components";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
 
 const MessageScreen = () => {
   const { user } = useContext(AuthContext);

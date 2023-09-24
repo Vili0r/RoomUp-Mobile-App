@@ -244,7 +244,11 @@ const RegisterScreen = ({ navigation }) => {
       showsVerticalScrollIndicator={false}
     >
       <View className="flex-1 bg-white" style={{ backgroundColor: "#877dfa" }}>
-        <ModalHeader text="Register to RoomUp" xShown />
+        <ModalHeader
+          text="Register to RoomUp"
+          xShown
+          style={{ borderBottom: "1px solid #7d72f2" }}
+        />
 
         <View
           style={{ borderTopLeftRadius: 50, borderTopRightRadius: 50 }}

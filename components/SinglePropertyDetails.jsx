@@ -148,11 +148,11 @@ const SinglePropertyDetails = ({ property, imageIndex }) => {
             )}
           </View>
 
-          {property.owner ? (
+          {/* {property.owner ? (
             <PropertyLocation address={property.owner.address} />
           ) : (
             <PropertyLocation address={property.address} />
-          )}
+          )} */}
 
           <View className="flex border-0 border-t-2 mt-7 border-t-gray-200">
             <Text className="mt-5 text-xl font-bold text-gray-700">
@@ -223,23 +223,27 @@ const SinglePropertyDetails = ({ property, imageIndex }) => {
             <AdvertisedBy
               advertiser={property.owner.advertiser}
               occupation={property.owner.what_i_am}
-              id={property.id}
-              model={property.model}
             />
           ) : (
             <AdvertisedBy
               advertiser={property.advertiser}
               occupation={property.what_i_am}
-              id={property.id}
-              model={property.model}
             />
           )}
         </View>
       </ParallaxScrollView>
       {property.owner ? (
-        <SinglePropertyFooter name={property.owner.advertiser.first_name} />
+        <SinglePropertyFooter
+          id={property.id}
+          type={property.model}
+          name={property.owner.advertiser.first_name}
+        />
       ) : (
-        <SinglePropertyFooter name={property.advertiser.first_name} />
+        <SinglePropertyFooter
+          id={property.id}
+          type={property.model}
+          name={property.advertiser.first_name}
+        />
       )}
     </>
   );

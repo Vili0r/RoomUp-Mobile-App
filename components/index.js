@@ -14,3 +14,5 @@ export { default as CustomInput } from "./CustomInput";
 export { default as UpdateProfileInformation } from "./UpdateProfileInformation";
 export { default as DeleteUser } from "./DeleteUser";
 export { default as MyProperties } from "./MyProperties";
+export { default as MessageForm } from "./MessageForm";
+export { default as MessageCard } from "./MessageCard";
