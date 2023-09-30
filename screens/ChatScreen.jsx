@@ -12,8 +12,29 @@ import axiosConfig from "../helpers/axiosConfig";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { ChatDetails } from "../components";
+import {
+  PUSHER_APP_KEY,
+  PUSHER_APP_CLUSTER,
+  PUSHER_HOST,
+  PUSHER_PORT,
+} from "@env";
 
-console.log(process.env.VITE_PUSHER_APP_KEY);
+import Echo from "laravel-echo";
+import socketio from "socket.io-client";
+
+const echo = new Echo({
+  broadcaster: "socket.io",
+  client: socketio,
+  key: PUSHER_APP_KEY,
+  cluster: PUSHER_APP_CLUSTER ?? "mt1",
+  wsHost: PUSHER_HOST,
+  wsPort: PUSHER_PORT,
+  wssPort: PUSHER_PORT,
+  forceTLS: false,
+  encrypted: true,
+  disableStats: true,
+  enabledTransports: ["ws", "wss"],
+});
 
 const ChatScreen = ({ route }) => {
   const { id, title } = route.params;
@@ -62,7 +83,7 @@ const ChatScreen = ({ route }) => {
 
   const handleSendMessage = async () => {
     if (singleConversation != null) {
-      LaravelEcho.leave(`conversation.${id}`);
+      echo.leave(`conversation.${id}`);
     }
     await axiosConfig
       .post(
@@ -90,13 +111,12 @@ const ChatScreen = ({ route }) => {
   };
   const add = () => {
     if (singleConversation != null) {
-      LaravelEcho.private(`conversation.${id}`).listen(
-        "ConversationReplyCreated",
-        (e) => {
+      echo
+        .private(`conversation.${id}`)
+        .listen("ConversationReplyCreated", (e) => {
           console.log(e);
           setReplies((prevReplies) => [e, ...prevReplies]);
-        }
-      );
+        });
     }
   };
 

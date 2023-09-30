@@ -66,7 +66,7 @@ const ChatDetails = ({ conversation, replies }) => {
                   : conversation.message?.initial}
               </Text>
             </View>
-            <View className="relative ml-3 text-sm bg-white shadow rounded-xl">
+            <View className="relative px-4 py-2 ml-3 text-sm bg-white shadow rounded-xl">
               <Text>{conversation.body}</Text>
             </View>
           </View>
