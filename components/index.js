@@ -16,3 +16,5 @@ export { default as DeleteUser } from "./DeleteUser";
 export { default as MyProperties } from "./MyProperties";
 export { default as MessageForm } from "./MessageForm";
 export { default as MessageCard } from "./MessageCard";
+export { default as ConversationCard } from "./ConversationCard";
+export { default as ChatDetails } from "./ChatDetails";

@@ -26,13 +26,7 @@ const IncomingMessagesScreen = () => {
   );
   return (
     <View className="flex-1 bg-white">
-      {Platform.OS === "ios" ? (
-        <ModalHeader
-          text="My Messages"
-          xShown
-          style={{ borderBottom: "2px solid #2a2a2c" }}
-        />
-      ) : null}
+      {Platform.OS === "ios" ? <ModalHeader text="My Messages" xShown /> : null}
       <View className="flex-1 bg-white">
         {!data ? (
           <View className="items-center justify-center">

@@ -247,7 +247,7 @@ const RegisterScreen = ({ navigation }) => {
         <ModalHeader
           text="Register to RoomUp"
           xShown
-          style={{ borderBottom: "1px solid #7d72f2" }}
+          component="login-register"
         />
 
         <View

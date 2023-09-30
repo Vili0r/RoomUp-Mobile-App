@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import axiosConfig from "../helpers/axiosConfig";
@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 const HistoryScreen = () => {
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
+  const [intervalMs, setIntervalMs] = useState(5000);
   const fetchViewedProperties = async () => {
     const response = await axiosConfig.get(`/viewed`, {
       headers: {
@@ -28,9 +29,12 @@ const HistoryScreen = () => {
   };
 
   //Use useQuery to fetch user data with the token
-  const { isLoading, data } = useQuery(
+  const { isLoading, data, refetch } = useQuery(
     ["viewedProperties"],
-    fetchViewedProperties
+    fetchViewedProperties,
+    {
+      refetchOnMount: true,
+    }
   );
 
   return (
@@ -71,7 +75,11 @@ const HistoryScreen = () => {
                   </View>
                 </>
               ) : (
-                <ViewedProperties properties={data} isLoading={isLoading} />
+                <ViewedProperties
+                  properties={data}
+                  isLoading={isLoading}
+                  refetch={refetch}
+                />
               )}
             </View>
           </>

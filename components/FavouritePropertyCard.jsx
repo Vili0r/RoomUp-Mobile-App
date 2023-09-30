@@ -74,7 +74,7 @@ const PropertyCard = ({ item: property }) => {
   };
 
   return (
-    <View className="flex flex-row mb-8 group">
+    <View className="flex flex-row group">
       <View className="flex flex-col w-full gap-2">
         <TouchableOpacity onPress={() => gotoPropertyDetails()}>
           <View className="relative w-full overflow-hidden aspect-square rounded-xl">

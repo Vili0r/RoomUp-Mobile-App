@@ -93,7 +93,7 @@ const MessageForm = ({ property }) => {
         <Text className="ml-4 text-gray-700">Full Name</Text>
         <TextInput
           className="p-4 mb-3 text-gray-700 bg-gray-100 rounded-2xl"
-          onChangeText={setEmail}
+          onChangeText={setFullName}
           value={fullName}
           placeholder="Full Name"
           placeholderTextColor="gray"

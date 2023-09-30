@@ -36,15 +36,15 @@ const AdvertisedBy = ({ advertiser, occupation }) => {
       </View>
 
       <View className="flex flex-row mt-2 space-x-1">
-        <View className="flex flex-row gap-2">
+        <Text className="flex flex-row gap-2">
           <Feather name="star" size={24} color="black" />
           <Text className="text-sm font-popp">744 reviews</Text>
-        </View>
-        <Text className="font-extrabold">.</Text>
-        <View className="flex flex-row gap-2">
+        </Text>
+        <Text>&middot;</Text>
+        <Text className="flex flex-row gap-2">
           <Ionicons name="shield-checkmark-outline" size={24} color="black" />
           <Text className="text-sm font-popp">Identity certified</Text>
-        </View>
+        </Text>
       </View>
     </View>
   );

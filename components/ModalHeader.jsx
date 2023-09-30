@@ -2,14 +2,17 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { View, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const ModalHeader = ({ xShown, text, onPress, style }) => {
+const ModalHeader = ({ xShown, text, onPress, component }) => {
   const navigation = useNavigation();
 
   if (text) {
     return (
       <View
-        className="flex-row items-center justify-center p-4 border-b-[1px]"
-        style={[style]}
+        className={`${
+          component === "login-register"
+            ? "border-b-[#6f63ed] border-b-2"
+            : "border-b-gray-800 border-b-[1px]"
+        } "flex-row items-center justify-center p-4`}
       >
         {xShown ? (
           <MaterialCommunityIcons

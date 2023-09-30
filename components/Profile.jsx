@@ -85,7 +85,7 @@ const Profile = () => {
     {
       id: 6,
       label: "Favourite Properties",
-      onPress: () => navigation.navigate("Root", { screen: "Saved" }),
+      onPress: () => navigation.navigate("Saved Screen"),
       icon: <MaterialCommunityIcons name="home-heart" size={28} color="gray" />,
     },
     {

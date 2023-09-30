@@ -30,7 +30,10 @@ const SavedScreen = () => {
   //Use useQuery to fetch user data with the token
   const { isLoading, error, data, refetch } = useQuery(
     ["savedProperties"],
-    fetchFavouriteProperties
+    fetchFavouriteProperties,
+    {
+      refetchOnMount: true,
+    }
   );
 
   return (
@@ -71,7 +74,11 @@ const SavedScreen = () => {
                   </View>
                 </>
               ) : (
-                <FavouriteProperties properties={data} isLoading={isLoading} />
+                <FavouriteProperties
+                  properties={data}
+                  isLoading={isLoading}
+                  refetch={refetch}
+                />
               )}
             </View>
           </>

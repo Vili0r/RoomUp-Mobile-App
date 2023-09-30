@@ -1,8 +1,19 @@
-import { View, FlatList, ActivityIndicator } from "react-native";
-import React from "react";
+import {
+  View,
+  FlatList,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
+import React, { useState } from "react";
 import FavouritePropertyCard from "./FavouritePropertyCard";
 
-const FavouriteProperties = ({ properties, isLoading }) => {
+const FavouriteProperties = ({ properties, isLoading, refetch }) => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    refetch(["savedProperties"]);
+    setIsRefreshing(false);
+  };
   return (
     <View className="flex-1 p-4" style={{ paddingTop: 20 }}>
       <View className="bg-white">
@@ -14,6 +25,12 @@ const FavouriteProperties = ({ properties, isLoading }) => {
             renderItem={(props) => <FavouritePropertyCard {...props} />}
             keyExtractor={(item, index) => index.toString()}
             showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={handleRefresh}
+              />
+            }
           />
         )}
       </View>

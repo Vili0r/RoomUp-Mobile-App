@@ -25,6 +25,7 @@ import MyPropertiesScreen from "../screens/MyPropertiesScreen";
 import AddPropertyScreen from "../screens/AddPropertyScreen";
 import MessageAdvertiserScreen from "../screens/MessageAdvertiserScreen";
 import IncomingMessagesScreen from "../screens/IncomingMessagesScreen";
+import ChatScreen from "../screens/ChatScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -128,6 +129,11 @@ const RootNavigator = () => {
         component={AddPropertyScreen}
         options={{ headerShown: true, title: "Add a Listing" }}
       />
+      <Stack.Screen
+        name="Chat Screen"
+        component={ChatScreen}
+        options={{ headerShown: true }}
+      />
     </Stack.Navigator>
   );
 };
@@ -146,6 +152,9 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="search1" size={size} color={color} />
           ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+          },
         }}
       />
       <Tab.Screen
@@ -157,6 +166,9 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome name="heart-o" size={size} color={color} />
           ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+          },
         }}
       />
       <Tab.Screen
@@ -168,6 +180,9 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ color, size }) => (
             <MaterialIcons name="history" size={size} color={color} />
           ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+          },
         }}
       />
       <Tab.Screen
@@ -179,6 +194,9 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ color, size }) => (
             <Feather name="message-square" size={size} color={color} />
           ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+          },
         }}
       />
       <Tab.Screen
@@ -190,34 +208,11 @@ const BottomTabNavigator = () => {
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="user" size={size} color={color} />
           ),
+          tabBarLabelStyle: {
+            fontSize: 12,
+          },
         }}
       />
     </Tab.Navigator>
-  );
-};
-
-const AuthNavigator = () => {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-        headerBackTitleVisible: false,
-      }}
-    >
-      <Stack.Screen
-        name="Login Screen"
-        component={LoginScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="Register Screen"
-        component={RegisterScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-    </Stack.Navigator>
   );
 };
