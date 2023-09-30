@@ -24,10 +24,10 @@ const Profile = () => {
   const profileButtons = [
     {
       id: 1,
-      label: "Add a Property",
+      label: "Add Whole Property Listing",
       onPress: () =>
-        navigation.navigate("Add Property Screen", {
-          token: user.token,
+        navigation.navigate("AddPropertyRoot", {
+          screen: "Address",
         }),
       icon: (
         <MaterialCommunityIcons
@@ -39,23 +39,14 @@ const Profile = () => {
     },
     {
       id: 2,
-      label: "View My Properties",
-      onPress: () =>
-        navigation.navigate("My Properties Screen", {
-          token: user.token,
-        }),
-      icon: (
-        <MaterialCommunityIcons
-          name="home-search-outline"
-          size={28}
-          color="gray"
-        />
-      ),
+      label: "Add Room Listing",
+      onPress: () => navigation.navigate("Add Room Screen"),
+      icon: <Ionicons name="bed-outline" size={28} color="gray" />,
     },
     {
       id: 3,
-      label: "Roommate listing",
-      onPress: () => console.log("flatmate"),
+      label: "Add Roommate Listing",
+      onPress: () => navigation.navigate("Add Roommate Screen"),
       icon: (
         <MaterialCommunityIcons
           name="human-male-female"
@@ -94,10 +85,37 @@ const Profile = () => {
       onPress: () => navigation.navigate("Incoming Messages Screen"),
       icon: <AntDesign name="message1" size={28} color="gray" />,
     },
+    {
+      id: 8,
+      label: "View My Properties",
+      onPress: () =>
+        navigation.navigate("My Properties Screen", {
+          token: user.token,
+        }),
+      icon: (
+        <MaterialCommunityIcons
+          name="home-search-outline"
+          size={28}
+          color="gray"
+        />
+      ),
+    },
+    {
+      id: 9,
+      label: "View My Roommate listing",
+      onPress: () => console.log("flatmate"),
+      icon: (
+        <MaterialCommunityIcons
+          name="human-male-female"
+          size={28}
+          color="gray"
+        />
+      ),
+    },
   ];
   const accountButtons = [
     {
-      id: 8,
+      id: 10,
       label: "Account Settings",
       onPress: () =>
         navigation.navigate("Account Settings Screen", {
@@ -107,7 +125,7 @@ const Profile = () => {
       icon: <Ionicons name="settings-outline" size={28} color="gray" />,
     },
     {
-      id: 9,
+      id: 11,
       label: "Update Password",
       onPress: () => navigation.navigate("Update Password Screen"),
       icon: <MaterialCommunityIcons name="lock-reset" size={28} color="gray" />,

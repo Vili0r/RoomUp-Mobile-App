@@ -5,6 +5,8 @@ import {
   Image,
   TextInput,
   ActivityIndicator,
+  StyleSheet,
+  StatusBar,
 } from "react-native";
 import React, { useState } from "react";
 import { ModalHeader } from "../../components";
@@ -37,7 +39,7 @@ const ForgotPasswordScreen = () => {
   return (
     <KeyboardAwareScrollView
       bounces={false}
-      style={{ flexGrow: 1, backgroundColor: "white" }} //style changed to contentContainerStyle
+      style={styles.container} //style changed to contentContainerStyle
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
     >
@@ -106,3 +108,11 @@ const ForgotPasswordScreen = () => {
 };
 
 export default ForgotPasswordScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    flexGrow: 1,
+    backgroundColor: "white",
+  },
+});

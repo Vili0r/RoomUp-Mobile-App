@@ -22,10 +22,17 @@ import UpdatePasswordScreen from "../screens/Auth/UpdatePasswordScreen";
 import AccountSettingsScreen from "../screens/AccountSettingsScreen";
 import AdvancedFilterScreen from "../screens/AdvancedFilterScreen";
 import MyPropertiesScreen from "../screens/MyPropertiesScreen";
-import AddPropertyScreen from "../screens/AddPropertyScreen";
+import AddRoomScreen from "../screens/AddRoomScreen";
+import AddRoommateScreen from "../screens/AddRoommateScreen";
 import MessageAdvertiserScreen from "../screens/MessageAdvertiserScreen";
 import IncomingMessagesScreen from "../screens/IncomingMessagesScreen";
 import ChatScreen from "../screens/ChatScreen";
+import AddressStepOneScreen from "../screens/Flat/AddressStepOneScreen";
+import PropertyStepTwoScreen from "../screens/Flat/PropertyStepTwoScreen";
+import DetailsStepThreeScreen from "../screens/Flat/DetailsStepThreeScreen";
+import AdvertiserStepFourScreen from "../screens/Flat/AdvertiserStepFourScreen";
+import FlatmateStepFiveScreen from "../screens/Flat/FlatmateStepFiveScreen";
+import ConfirmStepSixScreen from "../screens/Flat/ConfirmStepSixScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -125,9 +132,19 @@ const RootNavigator = () => {
         options={{ headerShown: true, title: "My Property Listings" }}
       />
       <Stack.Screen
-        name="Add Property Screen"
-        component={AddPropertyScreen}
-        options={{ headerShown: true, title: "Add a Listing" }}
+        name="AddPropertyRoot"
+        component={AddPropertStack}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Add Room Screen"
+        component={AddRoomScreen}
+        options={{ headerShown: true, title: "Add a Room Listing" }}
+      />
+      <Stack.Screen
+        name="Add Roommate Screen"
+        component={AddRoommateScreen}
+        options={{ headerShown: true, title: "Add a Roommate Listing" }}
       />
       <Stack.Screen
         name="Chat Screen"
@@ -214,5 +231,51 @@ const BottomTabNavigator = () => {
         }}
       />
     </Tab.Navigator>
+  );
+};
+
+const AddPropertySatckNavigator = createNativeStackNavigator();
+
+const AddPropertStack = () => {
+  return (
+    <AddPropertySatckNavigator.Navigator initialRouteName="Address">
+      <AddPropertySatckNavigator.Screen
+        name="Adrress"
+        component={AddressStepOneScreen}
+      />
+      <AddPropertySatckNavigator.Screen
+        name="Property"
+        component={PropertyStepTwoScreen}
+        options={{
+          headerTitle: "Property",
+        }}
+      />
+      <AddPropertySatckNavigator.Screen
+        name="Details"
+        component={DetailsStepThreeScreen}
+        options={{ headerTitle: "Details" }}
+      />
+      <AddPropertySatckNavigator.Screen
+        name="Advertiser"
+        component={AdvertiserStepFourScreen}
+        options={{
+          headerTitle: "Advertiser",
+        }}
+      />
+      <AddPropertySatckNavigator.Screen
+        name="Flatmate"
+        component={FlatmateStepFiveScreen}
+        options={{
+          headerTitle: "Flatmate",
+        }}
+      />
+      <AddPropertySatckNavigator.Screen
+        name="Confirm"
+        component={ConfirmStepSixScreen}
+        options={{
+          headerTitle: "Confirm",
+        }}
+      />
+    </AddPropertySatckNavigator.Navigator>
   );
 };

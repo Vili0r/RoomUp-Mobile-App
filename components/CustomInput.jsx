@@ -2,7 +2,13 @@ import React from "react";
 import { TextInput, View, Text } from "react-native";
 import { Controller } from "react-hook-form";
 
-const CustomInput = ({ control, name, placeholder, secureTextEntry }) => {
+const CustomInput = ({
+  control,
+  name,
+  placeholder,
+  secureTextEntry,
+  editable,
+}) => {
   return (
     <Controller
       control={control}
@@ -10,7 +16,7 @@ const CustomInput = ({ control, name, placeholder, secureTextEntry }) => {
       render={({ field: { value, onChange, onBlur }, fieldState }) => (
         <>
           <TextInput
-            className="p-4 text-gray-700 bg-gray-100 rounded-2xl"
+            className="w-full px-3 py-3 border border-gray-300 rounded-md peer"
             onChangeText={onChange}
             value={value}
             onBlur={onBlur}
@@ -18,6 +24,7 @@ const CustomInput = ({ control, name, placeholder, secureTextEntry }) => {
             placeholderTextColor="gray"
             autoCapitalize="none"
             secureTextEntry={secureTextEntry}
+            editable={editable}
           />
           <View className="flex flex-row">
             {fieldState.error && (

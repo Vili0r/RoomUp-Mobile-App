@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const AddPropertyScreen = () => {
+const AddRoommateScreen = () => {
   return (
     <View>
-      <Text>AddPropertyScreen</Text>
+      <Text>AddRoommateScreen</Text>
     </View>
   );
 };
 
-export default AddPropertyScreen;
+export default AddRoommateScreen;

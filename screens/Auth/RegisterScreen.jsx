@@ -8,6 +8,8 @@ import {
   Pressable,
   Platform,
   Alert,
+  StyleSheet,
+  StatusBar,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import React, { useState, useEffect, useContext } from "react";
@@ -21,44 +23,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as ImagePicker from "expo-image-picker";
 import { AuthContext } from "../../context/AuthProvider";
 import * as SecureStore from "expo-secure-store";
-
-const genders = [
-  {
-    label: "",
-    value: "",
-  },
-  {
-    label: "Male",
-    value: "Male",
-  },
-  {
-    label: "Female",
-    value: "Female",
-  },
-  {
-    label: "Prefer not to say",
-    value: "Prefer not to say",
-  },
-];
-
-const lookingFor = [
-  {
-    label: "",
-    value: "",
-  },
-  {
-    label: "I am looking for a flat or a house share",
-    value: "I am looking for a flat or a house share",
-  },
-  {
-    label: "I have a flat or house share",
-    value: "I have a flat or house share",
-  },
-  {
-    label: "I would like to find people to form share",
-    value: "I would like to find people to form share",
-  },
-];
+import { genders, lookingFor } from "../../helpers/arrays";
 
 const RegisterScreen = ({ navigation }) => {
   const stepOneSchema = yup.object().shape({
@@ -239,7 +204,7 @@ const RegisterScreen = ({ navigation }) => {
   return (
     <KeyboardAwareScrollView
       bounces={false}
-      style={{ flexGrow: 1, backgroundColor: "white" }} //style changed to contentContainerStyle
+      style={styles.container} //style changed to contentContainerStyle
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
     >
@@ -526,3 +491,11 @@ const RegisterScreen = ({ navigation }) => {
 };
 
 export default RegisterScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+    flexGrow: 1,
+    backgroundColor: "white",
+  },
+});

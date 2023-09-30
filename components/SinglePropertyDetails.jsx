@@ -1,5 +1,5 @@
-import React, { useLayoutEffect, useContext, useState, useMemo } from "react";
-import { View, Text, Image, TouchableOpacity, Pressable } from "react-native";
+import React, { useLayoutEffect } from "react";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -10,7 +10,6 @@ import AdvertisedBy from "./AdvertisedBy";
 import SinglePropertyFooter from "./SinglePropertyFooter";
 import PropertyDetailsAmenities from "./PropertyDetailsAmenities";
 import { useNavigation } from "@react-navigation/native";
-import PropertyLocation from "./PropertyLocation";
 
 const SinglePropertyDetails = ({ property, imageIndex }) => {
   const navigation = useNavigation();

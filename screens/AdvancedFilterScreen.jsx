@@ -28,7 +28,7 @@ const AdvancedFilterScreen = () => {
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
     >
-      <View className="flex-1 bg-white border-2 mt-14 broder-b"></View>
+      <View className="flex-1 bg-white border-b-[1px] mt-14 broder-b"></View>
     </KeyboardAwareScrollView>
   );
 };
