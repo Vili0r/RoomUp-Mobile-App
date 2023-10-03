@@ -1,6 +1,5 @@
 import {
   View,
-  SafeAreaView,
   Text,
   TouchableOpacity,
   StatusBar,
@@ -86,14 +85,12 @@ const AddressStepOneScreen = ({ navigation }) => {
 
   const hanldeNext = async (data) => {
     try {
-      await stepOneSchema.validate(data);
-      console.log("pased");
+      // await stepOneSchema.validate(data);
       // If validation succeeds, move to step 2
       navigation.navigate("AddPropertyRoot", {
         screen: "Property",
       });
     } catch (error) {
-      console.log(error);
       setError(error.path, {
         type: "manual",
         message: error.message,
@@ -229,7 +226,7 @@ const AddressStepOneScreen = ({ navigation }) => {
                   value={value}
                   onBlur={onBlur}
                   items={Minutes}
-                  onItemChange={onChange}
+                  onItemChange={(item) => setValue("minutes", item.value)}
                   isNullable={false}
                   className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                 />
@@ -256,15 +253,15 @@ const AddressStepOneScreen = ({ navigation }) => {
                   value={value}
                   onBlur={onBlur}
                   items={Modes}
-                  onItemChange={onChange}
+                  onItemChange={(item) => setValue("mode", item.value)}
                   isNullable={false}
                   className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                 />
 
                 <View className="flex flex-row">
-                  {formState.errors.fieldName && (
+                  {fieldState.error && (
                     <Text className="mt-2 ml-4 text-sm text-red-500">
-                      {formState.errors.fieldName.message}
+                      {fieldState.error.message}
                     </Text>
                   )}
                 </View>
@@ -283,7 +280,7 @@ const AddressStepOneScreen = ({ navigation }) => {
                   value={value}
                   onBlur={onBlur}
                   items={Stations}
-                  onItemChange={onChange}
+                  onItemChange={(item) => setValue("station", item.value)}
                   isNullable={false}
                   className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                 />
@@ -302,7 +299,7 @@ const AddressStepOneScreen = ({ navigation }) => {
       </View>
       <TouchableOpacity
         onPress={handleSubmit(hanldeNext)}
-        disabled={!formState.isValid}
+        // disabled={!formState.isValid}
         className="flex flex-row items-center justify-center py-3 m-3 mt-5 space-x-3 bg-gray-900 rounded-xl"
       >
         <Text className="font-bold text-center text-white font-xl">

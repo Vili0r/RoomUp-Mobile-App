@@ -18,3 +18,4 @@ export { default as MessageForm } from "./MessageForm";
 export { default as MessageCard } from "./MessageCard";
 export { default as ConversationCard } from "./ConversationCard";
 export { default as ChatDetails } from "./ChatDetails";
+export { default as ImageCarousel } from "./ImageCarousel";

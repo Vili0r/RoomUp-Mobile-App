@@ -1,72 +1,34 @@
-export const bedrooms = [
-  { id: 1, title: "Studio/1" },
-  { id: 2, title: "2" },
-  { id: 3, title: "3" },
-  { id: 4, title: "4" },
-  { id: 5, title: "5" },
-  { id: 6, title: "6+" },
+export const Bedrooms = [
+  { value: "", label: "Select size" },
+  { value: 1, label: "Studio/1" },
+  { value: 2, label: "2" },
+  { value: 3, label: "3" },
+  { value: 4, label: "4" },
+  { value: 5, label: "5" },
+  { value: 6, label: "6+" },
 ];
 
-export const Modes = [
-  { value: 1, label: "Walk" },
-  { value: 2, label: "By car" },
-  { value: 3, label: "By bus" },
-  { value: 4, label: "By bike" },
+export const Types = [
+  { value: "", label: "Select type" },
+  { value: 1, label: "Flat/Apartment" },
+  { value: 2, label: "House" },
+  { value: 3, label: "Property" },
 ];
 
-export const furnishings = [
-  { id: 1, name: "Furnished" },
-  { id: 2, name: "Unfurnished" },
+export const Furnishings = [
+  { value: "", label: "Select furnishing" },
+  { value: 1, label: "Furnished" },
+  { value: 2, label: "Unfurnished" },
 ];
 
-export const flatmateGender = [
-  { id: 1, name: "Female" },
-  { id: 2, name: "Male" },
-];
-
-export const flatmateOccupation = [
-  { id: 1, name: "Student" },
-  { id: 2, name: "Professional" },
-];
-
-export const flatmateSmoker = [
-  { id: 1, name: "No" },
-  { id: 2, name: "Yes" },
-];
-
-export const flatmatePets = [
-  { id: 1, name: "No" },
-  { id: 2, name: "Yes" },
-];
-
-export const currentOccupants = [
-  { id: 0, name: "Zero" },
-  { id: 1, name: "One" },
-  { id: 2, name: "Two" },
-  { id: 3, name: "Three" },
-  { id: 4, name: "Four" },
-  { id: 5, name: "Five" },
-  { id: 6, name: "Six" },
-  { id: 7, name: "Seven" },
-  { id: 8, name: "Eight" },
-  { id: 9, name: "Nine" },
-  { id: 10, name: "Ten" },
-];
-
-export const availableRooms = [
-  { id: 1, name: "One room for rent" },
-  { id: 2, name: "Two room for rent" },
-  { id: 3, name: "Three room for rent" },
-  { id: 4, name: "Four room for rent" },
-  { id: 5, name: "Five room for rent" },
-  { id: 6, name: "Six room for rent" },
-  { id: 7, name: "Seven room for rent" },
-  { id: 8, name: "Eight room for rent" },
-  { id: 9, name: "Nine room for rent" },
-  { id: 10, name: "Ten room for rent" },
+export const WhatIAmFlat = [
+  { value: "", label: "-- Select --" },
+  { value: 1, label: "Agent" },
+  { value: 2, label: "Landlord" },
 ];
 
 export const Minutes = [
+  { value: "", label: "Select minutes from" },
   { value: 1, label: "Less than 5" },
   { value: 2, label: "Between 5 and 10" },
   { value: 3, label: "Between 10 and 15" },
@@ -75,6 +37,7 @@ export const Minutes = [
 ];
 
 export const Stations = [
+  { value: "", label: "Select station" },
   { value: 1, label: "Sintagma" },
   { value: 2, label: "Monastiraki" },
   { value: 3, label: "Evangelismos" },
@@ -87,72 +50,182 @@ export const Stations = [
   { value: 10, label: "kalithea" },
 ];
 
-export const amenities = [
-  { id: 1, name: "Parking" },
-  { id: 2, name: "Garden" },
-  { id: 3, name: "Garage" },
-  { id: 4, name: "Balcony" },
-  { id: 5, name: "Disable Access" },
-  { id: 6, name: "Living Room" },
-  { id: 7, name: "Broadband" },
-  { id: 8, name: "Air Conditioning" },
-  { id: 9, name: "Heating System" },
-  { id: 10, name: "Dishwasher" },
-  { id: 11, name: "Microwave" },
-  { id: 12, name: "Oven" },
-  { id: 13, name: "Washer" },
-  { id: 14, name: "Refrigirator" },
-  { id: 15, name: "Storage" },
+export const Modes = [
+  { value: "", label: "Select Mode of transport" },
+  { value: 1, label: "Walk" },
+  { value: 2, label: "By car" },
+  { value: 3, label: "By bus" },
+  { value: 4, label: "By bike" },
+];
+
+export const MinStay = [
+  { value: "", label: "Select min stay" },
+  { value: 0, label: "No Minimum" },
+  { value: 1, label: "1 month" },
+  { value: 2, label: "2 months" },
+  { value: 3, label: "3 months" },
+  { value: 4, label: "4 months" },
+  { value: 5, label: "5 months" },
+  { value: 6, label: "6 months" },
+  { value: 7, label: "7 months" },
+  { value: 8, label: "8 months" },
+  { value: 9, label: "9 months" },
+  { value: 10, label: "10 months" },
+  { value: 11, label: "11 months" },
+  { value: 12, label: "1 year" },
+  { value: 13, label: ">1" },
+  { value: 14, label: "2 years" },
+  { value: 15, label: ">2" },
+  { value: 16, label: "3 years" },
+];
+
+export const MaxStay = [
+  { value: "", label: "Select max stay" },
+  { value: 0, label: "No Minimum" },
+  { value: 1, label: "1 month" },
+  { value: 2, label: "2 months" },
+  { value: 3, label: "3 months" },
+  { value: 4, label: "4 months" },
+  { value: 5, label: "5 months" },
+  { value: 6, label: "6 months" },
+  { value: 7, label: "7 months" },
+  { value: 8, label: "8 months" },
+  { value: 9, label: "9 months" },
+  { value: 10, label: "10 months" },
+  { value: 11, label: "11 months" },
+  { value: 12, label: "1 year" },
+  { value: 13, label: ">1" },
+  { value: 14, label: "2 years" },
+  { value: 15, label: ">2" },
+  { value: 16, label: "3 years" },
+];
+
+export const DaysAvailable = [
+  { value: "", label: "Select days available" },
+  { value: 1, label: "Full Week" },
+  { value: 2, label: "From Monday to Friday only" },
+  { value: 3, label: "Weekends only" },
+];
+
+export const Amenities = [
+  { key: 1, value: "Parking" },
+  { key: 2, value: "Garden" },
+  { key: 3, value: "Garage" },
+  { key: 4, value: "Balcony" },
+  { key: 5, value: "Disable Access" },
+  { key: 6, value: "Living Room" },
+  { key: 7, value: "Broadband" },
+  { key: 8, value: "Air Conditioning" },
+  { key: 9, value: "Heating System" },
+  { key: 10, value: "Dishwasher" },
+  { key: 11, value: "Microwave" },
+  { key: 12, value: "Oven" },
+  { key: 13, value: "Washer" },
+  { key: 14, value: "Refrigirator" },
+  { key: 15, value: "Storage" },
+];
+
+export const flatmateGender = [
+  { value: "", label: "Select gender" },
+  { value: 1, label: "No preference" },
+  { value: 2, label: "Female" },
+  { value: 3, label: "Male" },
+];
+
+export const flatmateOccupation = [
+  { value: "", label: "Select occupation" },
+  { value: 1, label: "No preference" },
+  { value: 2, label: "Student" },
+  { value: 3, label: "Professional" },
+];
+
+export const flatmateSmoker = [
+  { value: "", label: "Select smoker preferences" },
+  { value: 1, label: "No preference" },
+  { value: 1, label: "No" },
+];
+
+export const flatmatePets = [
+  { value: "", label: "Select pet preferences" },
+  { value: 1, label: "No" },
+  { value: 2, label: "Yes" },
+];
+
+export const currentOccupants = [
+  { value: 0, label: "Zero" },
+  { value: 1, label: "One" },
+  { value: 2, label: "Two" },
+  { value: 3, label: "Three" },
+  { value: 4, label: "Four" },
+  { value: 5, label: "Five" },
+  { value: 6, label: "Six" },
+  { value: 7, label: "Seven" },
+  { value: 8, label: "Eight" },
+  { value: 9, label: "Nine" },
+  { value: 10, label: "Ten" },
+];
+
+export const availableRooms = [
+  { value: 1, label: "One room for rent" },
+  { value: 2, label: "Two room for rent" },
+  { value: 3, label: "Three room for rent" },
+  { value: 4, label: "Four room for rent" },
+  { value: 5, label: "Five room for rent" },
+  { value: 6, label: "Six room for rent" },
+  { value: 7, label: "Seven room for rent" },
+  { value: 8, label: "Eight room for rent" },
+  { value: 9, label: "Nine room for rent" },
+  { value: 10, label: "Ten room for rent" },
 ];
 
 export const roomSize = [
-  { id: 1, name: "Single" },
-  { id: 2, name: "Double" },
+  { value: 1, label: "Single" },
+  { value: 2, label: "Double" },
 ];
 
 export const hobbies = [
-  { id: 1, name: "Reading" },
-  { id: 2, name: "Writing" },
-  { id: 3, name: "Painting" },
-  { id: 4, name: "Drawing" },
-  { id: 5, name: "Photography" },
-  { id: 6, name: "Gardening" },
-  { id: 7, name: "Cooking/Baking" },
-  { id: 8, name: "Playing a musical instrument" },
-  { id: 9, name: "Singing" },
-  { id: 10, name: "Dancing" },
-  { id: 11, name: "Knitting/Crocheting" },
-  { id: 12, name: "Sewing" },
-  { id: 13, name: "Woodworking" },
-  { id: 14, name: "Sculpting" },
-  { id: 15, name: "Pottery/Ceramics" },
-  { id: 16, name: "Hiking/Outdoor activities" },
-  { id: 17, name: "Cycling" },
-  { id: 18, name: "Running/Jogging" },
-  { id: 19, name: "Swimming" },
-  { id: 20, name: "Yoga" },
-  { id: 21, name: "Meditation" },
-  { id: 22, name: "Gaming" },
-  { id: 23, name: "Collecting" },
-  { id: 24, name: "Model building" },
-  { id: 25, name: "Sports" },
-  { id: 26, name: "Football" },
-  { id: 27, name: "Fishing" },
-  { id: 28, name: "Camping" },
-  { id: 29, name: "Traveling" },
-  { id: 30, name: "Volunteering" },
-  { id: 31, name: "Learning a new language" },
-  { id: 32, name: "Film/TV series watching" },
-  { id: 33, name: "Playing chess" },
-  { id: 34, name: "DIY projects" },
-  { id: 35, name: "Wine tasting" },
-  { id: 36, name: "Home brewing" },
-  { id: 37, name: "Theatre" },
-  { id: 38, name: "Calligraphy" },
-  { id: 39, name: "Astronomy/Stargazing" },
-  { id: 40, name: "Chess" },
-  { id: 41, name: "Martial arts" },
-  { id: 42, name: "Cars" },
+  { value: 1, label: "Reading" },
+  { value: 2, label: "Writing" },
+  { value: 3, label: "Painting" },
+  { value: 4, label: "Drawing" },
+  { value: 5, label: "Photography" },
+  { value: 6, label: "Gardening" },
+  { value: 7, label: "Cooking/Baking" },
+  { value: 8, label: "Playing a musical instrument" },
+  { value: 9, label: "Singing" },
+  { value: 10, label: "Dancing" },
+  { value: 11, label: "Knitting/Crocheting" },
+  { value: 12, label: "Sewing" },
+  { value: 13, label: "Woodworking" },
+  { value: 14, label: "Sculpting" },
+  { value: 15, label: "Pottery/Ceramics" },
+  { value: 16, label: "Hiking/Outdoor activities" },
+  { value: 17, label: "Cycling" },
+  { value: 18, label: "Running/Jogging" },
+  { value: 19, label: "Swimming" },
+  { value: 20, label: "Yoga" },
+  { value: 21, label: "Meditation" },
+  { value: 22, label: "Gaming" },
+  { value: 23, label: "Collecting" },
+  { value: 24, label: "Model building" },
+  { value: 25, label: "Sports" },
+  { value: 26, label: "Football" },
+  { value: 27, label: "Fishing" },
+  { value: 28, label: "Camping" },
+  { value: 29, label: "Traveling" },
+  { value: 30, label: "Volunteering" },
+  { value: 31, label: "Learning a new language" },
+  { value: 32, label: "Film/TV series watching" },
+  { value: 33, label: "Playing chess" },
+  { value: 34, label: "DIY projects" },
+  { value: 35, label: "Wine tasting" },
+  { value: 36, label: "Home brewing" },
+  { value: 37, label: "Theatre" },
+  { value: 38, label: "Calligraphy" },
+  { value: 39, label: "Astronomy/Stargazing" },
+  { value: 40, label: "Chess" },
+  { value: 41, label: "Martial arts" },
+  { value: 42, label: "Cars" },
 ];
 
 export const genders = [

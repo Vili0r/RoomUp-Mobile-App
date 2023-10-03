@@ -128,8 +128,9 @@ const MessageForm = ({ property }) => {
           placeholder="Message"
           placeholderTextColor="gray"
           autoCapitalize="none"
-          multiline={true}
+          multiline
           numberOfLines={4}
+          style={{ minHeight: 100 }}
         />
       </View>
       <View className="p-5">

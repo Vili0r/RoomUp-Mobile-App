@@ -5,7 +5,7 @@ const supportedFormats = ["image/jpeg", "image/png", "image/jpg"];
 
 const stepOneSchema = yup.object().shape({
   address_1: yup.string().max(30).required("Address is required"),
-  city: yup.string().max(20).required("City is required"),
+  city: yup.string().max(40).required("City is required"),
   post_code: yup
     .string()
     .max(7, "Post code must have maximum six characters")
@@ -17,6 +17,7 @@ const stepOneSchema = yup.object().shape({
 
 const stepTwoSchema = yup.object().shape({
   size: yup.string().required("Size is required"),
+  furnished: yup.string().required("Furnishing is required"),
   type: yup.string().required("Type is required"),
   what_i_am: yup.string().required("Who i am is required"),
   cost: yup
@@ -29,7 +30,7 @@ const stepTwoSchema = yup.object().shape({
     .required("Deposit of the room is required"),
 });
 const stepThreeSchema = yup.object().shape({
-  selectedAmenities: yup
+  amenities: yup
     .array()
     .min(1, "At least one amenity is required")
     .required("Amenities are required"),
@@ -38,7 +39,7 @@ const stepThreeSchema = yup.object().shape({
     .typeError("Available from must be a date")
     .min(new Date(), "Available from date must be in the future")
     .required("Available from date is required"),
-  furnished: yup.string().required("Room furnished is required"),
+  // furnished: yup.string().required("Room furnished is required"),
   minimum_stay: yup.string().required("Minimum stay is required"),
   maximum_stay: yup
     .string()
@@ -73,12 +74,12 @@ const stepFiveSchema = yup.object().shape({
     .number()
     .typeError("That doesn't look like an age")
     .min(18, "Your new flatmate should be more than 18 years old")
-    .required(),
+    .required("Min Age is required"),
   new_flatmate_max_age: yup
     .number()
     .typeError("That doesn't look like an age")
     .min(18, "Your new flatmate should be more than 18 years old")
-    .required()
+    .required("Max Age is required")
     .when("new_flatmate_min_age", (new_flatmate_min_age, schema) => {
       return schema.test({
         test: (new_flatmate_max_age) =>

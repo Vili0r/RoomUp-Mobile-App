@@ -247,26 +247,26 @@ const AddPropertStack = () => {
         name="Property"
         component={PropertyStepTwoScreen}
         options={{
-          headerTitle: "Property",
+          headerTitle: "Property info",
         }}
       />
       <AddPropertySatckNavigator.Screen
         name="Details"
         component={DetailsStepThreeScreen}
-        options={{ headerTitle: "Details" }}
+        options={{ headerTitle: "Property details" }}
       />
       <AddPropertySatckNavigator.Screen
         name="Advertiser"
         component={AdvertiserStepFourScreen}
         options={{
-          headerTitle: "Advertiser",
+          headerTitle: "Advertiser info",
         }}
       />
       <AddPropertySatckNavigator.Screen
         name="Flatmate"
         component={FlatmateStepFiveScreen}
         options={{
-          headerTitle: "Flatmate",
+          headerTitle: "Prefernce for new tenant",
         }}
       />
       <AddPropertySatckNavigator.Screen
