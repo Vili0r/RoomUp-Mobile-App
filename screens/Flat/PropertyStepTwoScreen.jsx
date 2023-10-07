@@ -4,11 +4,11 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
+  SafeAreaView,
 } from "react-native";
 import React from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useForm, Controller } from "react-hook-form";
-import { Select, CustomInput } from "../../components";
+import { CustomInput, CustomDropdown } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { stepTwoSchema } from "../../helpers/FlatValidation";
 import Feather from "@expo/vector-icons/Feather";
@@ -18,8 +18,11 @@ import {
   Bedrooms,
   Types,
 } from "../../helpers/arrays";
+import { useFlatContext } from "../../context/FlatContext";
+import { Picker } from "@react-native-picker/picker";
 
 const PropertyStepTwoScreen = ({ navigation }) => {
+  const { propertyStepTwo, setPropertyStepTwo } = useFlatContext();
   const {
     control,
     handleSubmit,
@@ -28,18 +31,24 @@ const PropertyStepTwoScreen = ({ navigation }) => {
     clearErrors,
     setValue,
     reset,
-  } = useForm(
-    {
-      mode: "onBlur",
+    getValues,
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(stepTwoSchema),
+    defaultValues: {
+      size: propertyStepTwo?.size || "",
+      type: propertyStepTwo?.type || "",
+      what_i_am: propertyStepTwo?.what_i_am || "",
+      cost: propertyStepTwo?.cost.toString() || "",
+      deposit: propertyStepTwo?.deposit.toString() || "",
+      furnished: propertyStepTwo?.furnished || "",
     },
-    {
-      resolver: yupResolver(stepTwoSchema),
-    }
-  );
+  });
 
   const hanldeNext = async (data) => {
     try {
-      // await stepTwoSchema.validate(data);
+      await stepTwoSchema.validate(data);
+      setPropertyStepTwo(data);
       // If validation succeeds, move to step 2
       navigation.navigate("AddPropertyRoot", {
         screen: "Details",
@@ -53,12 +62,7 @@ const PropertyStepTwoScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAwareScrollView
-      bounces={false}
-      style={styles.container} //style changed to contentContainerStyle
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-    >
+    <SafeAreaView style={styles.container}>
       <StatusBar />
       <View className="p-2 mt-5">
         <View className="flex flex-row justify-between">
@@ -68,14 +72,11 @@ const PropertyStepTwoScreen = ({ navigation }) => {
               name="size"
               render={({ field: { value, onChange, onBlur }, fieldState }) => (
                 <>
-                  <Select
+                  <CustomDropdown
                     label="Size"
                     value={value}
-                    onBlur={onBlur}
-                    items={Bedrooms}
+                    data={Bedrooms}
                     onItemChange={(item) => setValue("size", item.value)}
-                    isNullable={false}
-                    className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                   />
 
                   <View className="flex flex-row">
@@ -95,14 +96,11 @@ const PropertyStepTwoScreen = ({ navigation }) => {
               name="type"
               render={({ field: { value, onChange, onBlur }, fieldState }) => (
                 <>
-                  <Select
+                  <CustomDropdown
                     label="Type"
                     value={value}
-                    onBlur={onBlur}
-                    items={Types}
+                    data={Types}
                     onItemChange={(item) => setValue("type", item.value)}
-                    isNullable={false}
-                    className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                   />
 
                   <View className="flex flex-row">
@@ -123,16 +121,12 @@ const PropertyStepTwoScreen = ({ navigation }) => {
             name="what_i_am"
             render={({ field: { value, onChange, onBlur }, fieldState }) => (
               <>
-                <Select
+                <CustomDropdown
                   label="What I am"
                   value={value}
-                  onBlur={onBlur}
-                  items={WhatIAmFlat}
+                  data={WhatIAmFlat}
                   onItemChange={(item) => setValue("what_i_am", item.value)}
-                  isNullable={false}
-                  className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                 />
-
                 <View className="flex flex-row">
                   {fieldState.error && (
                     <Text className="mt-2 ml-4 text-sm text-red-500">
@@ -170,16 +164,12 @@ const PropertyStepTwoScreen = ({ navigation }) => {
             name="furnished"
             render={({ field: { value, onChange, onBlur }, fieldState }) => (
               <>
-                <Select
+                <CustomDropdown
                   label="Furnishing"
                   value={value}
-                  onBlur={onBlur}
-                  items={Furnishings}
+                  data={Furnishings}
                   onItemChange={(item) => setValue("furnished", item.value)}
-                  isNullable={false}
-                  className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                 />
-
                 <View className="flex flex-row">
                   {fieldState.error && (
                     <Text className="mt-2 ml-4 text-sm text-red-500">
@@ -202,7 +192,7 @@ const PropertyStepTwoScreen = ({ navigation }) => {
         </Text>
         <Feather name="arrow-right" size={20} color="white" />
       </TouchableOpacity>
-    </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -214,4 +204,19 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: "white",
   },
+  selectContainer: {
+    backgroundColor: "#fff",
+  },
+  pickerStyles: {
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+
+  textInput: {
+    marginLeft: 15,
+    marginTop: 5,
+  },
+  errorText: { color: "#f15c5c" },
 });

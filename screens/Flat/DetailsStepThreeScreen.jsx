@@ -5,11 +5,11 @@ import {
   StatusBar,
   StyleSheet,
   Pressable,
+  SafeAreaView,
 } from "react-native";
 import React, { useState } from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useForm, Controller } from "react-hook-form";
-import { Select, CustomInput } from "../../components";
+import { CustomDropdown } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { stepThreeSchema } from "../../helpers/FlatValidation";
 import Feather from "@expo/vector-icons/Feather";
@@ -22,11 +22,17 @@ import {
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Checkbox from "expo-checkbox";
 import { MultipleSelectList } from "react-native-dropdown-select-list";
+import { useFlatContext } from "../../context/FlatContext";
 
 const DetailsStepThreeScreen = ({ navigation }) => {
-  const [pickedDate, setPickedDate] = useState(new Date());
+  const { detailsStepThree, setDetailsStepThree } = useFlatContext();
+  const [pickedDate, setPickedDate] = useState(
+    detailsStepThree?.available_from ?? new Date()
+  );
   const [showCalendar, setShowCalendar] = useState(false);
-  const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const [selectedAmenities, setSelectedAmenities] = useState(
+    detailsStepThree?.amenities ?? []
+  );
 
   const {
     control,
@@ -36,18 +42,23 @@ const DetailsStepThreeScreen = ({ navigation }) => {
     clearErrors,
     setValue,
     reset,
-  } = useForm(
-    {
-      mode: "onBlur",
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(stepThreeSchema),
+    defaultValues: {
+      amenities: detailsStepThree?.amenities,
+      minimum_stay: detailsStepThree?.minimum_stay,
+      maximum_stay: detailsStepThree?.maximum_stay,
+      available_from: detailsStepThree?.available_from,
+      days_available: detailsStepThree?.days_available,
+      short_term: detailsStepThree?.short_term ? true : false,
     },
-    {
-      resolver: yupResolver(stepThreeSchema),
-    }
-  );
+  });
 
   const hanldeNext = async (data) => {
     try {
-      // await stepThreeSchema.validate(data);
+      await stepThreeSchema.validate(data);
+      setDetailsStepThree(data);
       // If validation succeeds, move to step 2
       navigation.navigate("AddPropertyRoot", {
         screen: "Advertiser",
@@ -61,14 +72,8 @@ const DetailsStepThreeScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAwareScrollView
-      bounces={false}
-      style={styles.container} //style changed to contentContainerStyle
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-    >
+    <SafeAreaView style={styles.container}>
       <StatusBar />
-
       <View className="p-2 mt-5">
         <View className="mt-2">
           <Controller
@@ -82,6 +87,7 @@ const DetailsStepThreeScreen = ({ navigation }) => {
                   save="value"
                   onSelect={() => setValue("amenities", selectedAmenities)}
                   label="Amenities"
+                  defaultOption={{ key: "1", value: "Jammu & Kashmir" }}
                 />
                 <View className="flex flex-row">
                   {fieldState.error && (
@@ -102,16 +108,13 @@ const DetailsStepThreeScreen = ({ navigation }) => {
               name="minimum_stay"
               render={({ field: { value, onChange, onBlur }, fieldState }) => (
                 <>
-                  <Select
+                  <CustomDropdown
                     label="Minimum Stay"
                     value={value}
-                    onBlur={onBlur}
-                    items={MinStay}
+                    data={MinStay}
                     onItemChange={(item) =>
                       setValue("minimum_stay", item.value)
                     }
-                    isNullable={false}
-                    className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                   />
 
                   <View className="flex flex-row">
@@ -131,18 +134,14 @@ const DetailsStepThreeScreen = ({ navigation }) => {
               name="maximum_stay"
               render={({ field: { value, onChange, onBlur }, fieldState }) => (
                 <>
-                  <Select
+                  <CustomDropdown
                     label="Maximum Stay"
                     value={value}
-                    onBlur={onBlur}
-                    items={MaxStay}
+                    data={MaxStay}
                     onItemChange={(item) =>
                       setValue("maximum_stay", item.value)
                     }
-                    isNullable={false}
-                    className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                   />
-
                   <View className="flex flex-row">
                     {fieldState.error && (
                       <Text className="mt-2 ml-4 text-sm text-red-500">
@@ -206,18 +205,14 @@ const DetailsStepThreeScreen = ({ navigation }) => {
               name="days_available"
               render={({ field: { value, onChange, onBlur }, fieldState }) => (
                 <>
-                  <Select
+                  <CustomDropdown
                     label="Days Available"
                     value={value}
-                    onBlur={onBlur}
-                    items={DaysAvailable}
+                    data={DaysAvailable}
                     onItemChange={(item) =>
                       setValue("days_available", item.value)
                     }
-                    isNullable={false}
-                    className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                   />
-
                   <View className="flex flex-row">
                     {fieldState.error && (
                       <Text className="mt-2 ml-4 text-sm text-red-500">
@@ -258,7 +253,7 @@ const DetailsStepThreeScreen = ({ navigation }) => {
         </Text>
         <Feather name="arrow-right" size={20} color="white" />
       </TouchableOpacity>
-    </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 

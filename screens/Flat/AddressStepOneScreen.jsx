@@ -17,12 +17,15 @@ import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Minutes, Modes, Stations } from "../../helpers/arrays";
 import { AuthContext } from "../../context/AuthProvider";
+import { useFlatContext } from "../../context/FlatContext";
 
 const AddressStepOneScreen = ({ navigation }) => {
   const { user } = useContext(AuthContext);
   const [search, setSearch] = useState("");
   const [selectedAddress, setSelectedAddress] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
+  const { addressStepOne, setAddressStepOne } = useFlatContext();
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTransparent: false,
@@ -43,14 +46,19 @@ const AddressStepOneScreen = ({ navigation }) => {
     clearErrors,
     setValue,
     reset,
-  } = useForm(
-    {
-      mode: "onBlur",
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(stepOneSchema),
+    defaultValues: {
+      address_1: addressStepOne?.address_1 || "",
+      area: addressStepOne?.area || "",
+      city: addressStepOne?.city || "",
+      post_code: addressStepOne?.post_code || "",
+      minutes: addressStepOne?.minutes || "",
+      mode: addressStepOne?.mode || "",
+      station: addressStepOne?.station || "",
     },
-    {
-      resolver: yupResolver(stepOneSchema),
-    }
-  );
+  });
 
   const handleSelectedAddress = (selectedAddress) => {
     setValue("address_1", selectedAddress.address.name);
@@ -85,7 +93,8 @@ const AddressStepOneScreen = ({ navigation }) => {
 
   const hanldeNext = async (data) => {
     try {
-      // await stepOneSchema.validate(data);
+      await stepOneSchema.validate(data);
+      setAddressStepOne(data);
       // If validation succeeds, move to step 2
       navigation.navigate("AddPropertyRoot", {
         screen: "Property",

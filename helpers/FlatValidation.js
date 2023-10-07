@@ -98,19 +98,19 @@ const stepFiveSchema = yup.object().shape({
 const stepSixSchema = yup.object().shape({
   title: yup.string().min(10).max(50).required(),
   description: yup.string().min(50).max(500).required(),
-  photos: yup
-    .array()
-    .max(maxFiles, `You can upload up to ${maxFiles} images`)
-    .of(
-      yup
-        .mixed()
-        .test("fileFormat", "Unsupported file format", (value) =>
-          supportedFormats.includes(value.type)
-        )
-        .test("fileSize", "File size is too large", (value) =>
-          value ? value.size <= 1048576 : true
-        )
-    ),
+  // photos: yup
+  //   .array()
+  //   .max(maxFiles, `You can upload up to ${maxFiles} images`)
+  //   .of(
+  //     yup
+  //       .mixed()
+  //       .test("fileFormat", "Unsupported file format", (value) =>
+  //         supportedFormats.includes(value.type)
+  //       )
+  //       .test("fileSize", "File size is too large", (value) =>
+  //         value ? value.size <= 1048576 : true
+  //       )
+  //   ),
 });
 
 export {

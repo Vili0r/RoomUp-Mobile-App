@@ -33,6 +33,7 @@ import DetailsStepThreeScreen from "../screens/Flat/DetailsStepThreeScreen";
 import AdvertiserStepFourScreen from "../screens/Flat/AdvertiserStepFourScreen";
 import FlatmateStepFiveScreen from "../screens/Flat/FlatmateStepFiveScreen";
 import ConfirmStepSixScreen from "../screens/Flat/ConfirmStepSixScreen";
+import { FlatContextProvider } from "../context/FlatContext";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -238,44 +239,46 @@ const AddPropertySatckNavigator = createNativeStackNavigator();
 
 const AddPropertStack = () => {
   return (
-    <AddPropertySatckNavigator.Navigator initialRouteName="Address">
-      <AddPropertySatckNavigator.Screen
-        name="Adrress"
-        component={AddressStepOneScreen}
-      />
-      <AddPropertySatckNavigator.Screen
-        name="Property"
-        component={PropertyStepTwoScreen}
-        options={{
-          headerTitle: "Property info",
-        }}
-      />
-      <AddPropertySatckNavigator.Screen
-        name="Details"
-        component={DetailsStepThreeScreen}
-        options={{ headerTitle: "Property details" }}
-      />
-      <AddPropertySatckNavigator.Screen
-        name="Advertiser"
-        component={AdvertiserStepFourScreen}
-        options={{
-          headerTitle: "Advertiser info",
-        }}
-      />
-      <AddPropertySatckNavigator.Screen
-        name="Flatmate"
-        component={FlatmateStepFiveScreen}
-        options={{
-          headerTitle: "Prefernce for new tenant",
-        }}
-      />
-      <AddPropertySatckNavigator.Screen
-        name="Confirm"
-        component={ConfirmStepSixScreen}
-        options={{
-          headerTitle: "Confirm",
-        }}
-      />
-    </AddPropertySatckNavigator.Navigator>
+    <FlatContextProvider>
+      <AddPropertySatckNavigator.Navigator initialRouteName="Address">
+        <AddPropertySatckNavigator.Screen
+          name="Adrress"
+          component={AddressStepOneScreen}
+        />
+        <AddPropertySatckNavigator.Screen
+          name="Property"
+          component={PropertyStepTwoScreen}
+          options={{
+            headerTitle: "Property info",
+          }}
+        />
+        <AddPropertySatckNavigator.Screen
+          name="Details"
+          component={DetailsStepThreeScreen}
+          options={{ headerTitle: "Property details" }}
+        />
+        <AddPropertySatckNavigator.Screen
+          name="Advertiser"
+          component={AdvertiserStepFourScreen}
+          options={{
+            headerTitle: "Advertiser info",
+          }}
+        />
+        <AddPropertySatckNavigator.Screen
+          name="Flatmate"
+          component={FlatmateStepFiveScreen}
+          options={{
+            headerTitle: "Prefernce for new tenant",
+          }}
+        />
+        <AddPropertySatckNavigator.Screen
+          name="Confirm"
+          component={ConfirmStepSixScreen}
+          options={{
+            headerTitle: "Confirm",
+          }}
+        />
+      </AddPropertySatckNavigator.Navigator>
+    </FlatContextProvider>
   );
 };

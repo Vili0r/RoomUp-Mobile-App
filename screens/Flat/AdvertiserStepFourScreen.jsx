@@ -5,7 +5,7 @@ import {
   StatusBar,
   StyleSheet,
 } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useForm, Controller } from "react-hook-form";
 import { CustomInput } from "../../components";
@@ -13,8 +13,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { stepFourSchema } from "../../helpers/FlatValidation";
 import Checkbox from "expo-checkbox";
 import Feather from "@expo/vector-icons/Feather";
+import { useFlatContext } from "../../context/FlatContext";
+import { AuthContext } from "../../context/AuthProvider";
 
 const AdvertiserStepFourScreen = ({ navigation }) => {
+  const { user } = useContext(AuthContext);
+  const { advertiserStepFour, setAdvertiserStepFour } = useFlatContext();
   const {
     control,
     handleSubmit,
@@ -23,18 +27,22 @@ const AdvertiserStepFourScreen = ({ navigation }) => {
     clearErrors,
     setValue,
     reset,
-  } = useForm(
-    {
-      mode: "onBlur",
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(stepFourSchema),
+    defaultValues: {
+      first_name: user.first_name || "",
+      last_name: advertiserStepFour?.last_name || "",
+      telephone: advertiserStepFour?.telephone || "",
+      display_last_name: advertiserStepFour?.display_last_name ? true : false,
+      display_telephone: advertiserStepFour?.display_telephone ? true : false,
     },
-    {
-      resolver: yupResolver(stepFourSchema),
-    }
-  );
+  });
 
   const hanldeNext = async (data) => {
     try {
-      // await stepFourSchema.validate(data);
+      await stepFourSchema.validate(data);
+      setAdvertiserStepFour(data);
       // If validation succeeds, move to step 2
       navigation.navigate("AddPropertyRoot", {
         screen: "Flatmate",

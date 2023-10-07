@@ -9,7 +9,7 @@ export const Bedrooms = [
 ];
 
 export const Types = [
-  { value: "", label: "Select type" },
+  { value: "", label: "Select Type" },
   { value: 1, label: "Flat/Apartment" },
   { value: 2, label: "House" },
   { value: 3, label: "Property" },
@@ -59,7 +59,6 @@ export const Modes = [
 ];
 
 export const MinStay = [
-  { value: "", label: "Select min stay" },
   { value: 0, label: "No Minimum" },
   { value: 1, label: "1 month" },
   { value: 2, label: "2 months" },
@@ -80,7 +79,6 @@ export const MinStay = [
 ];
 
 export const MaxStay = [
-  { value: "", label: "Select max stay" },
   { value: 0, label: "No Minimum" },
   { value: 1, label: "1 month" },
   { value: 2, label: "2 months" },
@@ -142,7 +140,7 @@ export const flatmateOccupation = [
 export const flatmateSmoker = [
   { value: "", label: "Select smoker preferences" },
   { value: 1, label: "No preference" },
-  { value: 1, label: "No" },
+  { value: 2, label: "No" },
 ];
 
 export const flatmatePets = [

@@ -4,11 +4,11 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
+  SafeAreaView,
 } from "react-native";
 import React from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useForm, Controller } from "react-hook-form";
-import { Select, CustomInput } from "../../components";
+import { CustomInput, CustomDropdown } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { stepFiveSchema } from "../../helpers/FlatValidation";
 import Feather from "@expo/vector-icons/Feather";
@@ -19,8 +19,10 @@ import {
   flatmatePets,
 } from "../../helpers/arrays";
 import Checkbox from "expo-checkbox";
+import { useFlatContext } from "../../context/FlatContext";
 
 const FlatmateStepFiveScreen = ({ navigation }) => {
+  const { flatmateStepFive, setFlatmateStepFive } = useFlatContext();
   const {
     control,
     handleSubmit,
@@ -29,25 +31,30 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
     clearErrors,
     setValue,
     reset,
-  } = useForm(
-    {
-      mode: "onBlur",
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(stepFiveSchema),
+    defaultValues: {
+      new_flatmate_smoker: flatmateStepFive?.new_flatmate_smoker || "",
+      new_flatmate_min_age:
+        flatmateStepFive?.new_flatmate_min_age.toString() || "",
+      new_flatmate_max_age:
+        flatmateStepFive?.new_flatmate_max_age.toString() || "",
+      new_flatmate_occupation: flatmateStepFive?.new_flatmate_occupation || "",
+      new_flatmate_pets: flatmateStepFive?.new_flatmate_pets || "",
+      new_flatmate_gender: flatmateStepFive?.new_flatmate_gender || "",
     },
-    {
-      resolver: yupResolver(stepFiveSchema),
-    }
-  );
+  });
 
   const hanldeNext = async (data) => {
-    console.log(data);
     try {
-      // await stepFiveSchema.validate(data);
+      await stepFiveSchema.validate(data);
+      setFlatmateStepFive(data);
       // If validation succeeds, move to step 2
       navigation.navigate("AddPropertyRoot", {
         screen: "Confirm",
       });
     } catch (error) {
-      console.log(error);
       setError(error.path, {
         type: "manual",
         message: error.message,
@@ -56,12 +63,7 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAwareScrollView
-      bounces={false}
-      style={styles.container} //style changed to contentContainerStyle
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-    >
+    <SafeAreaView style={styles.container}>
       <StatusBar />
       <View className="p-2 mt-5">
         <View className="">
@@ -70,18 +72,14 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
             name="new_flatmate_smoker"
             render={({ field: { value, onChange, onBlur }, fieldState }) => (
               <>
-                <Select
+                <CustomDropdown
                   label="Smoker"
                   value={value}
-                  onBlur={onBlur}
-                  items={flatmateSmoker}
+                  data={flatmateSmoker}
                   onItemChange={(item) =>
                     setValue("new_flatmate_smoker", item.value)
                   }
-                  isNullable={false}
-                  className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                 />
-
                 <View className="flex flex-row">
                   {fieldState.error && (
                     <Text className="mt-2 ml-4 text-sm text-red-500">
@@ -128,18 +126,14 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
               name="new_flatmate_occupation"
               render={({ field: { value, onChange, onBlur }, fieldState }) => (
                 <>
-                  <Select
+                  <CustomDropdown
                     label="Occupation"
                     value={value}
-                    onBlur={onBlur}
-                    items={flatmateOccupation}
+                    data={flatmateOccupation}
                     onItemChange={(item) =>
                       setValue("new_flatmate_occupation", item.value)
                     }
-                    isNullable={false}
-                    className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                   />
-
                   <View className="flex flex-row">
                     {fieldState.error && (
                       <Text className="mt-2 ml-4 text-sm text-red-500">
@@ -157,18 +151,14 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
               name="new_flatmate_pets"
               render={({ field: { value, onChange, onBlur }, fieldState }) => (
                 <>
-                  <Select
+                  <CustomDropdown
                     label="Pets"
                     value={value}
-                    onBlur={onBlur}
-                    items={flatmatePets}
+                    data={flatmatePets}
                     onItemChange={(item) =>
                       setValue("new_flatmate_pets", item.value)
                     }
-                    isNullable={false}
-                    className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                   />
-
                   <View className="flex flex-row">
                     {fieldState.error && (
                       <Text className="mt-2 ml-4 text-sm text-red-500">
@@ -187,18 +177,14 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
             name="new_flatmate_gender"
             render={({ field: { value, onChange, onBlur }, fieldState }) => (
               <>
-                <Select
+                <CustomDropdown
                   label="Gender"
                   value={value}
-                  onBlur={onBlur}
-                  items={flatmateGender}
+                  data={flatmateGender}
                   onItemChange={(item) =>
                     setValue("new_flatmate_gender", item.value)
                   }
-                  isNullable={false}
-                  className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                 />
-
                 <View className="flex flex-row">
                   {fieldState.error && (
                     <Text className="mt-2 ml-4 text-sm text-red-500">
@@ -258,7 +244,7 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
         </Text>
         <Feather name="arrow-right" size={20} color="white" />
       </TouchableOpacity>
-    </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 

@@ -9,20 +9,19 @@ import {
   SafeAreaView,
   Image,
   FlatList,
-  ScrollView,
+  Alert,
 } from "react-native";
-import React, { useState, useContext, useEffect } from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import React, { useState, useEffect, useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { CustomInput } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axiosConfig from "../../helpers/axiosConfig";
 import { stepSixSchema } from "../../helpers/FlatValidation";
 import { AntDesign } from "@expo/vector-icons";
-import { AuthContext } from "../../context/AuthProvider";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useFlatContext } from "../../context/FlatContext";
+import { AuthContext } from "../../context/AuthProvider";
 
 const imgDir = FileSystem.documentDirectory + "images/";
 
@@ -35,7 +34,8 @@ const ensureDirExists = async () => {
 
 const ConfirmStepSixScreen = ({ navigation }) => {
   const { user } = useContext(AuthContext);
-  const [validationErrors, setValidationErrors] = useState({});
+  const { confirmStepSixScreen, onSubmitAll, validationErrors } =
+    useFlatContext();
   const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState([]);
   const {
@@ -46,14 +46,14 @@ const ConfirmStepSixScreen = ({ navigation }) => {
     clearErrors,
     setValue,
     reset,
-  } = useForm(
-    {
-      mode: "onBlur",
+  } = useForm({
+    mode: "onBlur",
+    resolver: yupResolver(stepSixSchema),
+    defaultValues: {
+      title: confirmStepSixScreen?.title || "",
+      short_description: confirmStepSixScreen?.short_description || "",
     },
-    {
-      resolver: yupResolver(stepSixSchema),
-    }
-  );
+  });
 
   useEffect(() => {
     loadImages();
@@ -67,26 +67,23 @@ const ConfirmStepSixScreen = ({ navigation }) => {
       setImages(files.map((f) => imgDir + f));
     }
   };
+  // console.log(validationErrors, images);
 
-  const hanldeSubmit = async (data) => {
+  const hanldeNext = async (data) => {
+    setValue("photos", images);
     try {
-      // await stepOneSchema.validate(data);
-      // If validation succeeds, move to step 2
-      axiosConfig
-        .get(`/autocomplete?query=${encodeURIComponent(search)}`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        })
-        .then(function (response) {
-          setSearchResults(response.data);
-        })
-        .catch(function (error) {
-          setValidationErrors(error.response.data.message);
-          const key = Object.keys(error.response.data.errors)[0];
-          setValidationErrors(error.response.data.errors[key][0]);
-        });
+      await stepSixSchema.validate(data);
+      onSubmitAll(data);
+      // const response = await onSubmitAll();
+      // if (response) {
+      //   navigation.navigate("My Properties Screen", {
+      //     token: user.token,
+      //   });
+      // } else {
+      //   Alert.alert("Listing was not added successfully");
+      // }
     } catch (error) {
+      console.log(error);
       setError(error.path, {
         type: "manual",
         message: error.message,
@@ -127,13 +124,7 @@ const ConfirmStepSixScreen = ({ navigation }) => {
   // Upload image to server
   const uploadImage = async (uri) => {
     setUploading(true);
-
-    await FileSystem.uploadAsync("http://192.168.1.52:8888/upload.php", uri, {
-      httpMethod: "POST",
-      uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-      fieldName: "file",
-    });
-
+    setValue("images", uri);
     setUploading(false);
   };
 
@@ -150,11 +141,10 @@ const ConfirmStepSixScreen = ({ navigation }) => {
       <View className="flex-row items-center gap-1 m-1">
         <Image style={{ width: 80, height: 80 }} source={{ uri: item.item }} />
         <Text className="flex-1">{filename}</Text>
-
-        <Ionicons.Button
+        {/* <Ionicons.Button
           name="cloud-upload"
           onPress={() => uploadImage(item.item)}
-        />
+        /> */}
         <Ionicons.Button name="trash" onPress={() => deleteImage(item.item)} />
       </View>
     );
@@ -162,12 +152,7 @@ const ConfirmStepSixScreen = ({ navigation }) => {
 
   return (
     <View className="flex-1 bg-white">
-      <SafeAreaView
-        // bounces={false}
-        style={styles.container} //style changed to contentContainerStyle
-        // showsHorizontalScrollIndicator={false}
-        // showsVerticalScrollIndicator={false}
-      >
+      <SafeAreaView style={styles.container}>
         <StatusBar />
         <View className="p-2 mt-5">
           <View className="relative">
@@ -175,7 +160,7 @@ const ConfirmStepSixScreen = ({ navigation }) => {
               name="title"
               control={control}
               placeholder=""
-              editable={false}
+              editable={true}
             />
             <Text
               htmlFor="title"
@@ -187,7 +172,7 @@ const ConfirmStepSixScreen = ({ navigation }) => {
           <View className="relative mt-10">
             <Controller
               control={control}
-              name="short_description"
+              name="description"
               render={({ field: { value, onChange, onBlur }, fieldState }) => (
                 <>
                   <TextInput
@@ -239,7 +224,7 @@ const ConfirmStepSixScreen = ({ navigation }) => {
           </View>
         </View>
         <TouchableOpacity
-          onPress={handleSubmit(hanldeSubmit)}
+          onPress={handleSubmit(hanldeNext)}
           // disabled={!formState.isValid}
           className="flex flex-row items-center justify-center py-3 m-3 mt-2 space-x-3 bg-gray-900 rounded-xl"
         >
