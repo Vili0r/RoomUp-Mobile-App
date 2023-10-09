@@ -51,7 +51,7 @@ const ConfirmStepSixScreen = ({ navigation }) => {
     resolver: yupResolver(stepSixSchema),
     defaultValues: {
       title: confirmStepSixScreen?.title || "",
-      short_description: confirmStepSixScreen?.short_description || "",
+      description: confirmStepSixScreen?.description || "",
     },
   });
 
@@ -67,23 +67,21 @@ const ConfirmStepSixScreen = ({ navigation }) => {
       setImages(files.map((f) => imgDir + f));
     }
   };
-  // console.log(validationErrors, images);
 
   const hanldeNext = async (data) => {
-    setValue("photos", images);
+    setValue("images", images);
     try {
       await stepSixSchema.validate(data);
-      onSubmitAll(data);
-      // const response = await onSubmitAll();
-      // if (response) {
-      //   navigation.navigate("My Properties Screen", {
-      //     token: user.token,
-      //   });
-      // } else {
-      //   Alert.alert("Listing was not added successfully");
-      // }
+
+      const response = await onSubmitAll(data);
+      if (response) {
+        navigation.navigate("My Properties Screen", {
+          token: user.token,
+        });
+      } else {
+        Alert.alert("Listing was not added successfully");
+      }
     } catch (error) {
-      console.log(error);
       setError(error.path, {
         type: "manual",
         message: error.message,
@@ -124,7 +122,16 @@ const ConfirmStepSixScreen = ({ navigation }) => {
   // Upload image to server
   const uploadImage = async (uri) => {
     setUploading(true);
-    setValue("images", uri);
+
+    await FileSystem.uploadAsync("http://roomup.test/api/upload", uri, {
+      httpMethod: "POST",
+      uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+      fieldName: "file",
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+
     setUploading(false);
   };
 
@@ -141,10 +148,10 @@ const ConfirmStepSixScreen = ({ navigation }) => {
       <View className="flex-row items-center gap-1 m-1">
         <Image style={{ width: 80, height: 80 }} source={{ uri: item.item }} />
         <Text className="flex-1">{filename}</Text>
-        {/* <Ionicons.Button
+        <Ionicons.Button
           name="cloud-upload"
-          onPress={() => uploadImage(item.item)}
-        /> */}
+          onPress={() => uploadImage(item)}
+        />
         <Ionicons.Button name="trash" onPress={() => deleteImage(item.item)} />
       </View>
     );
@@ -154,6 +161,9 @@ const ConfirmStepSixScreen = ({ navigation }) => {
     <View className="flex-1 bg-white">
       <SafeAreaView style={styles.container}>
         <StatusBar />
+        {/* {validationErrors && (
+          <Text className="text-sm text-red-500">{validationErrors}</Text>
+        )} */}
         <View className="p-2 mt-5">
           <View className="relative">
             <CustomInput

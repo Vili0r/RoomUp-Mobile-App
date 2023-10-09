@@ -113,6 +113,14 @@ const RegisterScreen = ({ navigation }) => {
         const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so add 1
         const day = String(date.getDate()).padStart(2, "0");
         const formattedDate = `${year}-${month}-${day}`;
+        const uri =
+          Platform.OS === "android"
+            ? avatar.uri
+            : avatar.uri.replace("file://", "");
+        const filename = avatar.uri.split("/").pop();
+        const match = /\.(\w+)$/.exec(filename);
+        const ext = match?.[1];
+        const type = match ? `image/${match[1]}` : `image`;
 
         const formData = new FormData();
         formData.append("first_name", data.first_name);
@@ -124,9 +132,9 @@ const RegisterScreen = ({ navigation }) => {
         formData.append("birthdate", formattedDate);
         formData.append("looking_for", data.looking_for.value);
         formData.append("avatar", {
-          type: avatar.type,
-          uri: avatar.uri,
-          name: avatar.fileName,
+          uri,
+          name: `image.${ext}`,
+          type,
         });
 
         await axiosConfig

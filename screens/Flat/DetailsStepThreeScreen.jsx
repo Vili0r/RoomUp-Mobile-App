@@ -56,6 +56,15 @@ const DetailsStepThreeScreen = ({ navigation }) => {
   });
 
   const hanldeNext = async (data) => {
+    //Transforming amenties so the backend can attach them to the pivot table
+    const modifiedAmenities = selectedAmenities.map((selectedAmenity) => {
+      const matchingAmenity = Amenities.find(
+        (amenity) => amenity.value === selectedAmenity
+      );
+      return { id: matchingAmenity.key };
+    });
+
+    setValue("amenities", modifiedAmenities);
     try {
       await stepThreeSchema.validate(data);
       setDetailsStepThree(data);
@@ -87,7 +96,6 @@ const DetailsStepThreeScreen = ({ navigation }) => {
                   save="value"
                   onSelect={() => setValue("amenities", selectedAmenities)}
                   label="Amenities"
-                  defaultOption={{ key: "1", value: "Jammu & Kashmir" }}
                 />
                 <View className="flex flex-row">
                   {fieldState.error && (
@@ -101,7 +109,7 @@ const DetailsStepThreeScreen = ({ navigation }) => {
           />
         </View>
 
-        <View className="flex flex-row justify-between">
+        <View className="flex flex-row justify-between mt-5">
           <View className="w-[47%]">
             <Controller
               control={control}
@@ -155,7 +163,7 @@ const DetailsStepThreeScreen = ({ navigation }) => {
           </View>
         </View>
 
-        <View className="mt-10">
+        <View className="mt-8">
           <Controller
             name="available_from"
             control={control}
@@ -198,7 +206,7 @@ const DetailsStepThreeScreen = ({ navigation }) => {
           )}
         </View>
 
-        <View className="flex flex-row justify-between mt-5">
+        <View className="flex flex-row justify-between mt-7">
           <View className="w-[47%]">
             <Controller
               control={control}

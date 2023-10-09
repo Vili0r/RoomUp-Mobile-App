@@ -131,15 +131,31 @@ const Profile = () => {
       icon: <MaterialCommunityIcons name="lock-reset" size={28} color="gray" />,
     },
   ];
+  const avatarUrl =
+    user.avatar !==
+    "https://www.gravatar.com/avatar/000000000000000000000000000000?d=mp"
+      ? `http://127.0.0.1:8000/${user.avatar}`
+      : "https://www.gravatar.com/avatar/000000000000000000000000000000?d=mp";
+
   return (
     <ScrollView className="p-3">
       <View className="flex flex-row mt-4">
-        <Image
-          className="object-cover w-16 h-16 mx-2 rounded-full shrink-0 ring-4 ring-gray-300"
-          source={{
-            uri: user.avatar,
-          }}
-        />
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("Update Photo Profile Screen", {
+              id: user.id,
+              token: user.token,
+              name: user.first_name,
+            })
+          }
+        >
+          <Image
+            className="object-cover w-16 h-16 mx-2 rounded-full shrink-0 ring-4 ring-gray-300"
+            source={{
+              uri: avatarUrl,
+            }}
+          />
+        </TouchableOpacity>
         <View className="m-2">
           <Text className="text-base font-semibold text-gray-800">
             {user.first_name}

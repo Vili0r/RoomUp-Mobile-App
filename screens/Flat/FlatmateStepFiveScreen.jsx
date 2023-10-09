@@ -43,6 +43,12 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
       new_flatmate_occupation: flatmateStepFive?.new_flatmate_occupation || "",
       new_flatmate_pets: flatmateStepFive?.new_flatmate_pets || "",
       new_flatmate_gender: flatmateStepFive?.new_flatmate_gender || "",
+      new_flatmate_couples: flatmateStepFive?.new_flatmate_couples
+        ? true
+        : false,
+      new_flatmate_references: flatmateStepFive?.new_flatmate_references
+        ? true
+        : false,
     },
   });
 
@@ -91,7 +97,7 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
             )}
           />
         </View>
-        <View className="flex flex-row justify-between mt-7">
+        <View className="flex flex-row justify-between mt-9">
           <View className="relative w-[47%]">
             <CustomInput
               name="new_flatmate_min_age"
@@ -119,7 +125,7 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <View className="flex flex-row justify-between mt-3">
+        <View className="flex flex-row justify-between mt-7">
           <View className="w-[47%]">
             <Controller
               control={control}
@@ -171,7 +177,7 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        <View className="mt-3">
+        <View className="mt-7">
           <Controller
             control={control}
             name="new_flatmate_gender"
@@ -196,10 +202,10 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
             )}
           />
         </View>
-        <View className="flex flex-row justify-between">
+        <View className="flex flex-row justify-between mt-2">
           <View className="flex flex-row items-start justify-start flex-1 gap-3 mt-1 ml-1">
             <Controller
-              name="couples"
+              name="new_flatmate_couples"
               control={control}
               render={({ field: { value, onChange, onBlur }, fieldState }) => (
                 <Checkbox
@@ -216,7 +222,7 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
           </View>
           <View className="flex flex-row items-start justify-start flex-1 gap-3 mt-1 ml-1">
             <Controller
-              name="references"
+              name="new_flatmate_references"
               control={control}
               render={({ field: { value, onChange, onBlur }, fieldState }) => (
                 <Checkbox

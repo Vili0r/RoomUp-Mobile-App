@@ -5,11 +5,11 @@ import {
   StatusBar,
   StyleSheet,
   TextInput,
+  SafeAreaView,
 } from "react-native";
 import React, { useState, useLayoutEffect, useContext } from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useForm, Controller } from "react-hook-form";
-import { Select, CustomInput } from "../../components";
+import { CustomInput, CustomDropdown } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axiosConfig from "../../helpers/axiosConfig";
 import { stepOneSchema } from "../../helpers/FlatValidation";
@@ -38,6 +38,7 @@ const AddressStepOneScreen = ({ navigation }) => {
       ),
     });
   }, []);
+
   const {
     control,
     handleSubmit,
@@ -108,12 +109,7 @@ const AddressStepOneScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAwareScrollView
-      bounces={false}
-      style={styles.container} //style changed to contentContainerStyle
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-    >
+    <SafeAreaView style={styles.container}>
       <StatusBar />
 
       <View className="p-2 mt-5">
@@ -224,22 +220,18 @@ const AddressStepOneScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <View className="mt-2">
+        <View className="mt-6">
           <Controller
             control={control}
             name="minutes"
             render={({ field: { value, onChange, onBlur }, fieldState }) => (
               <>
-                <Select
+                <CustomDropdown
                   label="Minutes"
                   value={value}
-                  onBlur={onBlur}
-                  items={Minutes}
+                  data={Minutes}
                   onItemChange={(item) => setValue("minutes", item.value)}
-                  isNullable={false}
-                  className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                 />
-
                 <View className="flex flex-row">
                   {fieldState.error && (
                     <Text className="mt-2 ml-4 text-sm text-red-500">
@@ -251,22 +243,18 @@ const AddressStepOneScreen = ({ navigation }) => {
             )}
           />
         </View>
-        <View className="mt-2">
+        <View className="mt-6">
           <Controller
             control={control}
             name="mode"
             render={({ field: { value, onChange, onBlur }, fieldState }) => (
               <>
-                <Select
+                <CustomDropdown
                   label="Mode"
                   value={value}
-                  onBlur={onBlur}
-                  items={Modes}
+                  data={Modes}
                   onItemChange={(item) => setValue("mode", item.value)}
-                  isNullable={false}
-                  className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                 />
-
                 <View className="flex flex-row">
                   {fieldState.error && (
                     <Text className="mt-2 ml-4 text-sm text-red-500">
@@ -278,22 +266,18 @@ const AddressStepOneScreen = ({ navigation }) => {
             )}
           />
         </View>
-        <View className="mt-2">
+        <View className="mt-6">
           <Controller
             control={control}
             name="station"
             render={({ field: { value, onChange, onBlur }, fieldState }) => (
               <>
-                <Select
+                <CustomDropdown
                   label="Stations"
                   value={value}
-                  onBlur={onBlur}
-                  items={Stations}
+                  data={Stations}
                   onItemChange={(item) => setValue("station", item.value)}
-                  isNullable={false}
-                  className="p-4 mt-3 text-gray-700 bg-gray-100 rounded-2xl"
                 />
-
                 <View className="flex flex-row">
                   {fieldState.error && (
                     <Text className="mt-2 ml-4 text-sm text-red-500">
@@ -316,7 +300,7 @@ const AddressStepOneScreen = ({ navigation }) => {
         </Text>
         <Feather name="arrow-right" size={20} color="white" />
       </TouchableOpacity>
-    </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 

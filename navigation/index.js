@@ -34,6 +34,7 @@ import AdvertiserStepFourScreen from "../screens/Flat/AdvertiserStepFourScreen";
 import FlatmateStepFiveScreen from "../screens/Flat/FlatmateStepFiveScreen";
 import ConfirmStepSixScreen from "../screens/Flat/ConfirmStepSixScreen";
 import { FlatContextProvider } from "../context/FlatContext";
+import UpdatePhotoProfileScreen from "../screens/UpdatePhotoProfileScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -120,6 +121,11 @@ const RootNavigator = () => {
           name="Incoming Messages Screen"
           component={IncomingMessagesScreen}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Update Photo Profile Screen"
+          component={UpdatePhotoProfileScreen}
+          options={{ headerShown: true, title: "Update Photo Profile" }}
         />
       </Stack.Group>
       <Stack.Screen

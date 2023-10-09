@@ -115,7 +115,7 @@ const PropertyStepTwoScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        <View className="mt-3">
+        <View className="mt-6">
           <Controller
             control={control}
             name="what_i_am"
@@ -158,7 +158,7 @@ const PropertyStepTwoScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <View className="mt-3">
+        <View className="mt-6">
           <Controller
             control={control}
             name="furnished"
