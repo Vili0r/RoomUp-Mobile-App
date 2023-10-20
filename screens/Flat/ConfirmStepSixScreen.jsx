@@ -9,9 +9,8 @@ import {
   SafeAreaView,
   Image,
   FlatList,
-  Alert,
 } from "react-native";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { CustomInput } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -22,6 +21,7 @@ import * as FileSystem from "expo-file-system";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useFlatContext } from "../../context/FlatContext";
 import { AuthContext } from "../../context/AuthProvider";
+import axiosConfig from "../../helpers/axiosConfig";
 
 const imgDir = FileSystem.documentDirectory + "images/";
 
@@ -32,12 +32,12 @@ const ensureDirExists = async () => {
   }
 };
 
-const ConfirmStepSixScreen = ({ navigation }) => {
+const ConfirmStepSixScreen = () => {
   const { user } = useContext(AuthContext);
   const { confirmStepSixScreen, onSubmitAll, validationErrors } =
     useFlatContext();
-  const [uploading, setUploading] = useState(false);
   const [images, setImages] = useState([]);
+  const [serverErrors, setServerErrors] = useState(null);
   const {
     control,
     handleSubmit,
@@ -55,32 +55,11 @@ const ConfirmStepSixScreen = ({ navigation }) => {
     },
   });
 
-  useEffect(() => {
-    loadImages();
-  }, []);
-
-  // Load images from file system
-  const loadImages = async () => {
-    await ensureDirExists();
-    const files = await FileSystem.readDirectoryAsync(imgDir);
-    if (files.length > 0) {
-      setImages(files.map((f) => imgDir + f));
-    }
-  };
-
   const hanldeNext = async (data) => {
-    setValue("images", images);
     try {
+      await uploadImage();
       await stepSixSchema.validate(data);
-
-      const response = await onSubmitAll(data);
-      if (response) {
-        navigation.navigate("My Properties Screen", {
-          token: user.token,
-        });
-      } else {
-        Alert.alert("Listing was not added successfully");
-      }
+      await onSubmitAll(data);
     } catch (error) {
       setError(error.path, {
         type: "manual",
@@ -119,26 +98,38 @@ const ConfirmStepSixScreen = ({ navigation }) => {
     setImages([...images, dest]);
   };
 
-  // Upload image to server
-  const uploadImage = async (uri) => {
-    setUploading(true);
-
-    await FileSystem.uploadAsync("http://roomup.test/api/upload", uri, {
-      httpMethod: "POST",
-      uploadType: FileSystem.FileSystemUploadType.MULTIPART,
-      fieldName: "file",
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    });
-
-    setUploading(false);
-  };
-
   // Delete image from file system
   const deleteImage = async (uri) => {
     await FileSystem.deleteAsync(uri);
     setImages(images.filter((i) => i !== uri));
+  };
+
+  // Upload image from file system to server
+  const uploadImage = async () => {
+    const formData = new FormData();
+    images.map((item, index) => {
+      formData.append("images[]", {
+        uri: Platform.OS === "android" ? item : item.replace("file://", ""),
+        name: "image/jpeg",
+        type: item.split("/").pop(),
+      });
+    });
+
+    await axiosConfig
+      .post("/upload", formData, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        setValue("images", response.data);
+      })
+      .catch((error) => {
+        setServerErrors(error.response.data.message);
+        const key = Object.keys(error.response.data.errors)[0];
+        setServerErrors(error.response.data.errors[key][0]);
+      });
   };
 
   const renderItem = (item) => {
@@ -148,10 +139,6 @@ const ConfirmStepSixScreen = ({ navigation }) => {
       <View className="flex-row items-center gap-1 m-1">
         <Image style={{ width: 80, height: 80 }} source={{ uri: item.item }} />
         <Text className="flex-1">{filename}</Text>
-        <Ionicons.Button
-          name="cloud-upload"
-          onPress={() => uploadImage(item)}
-        />
         <Ionicons.Button name="trash" onPress={() => deleteImage(item.item)} />
       </View>
     );
@@ -161,9 +148,12 @@ const ConfirmStepSixScreen = ({ navigation }) => {
     <View className="flex-1 bg-white">
       <SafeAreaView style={styles.container}>
         <StatusBar />
-        {/* {validationErrors && (
+        {serverErrors && (
+          <Text className="text-sm text-red-500">{serverErrors}</Text>
+        )}
+        {validationErrors && typeof validationErrors === "string" && (
           <Text className="text-sm text-red-500">{validationErrors}</Text>
-        )} */}
+        )}
         <View className="p-2 mt-5">
           <View className="relative">
             <CustomInput

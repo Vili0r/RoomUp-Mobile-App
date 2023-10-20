@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Pressable,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -56,15 +57,7 @@ const DetailsStepThreeScreen = ({ navigation }) => {
   });
 
   const hanldeNext = async (data) => {
-    //Transforming amenties so the backend can attach them to the pivot table
-    const modifiedAmenities = selectedAmenities.map((selectedAmenity) => {
-      const matchingAmenity = Amenities.find(
-        (amenity) => amenity.value === selectedAmenity
-      );
-      return { id: matchingAmenity.key };
-    });
-
-    setValue("amenities", modifiedAmenities);
+    setValue("amenities", selectedAmenities);
     try {
       await stepThreeSchema.validate(data);
       setDetailsStepThree(data);
@@ -80,8 +73,19 @@ const DetailsStepThreeScreen = ({ navigation }) => {
     }
   };
 
+  const toggleAmenity = (amenity) => {
+    if (selectedAmenities.includes(amenity)) {
+      setSelectedAmenities(
+        selectedAmenities.filter((item) => item !== amenity)
+      );
+    } else {
+      setSelectedAmenities([...selectedAmenities, amenity]);
+    }
+    setValue("amenities", selectedAmenities);
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <ScrollView style={styles.container}>
       <StatusBar />
       <View className="p-2 mt-5">
         <View className="mt-2">
@@ -90,13 +94,26 @@ const DetailsStepThreeScreen = ({ navigation }) => {
             name="amenities"
             render={({ field: { value, onChange, onBlur }, fieldState }) => (
               <>
-                <MultipleSelectList
-                  setSelected={(val) => setSelectedAmenities(val)}
-                  data={Amenities}
-                  save="value"
-                  onSelect={() => setValue("amenities", selectedAmenities)}
-                  label="Amenities"
-                />
+                <View className="">
+                  {Amenities.map((amenity) => (
+                    <View
+                      key={amenity.key}
+                      className="flex flex-row items-center space-x-2"
+                    >
+                      <Checkbox
+                        value={selectedAmenities?.includes(amenity.key)}
+                        onValueChange={() => toggleAmenity(amenity.key)}
+                        style={styles.checkbox}
+                        color={
+                          selectedAmenities?.includes(amenity.key)
+                            ? "#4630EB"
+                            : undefined
+                        }
+                      />
+                      <Text className="mt-3">{amenity.value}</Text>
+                    </View>
+                  ))}
+                </View>
                 <View className="flex flex-row">
                   {fieldState.error && (
                     <Text className="mt-2 ml-4 text-sm text-red-500">
@@ -254,14 +271,14 @@ const DetailsStepThreeScreen = ({ navigation }) => {
       <TouchableOpacity
         onPress={handleSubmit(hanldeNext)}
         // disabled={!formState.isValid}
-        className="flex flex-row items-center justify-center py-3 m-3 mt-5 space-x-3 bg-gray-900 rounded-xl"
+        className="flex flex-row items-center justify-center py-3 m-3 mt-5 mb-10 space-x-3 bg-gray-900 rounded-xl"
       >
         <Text className="font-bold text-center text-white font-xl">
           Next step
         </Text>
         <Feather name="arrow-right" size={20} color="white" />
       </TouchableOpacity>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 
