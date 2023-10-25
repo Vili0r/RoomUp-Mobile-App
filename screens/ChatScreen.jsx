@@ -18,7 +18,6 @@ import {
   PUSHER_HOST,
   PUSHER_PORT,
 } from "@env";
-
 import Echo from "laravel-echo";
 import socketio from "socket.io-client";
 

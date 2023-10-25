@@ -35,6 +35,7 @@ import FlatmateStepFiveScreen from "../screens/Flat/FlatmateStepFiveScreen";
 import ConfirmStepSixScreen from "../screens/Flat/ConfirmStepSixScreen";
 import { FlatContextProvider } from "../context/FlatContext";
 import UpdatePhotoProfileScreen from "../screens/UpdatePhotoProfileScreen";
+import EditFlatScreen from "../screens/EditFlatScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -156,6 +157,11 @@ const RootNavigator = () => {
       <Stack.Screen
         name="Chat Screen"
         component={ChatScreen}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="Edit Flat Screen"
+        component={EditFlatScreen}
         options={{ headerShown: true }}
       />
     </Stack.Navigator>

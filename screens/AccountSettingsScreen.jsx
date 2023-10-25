@@ -15,18 +15,19 @@ const AccountSettingsScreen = ({ route }) => {
     return response.data;
   };
 
-  const { data } = useQuery(
-    ["userPersonalInformation"],
-    fetchPersonalInformation
-  );
+  const userPersonalInformationQuery = useQuery({
+    queryKey: ["userPersonalInformation"],
+    queryFn: fetchPersonalInformation,
+    refetchOnMount: true,
+  });
 
   return (
     <ScrollView className="p-4 space-y-6">
       <View className="p-2 bg-white rounded-lg shadow">
         <UpdateProfileInformation
-          mustVerifyEmail={data?.mustVerifyEmail}
-          user={data?.user}
-          status={data?.status}
+          mustVerifyEmail={userPersonalInformationQuery.data?.mustVerifyEmail}
+          user={userPersonalInformationQuery.data?.user}
+          status={userPersonalInformationQuery.data?.status}
           token={route.params.token}
         />
       </View>

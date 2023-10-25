@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useState, useLayoutEffect, useContext } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { CustomInput, CustomDropdown } from "../../components";
+import { CustomInput, CustomDropdown, StepOneFlat } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axiosConfig from "../../helpers/axiosConfig";
 import { stepOneSchema } from "../../helpers/FlatValidation";
@@ -22,8 +22,6 @@ import { useFlatContext } from "../../context/FlatContext";
 const AddressStepOneScreen = ({ navigation }) => {
   const { user } = useContext(AuthContext);
   const [search, setSearch] = useState("");
-  const [selectedAddress, setSelectedAddress] = useState([]);
-  const [searchResults, setSearchResults] = useState([]);
   const { addressStepOne, setAddressStepOne } = useFlatContext();
 
   useLayoutEffect(() => {
@@ -75,22 +73,22 @@ const AddressStepOneScreen = ({ navigation }) => {
     setSearch("");
   };
 
-  const getAddresses = (search) => {
-    if (search) {
-      axiosConfig
-        .get(`/autocomplete?query=${encodeURIComponent(search)}`, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        })
-        .then(function (response) {
-          setSearchResults(response.data);
-        })
-        .catch(function (error) {
-          console.error(error);
-        });
-    }
-  };
+  // const getAddresses = (search) => {
+  //   if (search) {
+  //     axiosConfig
+  //       .get(`/autocomplete?query=${encodeURIComponent(search)}`, {
+  //         headers: {
+  //           Authorization: `Bearer ${user.token}`,
+  //         },
+  //       })
+  //       .then(function (response) {
+  //         setSearchResults(response.data);
+  //       })
+  //       .catch(function (error) {
+  //         console.error(error);
+  //       });
+  //   }
+  // };
 
   const hanldeNext = async (data) => {
     try {
@@ -111,8 +109,14 @@ const AddressStepOneScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar />
-
-      <View className="p-2 mt-5">
+      <StepOneFlat
+        control={control}
+        setValue={setValue}
+        handleSelectedAddress={handleSelectedAddress}
+        search={search}
+        setSearch={setSearch}
+      />
+      {/* <View className="p-2 mt-5">
         <View className="flex-row items-center p-3 mx-3 border border-gray-300 rounded-full">
           <Feather name="search" size={24} stroke="gray" />
           <TextInput
@@ -289,7 +293,7 @@ const AddressStepOneScreen = ({ navigation }) => {
             )}
           />
         </View>
-      </View>
+      </View> */}
       <TouchableOpacity
         onPress={handleSubmit(hanldeNext)}
         // disabled={!formState.isValid}

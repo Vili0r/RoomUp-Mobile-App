@@ -1,10 +1,4 @@
-import {
-  View,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  StatusBar,
-} from "react-native";
+import { View, Text, TouchableOpacity, StatusBar } from "react-native";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import axiosConfig from "../helpers/axiosConfig";
@@ -14,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const MyPropertiesScreen = ({ route }) => {
   const navigation = useNavigation();
+
   const fetchMyPropertiesListings = async () => {
     const response = await axiosConfig.get(`/my-properties`, {
       headers: {
@@ -30,9 +25,9 @@ const MyPropertiesScreen = ({ route }) => {
   );
 
   return (
-    <SafeAreaView className="items-center justify-center flex-1 bg-white">
+    <View className="items-center justify-center flex-1">
       <StatusBar />
-      <View className="items-center justify-center flex-1 bg-white">
+      <View className="flex-1 bg-white">
         {!data || data.length === 0 ? (
           <>
             <LottieView
@@ -64,7 +59,7 @@ const MyPropertiesScreen = ({ route }) => {
           <MyProperties properties={data} isLoading={isLoading} />
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
