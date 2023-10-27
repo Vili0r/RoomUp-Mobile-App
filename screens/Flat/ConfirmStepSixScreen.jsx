@@ -4,15 +4,13 @@ import {
   TouchableOpacity,
   StatusBar,
   StyleSheet,
-  TextInput,
-  Pressable,
   SafeAreaView,
   Image,
   FlatList,
 } from "react-native";
 import React, { useState, useContext } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { CustomInput, StepSixFlat } from "../../components";
+import { useForm } from "react-hook-form";
+import { StepSixFlat } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { stepSixSchema } from "../../helpers/FlatValidation";
 import { AntDesign } from "@expo/vector-icons";

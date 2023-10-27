@@ -14,7 +14,7 @@ const StepThreeFlat = ({
   toggleAmenity,
 }) => {
   const [pickedDate, setPickedDate] = useState(
-    data?.available_from ?? new Date()
+    new Date(data?.available_from ?? "")
   );
   const [showCalendar, setShowCalendar] = useState(false);
 

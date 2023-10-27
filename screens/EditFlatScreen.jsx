@@ -104,7 +104,7 @@ const EditFlatScreen = ({ route, navigation }) => {
         {singleFlatEditQuery.isLoading ? (
           <ActivityIndicator className="mt-2" size="large" color="gray" />
         ) : (
-          <EditFlatForm data={singleFlatEditQuery.data} />
+          <EditFlatForm property={singleFlatEditQuery.data} />
         )}
       </View>
       <BottomSheet

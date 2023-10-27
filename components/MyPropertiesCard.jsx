@@ -66,6 +66,7 @@ const MyPropertiesCard = ({ item: property }) => {
       })
       .then((response) => {
         Alert.alert("Listing was deleted successfully!");
+        navigation.navigate("Account Screen");
       })
       .catch((error) => {
         setError(error.response.data.message);

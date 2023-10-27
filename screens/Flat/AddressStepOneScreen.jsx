@@ -1,26 +1,20 @@
 import {
-  View,
   Text,
   TouchableOpacity,
   StatusBar,
   StyleSheet,
-  TextInput,
   SafeAreaView,
 } from "react-native";
-import React, { useState, useLayoutEffect, useContext } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { CustomInput, CustomDropdown, StepOneFlat } from "../../components";
+import React, { useState, useLayoutEffect } from "react";
+import { useForm } from "react-hook-form";
+import { StepOneFlat } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
-import axiosConfig from "../../helpers/axiosConfig";
 import { stepOneSchema } from "../../helpers/FlatValidation";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Minutes, Modes, Stations } from "../../helpers/arrays";
-import { AuthContext } from "../../context/AuthProvider";
 import { useFlatContext } from "../../context/FlatContext";
 
 const AddressStepOneScreen = ({ navigation }) => {
-  const { user } = useContext(AuthContext);
   const [search, setSearch] = useState("");
   const { addressStepOne, setAddressStepOne } = useFlatContext();
 

@@ -1,27 +1,16 @@
 import {
-  View,
   Text,
   TouchableOpacity,
   StatusBar,
   StyleSheet,
-  Pressable,
-  SafeAreaView,
   ScrollView,
 } from "react-native";
 import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { CustomDropdown, StepThreeFlat } from "../../components";
+import { useForm } from "react-hook-form";
+import { StepThreeFlat } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { stepThreeSchema } from "../../helpers/FlatValidation";
 import Feather from "@expo/vector-icons/Feather";
-import {
-  DaysAvailable,
-  MinStay,
-  MaxStay,
-  Amenities,
-} from "../../helpers/arrays";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import Checkbox from "expo-checkbox";
 import { useFlatContext } from "../../context/FlatContext";
 
 const DetailsStepThreeScreen = ({ navigation }) => {

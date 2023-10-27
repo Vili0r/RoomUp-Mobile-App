@@ -1,5 +1,4 @@
 import {
-  View,
   Text,
   TouchableOpacity,
   StatusBar,
@@ -7,18 +6,11 @@ import {
   SafeAreaView,
 } from "react-native";
 import React from "react";
-import { useForm, Controller } from "react-hook-form";
-import { CustomInput, CustomDropdown, StepFiveFlat } from "../../components";
+import { useForm } from "react-hook-form";
+import { StepFiveFlat } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { stepFiveSchema } from "../../helpers/FlatValidation";
 import Feather from "@expo/vector-icons/Feather";
-import {
-  flatmateGender,
-  flatmateSmoker,
-  flatmateOccupation,
-  flatmatePets,
-} from "../../helpers/arrays";
-import Checkbox from "expo-checkbox";
 import { useFlatContext } from "../../context/FlatContext";
 
 const FlatmateStepFiveScreen = ({ navigation }) => {

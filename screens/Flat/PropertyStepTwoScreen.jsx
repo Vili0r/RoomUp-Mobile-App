@@ -1,5 +1,4 @@
 import {
-  View,
   Text,
   TouchableOpacity,
   StatusBar,
@@ -7,17 +6,11 @@ import {
   SafeAreaView,
 } from "react-native";
 import React from "react";
-import { useForm, Controller } from "react-hook-form";
-import { CustomInput, CustomDropdown, StepTwoFlat } from "../../components";
+import { useForm } from "react-hook-form";
+import { StepTwoFlat } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { stepTwoSchema } from "../../helpers/FlatValidation";
 import Feather from "@expo/vector-icons/Feather";
-import {
-  Furnishings,
-  WhatIAmFlat,
-  Bedrooms,
-  Types,
-} from "../../helpers/arrays";
 import { useFlatContext } from "../../context/FlatContext";
 
 const PropertyStepTwoScreen = ({ navigation }) => {

@@ -1,17 +1,10 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StatusBar,
-  StyleSheet,
-} from "react-native";
+import { Text, TouchableOpacity, StatusBar, StyleSheet } from "react-native";
 import React, { useContext } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useForm, Controller } from "react-hook-form";
-import { CustomInput, StepFourFlat } from "../../components";
+import { useForm } from "react-hook-form";
+import { StepFourFlat } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { stepFourSchema } from "../../helpers/FlatValidation";
-import Checkbox from "expo-checkbox";
 import Feather from "@expo/vector-icons/Feather";
 import { useFlatContext } from "../../context/FlatContext";
 import { AuthContext } from "../../context/AuthProvider";
