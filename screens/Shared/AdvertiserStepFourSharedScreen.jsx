@@ -2,16 +2,16 @@ import { Text, TouchableOpacity, StatusBar, StyleSheet } from "react-native";
 import React, { useContext } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useForm } from "react-hook-form";
-import { StepFourFlat } from "../../components";
+import { StepFour } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { stepFourSchema } from "../../helpers/FlatValidation";
+import { stepFourSchema } from "../../helpers/SharedValidation";
 import Feather from "@expo/vector-icons/Feather";
-import { useFlatContext } from "../../context/FlatContext";
+import { useSharedContext } from "../../context/SharedContext";
 import { AuthContext } from "../../context/AuthProvider";
 
-const AdvertiserStepFourScreen = ({ navigation }) => {
+const AdvertiserStepFourSharedScreen = ({ navigation }) => {
   const { user } = useContext(AuthContext);
-  const { advertiserStepFour, setAdvertiserStepFour } = useFlatContext();
+  const { advertiserStepFour, setAdvertiserStepFour } = useSharedContext();
   const {
     control,
     handleSubmit,
@@ -37,7 +37,7 @@ const AdvertiserStepFourScreen = ({ navigation }) => {
       await stepFourSchema.validate(data);
       setAdvertiserStepFour(data);
       // If validation succeeds, move to step 2
-      navigation.navigate("AddPropertyRoot", {
+      navigation.navigate("AddSharedRoot", {
         screen: "Flatmate",
       });
     } catch (error) {
@@ -55,7 +55,7 @@ const AdvertiserStepFourScreen = ({ navigation }) => {
       showsVerticalScrollIndicator={false}
     >
       <StatusBar />
-      <StepFourFlat control={control} />
+      <StepFour control={control} />
 
       <TouchableOpacity
         onPress={handleSubmit(hanldeNext)}
@@ -71,7 +71,7 @@ const AdvertiserStepFourScreen = ({ navigation }) => {
   );
 };
 
-export default AdvertiserStepFourScreen;
+export default AdvertiserStepFourSharedScreen;
 
 const styles = StyleSheet.create({
   container: {

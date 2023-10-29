@@ -13,7 +13,7 @@ import { stepThreeSchema } from "../../helpers/FlatValidation";
 import Feather from "@expo/vector-icons/Feather";
 import { useFlatContext } from "../../context/FlatContext";
 
-const DetailsStepThreeScreen = ({ navigation }) => {
+const DetailsStepThreeFlatScreen = ({ navigation }) => {
   const { detailsStepThree, setDetailsStepThree } = useFlatContext();
   const [selectedAmenities, setSelectedAmenities] = useState(
     detailsStepThree?.amenities ?? []
@@ -92,7 +92,7 @@ const DetailsStepThreeScreen = ({ navigation }) => {
   );
 };
 
-export default DetailsStepThreeScreen;
+export default DetailsStepThreeFlatScreen;
 
 const styles = StyleSheet.create({
   container: {

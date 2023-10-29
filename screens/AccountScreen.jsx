@@ -8,21 +8,28 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import LottieView from "lottie-react-native";
 import { AuthContext } from "../context/AuthProvider";
 import { useNavigation } from "@react-navigation/native";
 import Profile from "../components/Profile";
 
 const AccountScreen = () => {
+  const scrollViewRef = useRef();
   const navigation = useNavigation();
   const { user } = useContext(AuthContext);
+
+  const handleScroll = () => {
+    if (scrollViewRef.current) {
+      scrollViewRef.current.scrollToEnd({ animated: true });
+    }
+  };
   return (
     <SafeAreaView style={styles.container} className="flex-1 bg-white">
-      <StatusBar />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <StatusBar handleScroll={handleScroll} />
+      <ScrollView showsVerticalScrollIndicator={false} ref={scrollViewRef}>
         {user ? (
-          <Profile />
+          <Profile handleScroll={handleScroll} />
         ) : (
           <View className="items-center justify-center flex-1 bg-white">
             <LottieView

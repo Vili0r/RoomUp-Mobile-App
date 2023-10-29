@@ -22,19 +22,24 @@ import UpdatePasswordScreen from "../screens/Auth/UpdatePasswordScreen";
 import AccountSettingsScreen from "../screens/AccountSettingsScreen";
 import AdvancedFilterScreen from "../screens/AdvancedFilterScreen";
 import MyPropertiesScreen from "../screens/MyPropertiesScreen";
-import AddRoomScreen from "../screens/AddRoomScreen";
 import AddRoommateScreen from "../screens/AddRoommateScreen";
 import MessageAdvertiserScreen from "../screens/MessageAdvertiserScreen";
 import IncomingMessagesScreen from "../screens/IncomingMessagesScreen";
 import ChatScreen from "../screens/ChatScreen";
-import AddressStepOneScreen from "../screens/Flat/AddressStepOneScreen";
-import PropertyStepTwoScreen from "../screens/Flat/PropertyStepTwoScreen";
-import DetailsStepThreeScreen from "../screens/Flat/DetailsStepThreeScreen";
-import AdvertiserStepFourScreen from "../screens/Flat/AdvertiserStepFourScreen";
-import FlatmateStepFiveScreen from "../screens/Flat/FlatmateStepFiveScreen";
-import ConfirmStepSixScreen from "../screens/Flat/ConfirmStepSixScreen";
+import AddressStepOneFlatScreen from "../screens/Flat/AddressStepOneFlatScreen";
+import PropertyStepTwoFlatScreen from "../screens/Flat/PropertyStepTwoFlatScreen";
+import DetailsStepThreeFlatScreen from "../screens/Flat/DetailsStepThreeFlatScreen";
+import AdvertiserStepFourFlatScreen from "../screens/Flat/AdvertiserStepFourFlatScreen";
+import FlatmateStepFiveFlatScreen from "../screens/Flat/FlatmateStepFiveFlatScreen";
+import ConfirmStepSixFlatScreen from "../screens/Flat/ConfirmStepSixFlatScreen";
+import AddressStepOneSharedScreen from "../screens/Shared/AddressStepOneSharedScreen";
+import PropertyStepTwoSharedScreen from "../screens/Shared/PropertyStepTwoSharedScreen";
+import DetailsStepThreeSharedScreen from "../screens/Shared/DetailsStepThreeSharedScreen";
+import AdvertiserStepFourSharedScreen from "../screens/Shared/AdvertiserStepFourSharedScreen";
+import FlatmateStepFiveSharedScreen from "../screens/Shared/FlatmateStepFiveSharedScreen";
+import ConfirmStepSixSharedScreen from "../screens/Shared/ConfirmStepSixSharedScreen";
 import { FlatContextProvider } from "../context/FlatContext";
-import UpdatePhotoProfileScreen from "../screens/UpdatePhotoProfileScreen";
+import { SharedContextProvider } from "../context/SharedContext";
 import EditFlatScreen from "../screens/EditFlatScreen";
 
 export default Navigation = () => {
@@ -123,11 +128,6 @@ const RootNavigator = () => {
           component={IncomingMessagesScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-          name="Update Photo Profile Screen"
-          component={UpdatePhotoProfileScreen}
-          options={{ headerShown: true, title: "Update Photo Profile" }}
-        />
       </Stack.Group>
       <Stack.Screen
         name="Account Settings Screen"
@@ -141,13 +141,13 @@ const RootNavigator = () => {
       />
       <Stack.Screen
         name="AddPropertyRoot"
-        component={AddPropertStack}
+        component={AddPropertyStack}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Add Room Screen"
-        component={AddRoomScreen}
-        options={{ headerShown: true, title: "Add a Room Listing" }}
+        name="AddSharedRoot"
+        component={AddSharedStack}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Add Roommate Screen"
@@ -249,48 +249,96 @@ const BottomTabNavigator = () => {
 
 const AddPropertySatckNavigator = createNativeStackNavigator();
 
-const AddPropertStack = () => {
+const AddPropertyStack = () => {
   return (
     <FlatContextProvider>
       <AddPropertySatckNavigator.Navigator initialRouteName="Address">
         <AddPropertySatckNavigator.Screen
           name="Adrress"
-          component={AddressStepOneScreen}
+          component={AddressStepOneFlatScreen}
         />
         <AddPropertySatckNavigator.Screen
           name="Property"
-          component={PropertyStepTwoScreen}
+          component={PropertyStepTwoFlatScreen}
           options={{
             headerTitle: "Property info",
           }}
         />
         <AddPropertySatckNavigator.Screen
           name="Details"
-          component={DetailsStepThreeScreen}
+          component={DetailsStepThreeFlatScreen}
           options={{ headerTitle: "Property details" }}
         />
         <AddPropertySatckNavigator.Screen
           name="Advertiser"
-          component={AdvertiserStepFourScreen}
+          component={AdvertiserStepFourFlatScreen}
           options={{
             headerTitle: "Advertiser info",
           }}
         />
         <AddPropertySatckNavigator.Screen
           name="Flatmate"
-          component={FlatmateStepFiveScreen}
+          component={FlatmateStepFiveFlatScreen}
           options={{
             headerTitle: "Prefernce for new tenant",
           }}
         />
         <AddPropertySatckNavigator.Screen
           name="Confirm"
-          component={ConfirmStepSixScreen}
+          component={ConfirmStepSixFlatScreen}
           options={{
             headerTitle: "Confirm",
           }}
         />
       </AddPropertySatckNavigator.Navigator>
     </FlatContextProvider>
+  );
+};
+
+const AddSharedSatckNavigator = createNativeStackNavigator();
+
+const AddSharedStack = () => {
+  return (
+    <SharedContextProvider>
+      <AddSharedSatckNavigator.Navigator initialRouteName="Address">
+        <AddSharedSatckNavigator.Screen
+          name="Adrress"
+          component={AddressStepOneSharedScreen}
+        />
+        <AddSharedSatckNavigator.Screen
+          name="Property"
+          component={PropertyStepTwoSharedScreen}
+          options={{
+            headerTitle: "Property info",
+          }}
+        />
+        <AddSharedSatckNavigator.Screen
+          name="Details"
+          component={DetailsStepThreeSharedScreen}
+          options={{ headerTitle: "Property details" }}
+        />
+        <AddSharedSatckNavigator.Screen
+          name="Advertiser"
+          component={AdvertiserStepFourSharedScreen}
+          options={{
+            headerTitle: "Advertiser info",
+          }}
+        />
+        <AddSharedSatckNavigator.Screen
+          name="Flatmate"
+          component={FlatmateStepFiveSharedScreen}
+          options={{
+            headerTitle: "Prefernce for new tenant",
+          }}
+        />
+        <AddSharedSatckNavigator.Screen
+          name="Confirm"
+          component={ConfirmStepSixSharedScreen}
+          options={{
+            headerTitle: "Confirm",
+          }}
+        />
+      </AddSharedSatckNavigator.Navigator>
+    </SharedContextProvider>
   );
 };

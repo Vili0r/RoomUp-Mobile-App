@@ -13,7 +13,7 @@ import { stepFiveSchema } from "../../helpers/FlatValidation";
 import Feather from "@expo/vector-icons/Feather";
 import { useFlatContext } from "../../context/FlatContext";
 
-const FlatmateStepFiveScreen = ({ navigation }) => {
+const FlatmateStepFiveFlatScreen = ({ navigation }) => {
   const { flatmateStepFive, setFlatmateStepFive } = useFlatContext();
   const {
     control,
@@ -79,7 +79,7 @@ const FlatmateStepFiveScreen = ({ navigation }) => {
   );
 };
 
-export default FlatmateStepFiveScreen;
+export default FlatmateStepFiveFlatScreen;
 
 const styles = StyleSheet.create({
   container: {

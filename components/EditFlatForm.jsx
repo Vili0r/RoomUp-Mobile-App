@@ -23,10 +23,10 @@ import {
 } from "../helpers/FlatValidation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ScrollViewComponent from "./ScrollViewComponent";
-import StepOneFlat from "./StepOneFlat";
+import StepOne from "./StepOne";
 import StepTwoFlat from "./StepTwoFlat";
 import StepThreeFlat from "./StepThreeFlat";
-import StepFourFlat from "./StepFourFlat";
+import StepFour from "./StepFour";
 import StepFiveFlat from "./StepFiveFlat";
 import CustomInput from "./CustomInput";
 import { AuthContext } from "../context/AuthProvider";
@@ -147,7 +147,7 @@ const EditFlatForm = ({ property }) => {
         ...data,
         images: imagesData, // Add the images data to combinedData
       };
-
+      console.log(combinedData);
       // If validation succeeds on all above steps
       await axiosConfig
         .put(`/flats/${property.id}`, combinedData, {
@@ -223,14 +223,18 @@ const EditFlatForm = ({ property }) => {
 
   // Upload image from file system to server
   const uploadImage = async () => {
-    const formData = new FormData();
-    images.map((item, index) => {
-      formData.append("images[]", {
-        uri: Platform.OS === "android" ? item : item.replace("file://", ""),
-        name: "image/jpeg",
-        type: item.split("/").pop(),
+    if (images.length === 0) {
+      return null;
+    } else {
+      const formData = new FormData();
+      images.map((item, index) => {
+        formData.append("images[]", {
+          uri: Platform.OS === "android" ? item : item.replace("file://", ""),
+          name: "image/jpeg",
+          type: item.split("/").pop(),
+        });
       });
-    });
+    }
 
     try {
       const response = await axiosConfig.post("/upload", formData, {
@@ -284,7 +288,7 @@ const EditFlatForm = ({ property }) => {
         <Text className="text-sm text-red-500">{validationErrors}</Text>
       )}
       <AccordionItem title="Property Address">
-        <StepOneFlat
+        <StepOne
           control={control}
           setValue={setValue}
           handleSelectedAddress={handleSelectedAddress}
@@ -305,7 +309,7 @@ const EditFlatForm = ({ property }) => {
         />
       </AccordionItem>
       <AccordionItem title="Advertiser Information">
-        <StepFourFlat control={control} />
+        <StepFour control={control} />
       </AccordionItem>
       <AccordionItem title="Flatmate Information">
         <StepFiveFlat control={control} setValue={setValue} />

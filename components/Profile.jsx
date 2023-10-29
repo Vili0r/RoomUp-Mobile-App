@@ -5,8 +5,11 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
+  Pressable,
+  Platform,
 } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../context/AuthProvider";
 import { ButtonList } from "./ButtonList";
@@ -16,10 +19,89 @@ import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import axiosConfig from "../helpers/axiosConfig";
+import * as ImagePicker from "expo-image-picker";
+import BottomSheet from "./BottomSheet";
+import * as SecureStore from "expo-secure-store";
 
-const Profile = () => {
+const Profile = ({ handleScroll }) => {
   const navigation = useNavigation();
-  const { user, logout, isLoading } = useContext(AuthContext);
+  const { user, logout, isLoading, setUser } = useContext(AuthContext);
+  const [showBottomSheet, setShowBottomSheet] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [avatar, setAvatar] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleOpenBottomSheet = () => {
+    setShowBottomSheet(true);
+    handleScroll();
+  };
+
+  const handleProfileChange = async () => {
+    setIsUploading(true);
+    const uri =
+      Platform.OS === "android"
+        ? avatar.uri
+        : avatar.uri.replace("file://", "");
+    const filename = avatar.uri.split("/").pop();
+    const match = /\.(\w+)$/.exec(filename);
+    const ext = match?.[1];
+    const type = match ? `image/${match[1]}` : `image`;
+    const formData = new FormData();
+    formData.append("avatar", {
+      uri,
+      name: `image.${ext}`,
+      type,
+    });
+
+    await axiosConfig
+      .post("/profile-photo", formData, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        setUser((prevUser) => ({
+          ...prevUser,
+          avatar: response.data.avatar,
+        }));
+        SecureStore.setItemAsync(
+          "user",
+          JSON.stringify({ ...user, avatar: response.data.avatar })
+        );
+        Alert.alert("User profile Updated!");
+        navigation.goBack();
+        setIsUploading(false);
+        setShowBottomSheet(false);
+      })
+      .catch((error) => {
+        setIsUploading(false);
+        setError(error.response.data.message);
+      });
+  };
+
+  const selectImage = async (useLibrary) => {
+    let result;
+    const options = {
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.75,
+    };
+
+    if (useLibrary) {
+      result = await ImagePicker.launchImageLibraryAsync(options);
+    } else {
+      await ImagePicker.requestCameraPermissionsAsync();
+      result = await ImagePicker.launchCameraAsync(options);
+    }
+
+    // Save image if not cancelled
+    if (!result.canceled) {
+      setAvatar(result.assets[0]);
+    }
+  };
 
   const profileButtons = [
     {
@@ -40,7 +122,10 @@ const Profile = () => {
     {
       id: 2,
       label: "Add Room Listing",
-      onPress: () => navigation.navigate("Add Room Screen"),
+      onPress: () =>
+        navigation.navigate("AddSharedRoot", {
+          screen: "Address",
+        }),
       icon: <Ionicons name="bed-outline" size={28} color="gray" />,
     },
     {
@@ -113,6 +198,7 @@ const Profile = () => {
       ),
     },
   ];
+
   const accountButtons = [
     {
       id: 10,
@@ -131,6 +217,7 @@ const Profile = () => {
       icon: <MaterialCommunityIcons name="lock-reset" size={28} color="gray" />,
     },
   ];
+
   const avatarUrl =
     user.avatar !==
     "https://www.gravatar.com/avatar/000000000000000000000000000000?d=mp"
@@ -138,19 +225,11 @@ const Profile = () => {
       : "https://www.gravatar.com/avatar/000000000000000000000000000000?d=mp";
 
   return (
-    <ScrollView className="p-3">
-      <View className="flex flex-row mt-4">
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("Update Photo Profile Screen", {
-              id: user.id,
-              token: user.token,
-              name: user.first_name,
-            })
-          }
-        >
+    <View className="p-3">
+      <View className="flex flex-row mt-2">
+        <TouchableOpacity onPress={handleOpenBottomSheet}>
           <Image
-            className="object-cover w-16 h-16 mx-2 rounded-full shrink-0 ring-4 ring-gray-300"
+            className="object-cover mx-2 rounded-full w-14 h-14 shrink-0 ring-4 ring-gray-300"
             source={{
               uri: avatarUrl,
             }}
@@ -163,7 +242,7 @@ const Profile = () => {
           <Text className="text-base text-gray-500">{user.email}</Text>
         </View>
       </View>
-      <View className="mt-4 border-b-2 border-b-gray-200"></View>
+      <View className="mt-4 border-b-2 border-b-gray-200" />
       <View className="mt-4 mb-8">
         <ButtonList data={profileButtons} header={"Renting Made Easy"} />
         <ButtonList data={supportButtons} header={"Support"} />
@@ -182,7 +261,54 @@ const Profile = () => {
           Logout
         </Text>
       </TouchableOpacity>
-    </ScrollView>
+      <BottomSheet
+        show={showBottomSheet}
+        onDismiss={() => setShowBottomSheet(false)}
+        text="Change Photo"
+        modalHeight="0.45"
+      >
+        <View className="flex-1 bg-white">
+          {error && <Text className="text-sm text-red-500">{error}</Text>}
+          <View className="mt-3">
+            {avatar && (
+              <Image
+                source={{ uri: avatar.uri }}
+                style={{ width: 200, height: 200 }}
+              />
+            )}
+          </View>
+          <View className="flex flex-row justify-around mt-4">
+            <Pressable
+              onPress={() => selectImage(true)}
+              className="flex flex-row justify-center px-4 py-3 bg-yellow-400 rounded-xl"
+            >
+              <Text className="text-base font-semibold text-center text-gray-700">
+                Upload Images
+              </Text>
+            </Pressable>
+            <Pressable
+              onPress={() => selectImage(false)}
+              className="flex flex-row justify-center px-3 py-3 bg-yellow-400 rounded-xl"
+            >
+              <Text className="text-base font-semibold text-center text-gray-700">
+                Camera
+              </Text>
+            </Pressable>
+          </View>
+        </View>
+        <TouchableOpacity
+          onPress={handleProfileChange}
+          className="w-[80%] flex flex-row self-center items-center justify-center py-3 mt-5 space-x-3 border-2 rounded-xl"
+        >
+          {isUploading && (
+            <ActivityIndicator className="mr-2" size="small" color="black" />
+          )}
+          <Text className="text-xl font-bold text-center text-gray-700">
+            Update Photo
+          </Text>
+        </TouchableOpacity>
+      </BottomSheet>
+    </View>
   );
 };
 

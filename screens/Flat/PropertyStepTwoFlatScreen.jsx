@@ -13,7 +13,7 @@ import { stepTwoSchema } from "../../helpers/FlatValidation";
 import Feather from "@expo/vector-icons/Feather";
 import { useFlatContext } from "../../context/FlatContext";
 
-const PropertyStepTwoScreen = ({ navigation }) => {
+const PropertyStepTwoFlatScreen = ({ navigation }) => {
   const { propertyStepTwo, setPropertyStepTwo } = useFlatContext();
   const {
     control,
@@ -71,7 +71,7 @@ const PropertyStepTwoScreen = ({ navigation }) => {
   );
 };
 
-export default PropertyStepTwoScreen;
+export default PropertyStepTwoFlatScreen;
 
 const styles = StyleSheet.create({
   container: {

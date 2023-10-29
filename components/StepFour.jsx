@@ -4,7 +4,7 @@ import { Controller } from "react-hook-form";
 import CustomInput from "./CustomInput";
 import Checkbox from "expo-checkbox";
 
-const StepFourFlat = ({ control }) => {
+const StepFour = ({ control }) => {
   return (
     <View className="p-2 mt-5">
       <View className="relative">
@@ -72,7 +72,7 @@ const StepFourFlat = ({ control }) => {
   );
 };
 
-export default StepFourFlat;
+export default StepFour;
 
 const styles = StyleSheet.create({
   checkbox: {

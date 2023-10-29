@@ -3,9 +3,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const BottomSheet = ({ show, onDismiss, children, text }) => {
+const BottomSheet = ({ show, onDismiss, children, text, modalHeight }) => {
   const [open, setOpen] = useState(show);
-  const bottomSheetHeight = Dimensions.get("window").height * 0.325;
+  const bottomSheetHeight = Dimensions.get("window").height * modalHeight;
   const bottom = useRef(new Animated.Value(-bottomSheetHeight)).current;
   useEffect(() => {
     if (show) {

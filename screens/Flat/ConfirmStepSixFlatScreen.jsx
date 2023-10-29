@@ -30,7 +30,7 @@ const ensureDirExists = async () => {
   }
 };
 
-const ConfirmStepSixScreen = () => {
+const ConfirmStepSixFlatScreen = () => {
   const { user } = useContext(AuthContext);
   const { confirmStepSixScreen, onSubmitAll, validationErrors } =
     useFlatContext();
@@ -169,7 +169,7 @@ const ConfirmStepSixScreen = () => {
   );
 };
 
-export default ConfirmStepSixScreen;
+export default ConfirmStepSixFlatScreen;
 
 const styles = StyleSheet.create({
   container: {

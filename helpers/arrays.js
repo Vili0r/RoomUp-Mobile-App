@@ -27,6 +27,15 @@ export const WhatIAmFlat = [
   { value: 2, label: "Landlord" },
 ];
 
+export const WhatIAmShared = [
+  { value: "", label: "-- Select --" },
+  { value: 1, label: "Live in landlord" },
+  { value: 2, label: "Live out landlord" },
+  { value: 3, label: "Current tenant" },
+  { value: 4, label: "Agent" },
+  { value: 5, label: "Former flatmate" },
+];
+
 export const Minutes = [
   { value: "", label: "Select minutes from" },
   { value: 1, label: "Less than 5" },
@@ -150,6 +159,7 @@ export const flatmatePets = [
 ];
 
 export const currentOccupants = [
+  { value: "", label: "Select current tenants" },
   { value: 0, label: "Zero" },
   { value: 1, label: "One" },
   { value: 2, label: "Two" },
@@ -164,19 +174,21 @@ export const currentOccupants = [
 ];
 
 export const availableRooms = [
+  { value: "", label: "Select available rooms" },
   { value: 1, label: "One room for rent" },
-  { value: 2, label: "Two room for rent" },
-  { value: 3, label: "Three room for rent" },
-  { value: 4, label: "Four room for rent" },
-  { value: 5, label: "Five room for rent" },
-  { value: 6, label: "Six room for rent" },
-  { value: 7, label: "Seven room for rent" },
-  { value: 8, label: "Eight room for rent" },
-  { value: 9, label: "Nine room for rent" },
-  { value: 10, label: "Ten room for rent" },
+  { value: 2, label: "Two rooms for rent" },
+  { value: 3, label: "Three rooms for rent" },
+  { value: 4, label: "Four rooms for rent" },
+  { value: 5, label: "Five rooms for rent" },
+  { value: 6, label: "Six rooms for rent" },
+  { value: 7, label: "Seven rooms for rent" },
+  { value: 8, label: "Eight rooms for rent" },
+  { value: 9, label: "Nine rooms for rent" },
+  { value: 10, label: "Ten rooms for rent" },
 ];
 
 export const roomSize = [
+  { value: "", label: "Select room size" },
   { value: 1, label: "Single" },
   { value: 2, label: "Double" },
 ];

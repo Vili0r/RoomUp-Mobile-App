@@ -4,9 +4,9 @@ const maxFiles = 9;
 const supportedFormats = ["image/jpeg", "image/png", "image/jpg"];
 
 const stepOneSchema = yup.object().shape({
-  address_1: yup.string().max(30).required("Address is required"),
-  city: yup.string().max(20).required("City is required"),
-  area: yup.string().max(20).required("Area is required"),
+  address_1: yup.string().max(50).required("Address is required"),
+  city: yup.string().max(60).required("City is required"),
+  area: yup.string().max(60).required("Area is required"),
   post_code: yup
     .string()
     .max(7, "Post code must have maximum six characters")
@@ -143,7 +143,7 @@ const stepFiveSchema = (current_occupants) =>
   });
 
 const stepSixSchema = yup.object().shape({
-  electedAmenities: yup
+  amenities: yup
     .array()
     .min(1, "At least one amenity is required")
     .required("Amenities are required"),

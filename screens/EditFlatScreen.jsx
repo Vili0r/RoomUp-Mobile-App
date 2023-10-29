@@ -80,7 +80,7 @@ const EditFlatScreen = ({ route, navigation }) => {
         },
         {
           headers: {
-            Authorization: `Bearer ${user.token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       )
@@ -111,6 +111,7 @@ const EditFlatScreen = ({ route, navigation }) => {
         show={showBottomSheet}
         onDismiss={() => setShowBottomSheet(false)}
         text="Change Availability"
+        modalHeight="0.325"
       >
         {serverErrors && (
           <Text className="text-sm text-red-500">{serverErrors}</Text>
