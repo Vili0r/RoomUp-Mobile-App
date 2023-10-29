@@ -41,6 +41,7 @@ import ConfirmStepSixSharedScreen from "../screens/Shared/ConfirmStepSixSharedSc
 import { FlatContextProvider } from "../context/FlatContext";
 import { SharedContextProvider } from "../context/SharedContext";
 import EditFlatScreen from "../screens/EditFlatScreen";
+import EditSharedScreen from "../screens/EditSharedScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -162,6 +163,11 @@ const RootNavigator = () => {
       <Stack.Screen
         name="Edit Flat Screen"
         component={EditFlatScreen}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="Edit Shared Screen"
+        component={EditSharedScreen}
         options={{ headerShown: true }}
       />
     </Stack.Navigator>

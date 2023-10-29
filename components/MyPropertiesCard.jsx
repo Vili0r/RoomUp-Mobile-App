@@ -58,8 +58,15 @@ const MyPropertiesCard = ({ item: property }) => {
   };
 
   const handleDeleteProperty = () => {
+    let model = "";
+    if (property.model === "flat") {
+      model = "flats";
+    } else if (property.model === "shared") {
+      model = "shareds";
+    }
+
     axiosConfig
-      .delete(`/flats/${property.id}`, {
+      .delete(`/${model}/${property.id}`, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -73,6 +80,20 @@ const MyPropertiesCard = ({ item: property }) => {
         const key = Object.keys(error.response.data.errors)[0];
         setError(error.response.data.errors[key][0]);
       });
+  };
+
+  const handleEditProperty = () => {
+    if (property.model === "flat") {
+      navigation.navigate("Edit Flat Screen", {
+        id: property.id,
+        token: user.token,
+      });
+    } else if (property.model === "shared") {
+      navigation.navigate("Edit Shared Screen", {
+        id: property.id,
+        token: user.token,
+      });
+    }
   };
 
   return (
@@ -157,12 +178,7 @@ const MyPropertiesCard = ({ item: property }) => {
         </View>
         <View className="flex flex-row justify-between">
           <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Edit Flat Screen", {
-                id: property.id,
-                token: user.token,
-              });
-            }}
+            onPress={handleEditProperty}
             className="flex justify-center w-2/5 py-2 text-center bg-black rounded-full select-none px-7"
           >
             <Text className="text-base font-bold text-center text-white">

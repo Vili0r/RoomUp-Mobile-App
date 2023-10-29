@@ -64,10 +64,9 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
     mode: "onBlur",
     resolver: yupResolver(stepThreeSchema),
     defaultValues: {
-      rooms: detailsStepThree.rooms || "",
+      rooms: detailsStepThree?.rooms || "",
     },
   });
-  console.log(detailsStepThree.rooms);
 
   useEffect(() => {
     //Adding quantity of rooms based on user input

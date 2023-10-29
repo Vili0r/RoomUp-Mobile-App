@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { StepFiveFlat } from "../../components";
+import { StepFive } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { stepFiveSchema } from "../../helpers/FlatValidation";
 import Feather from "@expo/vector-icons/Feather";
@@ -63,7 +63,7 @@ const FlatmateStepFiveFlatScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar />
-      <StepFiveFlat control={control} setValue={setValue} />
+      <StepFive control={control} setValue={setValue} />
 
       <TouchableOpacity
         onPress={handleSubmit(hanldeNext)}

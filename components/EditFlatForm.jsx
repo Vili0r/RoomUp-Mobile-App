@@ -27,7 +27,7 @@ import StepOne from "./StepOne";
 import StepTwoFlat from "./StepTwoFlat";
 import StepThreeFlat from "./StepThreeFlat";
 import StepFour from "./StepFour";
-import StepFiveFlat from "./StepFiveFlat";
+import StepFive from "./StepFive";
 import CustomInput from "./CustomInput";
 import { AuthContext } from "../context/AuthProvider";
 import * as ImagePicker from "expo-image-picker";
@@ -312,7 +312,7 @@ const EditFlatForm = ({ property }) => {
         <StepFour control={control} />
       </AccordionItem>
       <AccordionItem title="Flatmate Information">
-        <StepFiveFlat control={control} setValue={setValue} />
+        <StepFive control={control} setValue={setValue} />
       </AccordionItem>
       <AccordionItem title="Upload Images">
         <>

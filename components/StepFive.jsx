@@ -11,7 +11,7 @@ import {
 } from "../helpers/arrays";
 import Checkbox from "expo-checkbox";
 
-const StepFiveFlat = ({ control, setValue }) => {
+const StepFive = ({ control, setValue }) => {
   return (
     <View className="p-2 mt-5">
       <View className="">
@@ -184,7 +184,7 @@ const StepFiveFlat = ({ control, setValue }) => {
   );
 };
 
-export default StepFiveFlat;
+export default StepFive;
 
 const styles = StyleSheet.create({
   checkbox: {

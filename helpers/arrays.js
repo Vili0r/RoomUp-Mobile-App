@@ -158,6 +158,30 @@ export const flatmatePets = [
   { value: 2, label: "Yes" },
 ];
 
+export const currentFlatmatePets = [
+  { value: "", label: "Select pet preferences" },
+  { value: 1, label: "No" },
+  { value: 2, label: "Yes" },
+];
+
+export const currentFlatmateSmoker = [
+  { value: "", label: "Select smoker" },
+  { value: 1, label: "No" },
+  { value: 2, label: "Yes" },
+];
+
+export const currentFlatmateGender = [
+  { value: "", label: "Select gender" },
+  { value: 1, label: "Female" },
+  { value: 2, label: "Male" },
+];
+
+export const currentFlatmateOccupation = [
+  { value: "", label: "Select occupation" },
+  { value: 1, label: "Student" },
+  { value: 2, label: "Professional" },
+];
+
 export const currentOccupants = [
   { value: "", label: "Select current tenants" },
   { value: 0, label: "Zero" },
