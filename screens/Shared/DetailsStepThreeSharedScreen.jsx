@@ -37,13 +37,13 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
       room_size: "",
       room_cost: "",
       room_deposit: "",
-      room_references: false,
+      room_references: "",
       room_furnished: "",
       available_from: "",
       minimum_stay: "",
       maximum_stay: "",
       days_available: "",
-      short_term: false,
+      short_term: "",
     },
   ]);
 
@@ -64,7 +64,7 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
     mode: "onBlur",
     resolver: yupResolver(stepThreeSchema),
     defaultValues: {
-      rooms: detailsStepThree?.rooms || "",
+      rooms: detailsStepThree || "",
     },
   });
 
@@ -102,7 +102,7 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
       if (!isValid) {
         return;
       }
-      setDetailsStepThree(data);
+      setDetailsStepThree(data.rooms);
       // If validation succeeds, move to step 2
       navigation.navigate("AddSharedRoot", {
         screen: "Advertiser",
@@ -116,7 +116,6 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
   };
 
   const validateDynamicInputs = async (items) => {
-    console.log("validateDynamicInputs", items);
     try {
       await stepThreeSchema.validate(items, {
         abortEarly: false,
@@ -203,7 +202,10 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
                       className="w-full px-3 py-3 border border-gray-300 rounded-md peer"
                     >
                       <Text className="mt-3">
-                        {(pickedDates[index] || new Date()).toDateString()}
+                        {(
+                          getValues(`rooms[${index}].available_from`) ||
+                          new Date()
+                        ).toDateString()}
                       </Text>
                     </Pressable>
                     <View className="flex flex-row">
@@ -260,7 +262,7 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
                       onChangeText={(text) =>
                         handleFormChange(text, index, "room_cost")
                       }
-                      value={value}
+                      value={getValues(`rooms[${index}].room_cost`)}
                       onBlur={onBlur}
                       placeholderTextColor="gray"
                       autoCapitalize="none"
@@ -297,7 +299,7 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
                       onChangeText={(text) =>
                         handleFormChange(text, index, "room_deposit")
                       }
-                      value={value}
+                      value={getValues(`rooms[${index}].room_deposit`)}
                       onBlur={onBlur}
                       placeholderTextColor="gray"
                       autoCapitalize="none"
@@ -333,7 +335,7 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
                   <>
                     <CustomDropdown
                       label="Room Size"
-                      value={value}
+                      value={getValues(`rooms[${index}].room_size`)}
                       data={roomSize}
                       onItemChange={(item) =>
                         handleFormChange(item.value, index, "room_size")
@@ -362,7 +364,7 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
                   <>
                     <CustomDropdown
                       label="Room Furnishing"
-                      value={value}
+                      value={getValues(`rooms[${index}].room_furnished`)}
                       data={Furnishings}
                       onItemChange={(item) =>
                         handleFormChange(item.value, index, "room_furnished")
@@ -393,7 +395,7 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
                   <>
                     <CustomDropdown
                       label="Minimum Stay"
-                      value={value}
+                      value={getValues(`rooms[${index}].minimum_stay`)}
                       data={MinStay}
                       onItemChange={(item) =>
                         handleFormChange(item.value, index, "minimum_stay")
@@ -422,7 +424,7 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
                   <>
                     <CustomDropdown
                       label="Maximum Stay"
-                      value={value}
+                      value={getValues(`rooms[${index}].maximum_stay`)}
                       data={MaxStay}
                       onItemChange={(item) =>
                         handleFormChange(item.value, index, "maximum_stay")
@@ -451,12 +453,14 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
               render={({ field: { value, onChange, onBlur }, fieldState }) => (
                 <Checkbox
                   style={styles.checkbox}
-                  value={roomAttributes[index].room_references}
+                  value={getValues(`rooms[${index}].room_references`)}
                   onValueChange={(value) =>
                     handleFormChange(value, index, "room_references")
                   }
                   color={
                     roomAttributes[index].room_references
+                      ? "#4630EB"
+                      : getValues(`rooms[${index}].room_references`)
                       ? "#4630EB"
                       : undefined
                   }
@@ -477,7 +481,7 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
                   <>
                     <CustomDropdown
                       label="Days Available"
-                      value={value}
+                      value={getValues(`rooms[${index}].days_available`)}
                       data={DaysAvailable}
                       onItemChange={(item) =>
                         handleFormChange(item.value, index, "days_available")
@@ -507,7 +511,7 @@ const DetailsStepThreeSharedScreen = ({ navigation }) => {
                 }) => (
                   <Checkbox
                     style={styles.checkbox}
-                    value={roomAttributes[index].short_term}
+                    value={getValues(`rooms[${index}].short_term`)}
                     onValueChange={(value) =>
                       handleFormChange(value, index, "short_term")
                     }

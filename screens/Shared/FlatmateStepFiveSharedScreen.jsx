@@ -9,7 +9,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { AccordionItem, CurrentFlatmate, StepFive } from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
-import stepFiveSchema from "../../helpers/SharedValidation";
+import {
+  stepFiveNewFlatmateSchema,
+  stepFiveCurrentFlatmateSchema,
+} from "../../helpers/SharedValidation";
 import Feather from "@expo/vector-icons/Feather";
 import { useSharedContext } from "../../context/SharedContext";
 
@@ -27,7 +30,7 @@ const FlatmateStepFiveSharedScreen = ({ navigation }) => {
     reset,
   } = useForm({
     mode: "onBlur",
-    resolver: yupResolver(stepFiveSchema),
+    resolver: yupResolver(stepFiveNewFlatmateSchema),
     defaultValues: {
       new_flatmate_smoker: flatmateStepFive?.new_flatmate_smoker || "",
       new_flatmate_min_age:
@@ -56,7 +59,11 @@ const FlatmateStepFiveSharedScreen = ({ navigation }) => {
   const hanldeNext = async () => {
     const data = getValues();
     try {
-      await stepFiveSchema(propertyStepTwo?.current_occupants).validate(data);
+      clearErrors();
+      if (propertyStepTwo.current_occupants > 0) {
+        await stepFiveCurrentFlatmateSchema.validate(data);
+      }
+      await stepFiveNewFlatmateSchema.validate(data);
       setFlatmateStepFive(data);
       clearErrors();
       // If validation succeeds, move to step 2

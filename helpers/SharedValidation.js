@@ -98,49 +98,45 @@ const stepFourSchema = yup.object().shape({
     .required("Telephone number is required"),
 });
 
-const stepFiveSchema = (current_occupants) =>
-  yup.object().shape({
-    new_flatmate_min_age: yup
-      .number()
-      .typeError("That doesn't look like an age")
-      .min(18, "Your new flatmate should be more than 18 years old")
-      .required(),
-    new_flatmate_max_age: yup
-      .number()
-      .typeError("That doesn't look like an age")
-      .min(18, "Your new flatmate should be more than 18 years old")
-      .required()
-      .when("new_flatmate_min_age", (new_flatmate_min_age, schema) => {
-        return schema.test({
-          test: (new_flatmate_max_age) =>
-            new_flatmate_max_age > new_flatmate_min_age,
-          message: "Max age must be greater than the min age",
-        });
-      }),
-    new_flatmate_smoker: yup.string().required("Smoker field is required"),
-    new_flatmate_pets: yup.string().required("Pet field is required"),
-    new_flatmate_occupation: yup
-      .string()
-      .required("Occupation field is required"),
-    new_flatmate_gender: yup.string().required("Gender field is required"),
-    ...(current_occupants >= 1 && {
-      current_flatmate_age: yup
-        .number()
-        .typeError("That doesn't look like an age")
-        .min(18, "You should be more than 18 years old")
-        .required("Age is required"),
-      current_flatmate_smoker: yup
-        .string()
-        .required("Smoker field is required"),
-      current_flatmate_pets: yup.string().required("Pet field is required"),
-      current_flatmate_occupation: yup
-        .string()
-        .required("Occupation field is required"),
-      current_flatmate_gender: yup
-        .string()
-        .required("Gender field is required"),
+const stepFiveNewFlatmateSchema = yup.object().shape({
+  new_flatmate_min_age: yup
+    .number()
+    .typeError("That doesn't look like an age")
+    .min(18, "Your new flatmate should be more than 18 years old")
+    .required(),
+  new_flatmate_max_age: yup
+    .number()
+    .typeError("That doesn't look like an age")
+    .min(18, "Your new flatmate should be more than 18 years old")
+    .required()
+    .when("new_flatmate_min_age", (new_flatmate_min_age, schema) => {
+      return schema.test({
+        test: (new_flatmate_max_age) =>
+          new_flatmate_max_age > new_flatmate_min_age,
+        message: "Max age must be greater than the min age",
+      });
     }),
-  });
+  new_flatmate_smoker: yup.string().required("Smoker field is required"),
+  new_flatmate_pets: yup.string().required("Pet field is required"),
+  new_flatmate_occupation: yup
+    .string()
+    .required("Occupation field is required"),
+  new_flatmate_gender: yup.string().required("Gender field is required"),
+});
+
+const stepFiveCurrentFlatmateSchema = yup.object().shape({
+  current_flatmate_age: yup
+    .number()
+    .typeError("That doesn't look like an age")
+    .min(18, "You should be more than 18 years old")
+    .required("Age is required"),
+  current_flatmate_smoker: yup.string().required("Smoker field is required"),
+  current_flatmate_pets: yup.string().required("Pet field is required"),
+  current_flatmate_occupation: yup
+    .string()
+    .required("Occupation field is required"),
+  current_flatmate_gender: yup.string().required("Gender field is required"),
+});
 
 const stepSixSchema = yup.object().shape({
   amenities: yup
@@ -169,6 +165,7 @@ export {
   stepTwoSchema,
   stepThreeSchema,
   stepFourSchema,
-  stepFiveSchema,
+  stepFiveNewFlatmateSchema,
+  stepFiveCurrentFlatmateSchema,
   stepSixSchema,
 };

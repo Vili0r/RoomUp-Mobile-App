@@ -11,7 +11,8 @@ import { AuthContext } from "../../context/AuthProvider";
 
 const AdvertiserStepFourSharedScreen = ({ navigation }) => {
   const { user } = useContext(AuthContext);
-  const { advertiserStepFour, setAdvertiserStepFour } = useSharedContext();
+  const { advertiserStepFour, setAdvertiserStepFour, detailsStepThree } =
+    useSharedContext();
   const {
     control,
     handleSubmit,
@@ -47,6 +48,7 @@ const AdvertiserStepFourSharedScreen = ({ navigation }) => {
       });
     }
   };
+
   return (
     <KeyboardAwareScrollView
       bounces={false}

@@ -42,6 +42,7 @@ import { FlatContextProvider } from "../context/FlatContext";
 import { SharedContextProvider } from "../context/SharedContext";
 import EditFlatScreen from "../screens/EditFlatScreen";
 import EditSharedScreen from "../screens/EditSharedScreen";
+import EditRoomScreen from "../screens/EditRoomScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -168,6 +169,11 @@ const RootNavigator = () => {
       <Stack.Screen
         name="Edit Shared Screen"
         component={EditSharedScreen}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="Edit Room Screen"
+        component={EditRoomScreen}
         options={{ headerShown: true }}
       />
     </Stack.Navigator>

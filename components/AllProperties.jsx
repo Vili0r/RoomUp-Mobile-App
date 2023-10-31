@@ -299,7 +299,7 @@ const AllProperties = () => {
       {mapShow ? (
         <Map properties={data} />
       ) : (
-        <View className="p-4 mb-14">
+        <View className="p-2 ml-[7px] mb-14">
           {isLoading ? (
             <ActivityIndicator className="mt-2" size="large" color="gray" />
           ) : (
