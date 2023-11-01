@@ -35,3 +35,4 @@ export { default as CurrentFlatmate } from "./CurrentFlatmate";
 export { default as StepSixShared } from "./StepSixShared";
 export { default as EditSharedForm } from "./EditSharedForm";
 export { default as RoomCard } from "./RoomCard";
+export { default as EditRoomForm } from "./EditRoomForm";

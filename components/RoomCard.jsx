@@ -10,8 +10,8 @@ const RoomCard = ({ item: room, title }) => {
   const navigation = useNavigation();
   const { user } = useContext(AuthContext);
 
-  //   const imageUrl =
-  //     room?.images[0] && `http://127.0.0.1:8000/storage/${room?.images[0]}`;
+  const imageUrl =
+    room?.images[0] && `http://127.0.0.1:8000/storage/${room?.images[0]}`;
 
   const handleEditRoom = () => {
     navigation.navigate("Edit Room Screen", {
@@ -28,7 +28,11 @@ const RoomCard = ({ item: room, title }) => {
           <View className="relative overflow-hidden aspect-square rounded-xl">
             <Image
               className="w-full h-[300px] aspect-3/2"
-              source={require("../assets/images/HousePlaceholder.jpeg")}
+              source={
+                imageUrl
+                  ? { uri: `http://127.0.0.1:8000/storage/${room.images[0]}` }
+                  : require("../assets/images/HousePlaceholder.jpeg")
+              }
             />
 
             <View className="absolute top-3 right-3">

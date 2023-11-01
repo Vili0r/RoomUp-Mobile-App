@@ -147,7 +147,6 @@ const EditFlatForm = ({ property }) => {
         ...data,
         images: imagesData, // Add the images data to combinedData
       };
-      console.log(combinedData);
       // If validation succeeds on all above steps
       await axiosConfig
         .put(`/flats/${property.id}`, combinedData, {

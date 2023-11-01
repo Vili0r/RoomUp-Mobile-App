@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import axiosConfig from "../helpers/axiosConfig";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { MaterialIcons } from "@expo/vector-icons";
+import { EditRoomForm } from "../components";
 
 const EditRoomScreen = ({ route, navigation }) => {
   const { id, token, title } = route.params;
@@ -19,7 +20,6 @@ const EditRoomScreen = ({ route, navigation }) => {
   const singleRoomEditQuery = useQuery({
     queryKey: ["singleRoomEditQuery", id, "edit"],
     queryFn: () => fetchEditRoom(id),
-    refetchOnMount: true,
   });
 
   useLayoutEffect(() => {
@@ -47,8 +47,8 @@ const EditRoomScreen = ({ route, navigation }) => {
   }, [singleRoomEditQuery.data]);
 
   return (
-    <View>
-      <Text>EditRoomScreen</Text>
+    <View className="flex-1 bg-white">
+      <EditRoomForm room={singleRoomEditQuery.data} />
     </View>
   );
 };
