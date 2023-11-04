@@ -87,7 +87,7 @@ const EditFlatScreen = ({ route, navigation }) => {
       .then((res) => {
         setIsUpdating(false);
         setShowBottomSheet(false);
-        Alert.alert("Availabuility updated successfully");
+        Alert.alert("Availability updated successfully");
       })
       .catch((error) => {
         setServerErrors(error.response.data.message);

@@ -8,6 +8,7 @@ import {
   Image,
   Alert,
   FlatList,
+  StyleSheet,
 } from "react-native";
 import React, { useState, useContext, useCallback, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -25,7 +26,7 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import ScrollViewComponent from "./ScrollViewComponent";
 import StepOne from "./StepOne";
-import StepTwoShared from "./StepTwoShared";
+import StepTwoSharedEdit from "./StepTwoSharedEdit";
 import StepThreeShared from "./StepThreeShared";
 import StepFour from "./StepFour";
 import StepFive from "./StepFive";
@@ -37,6 +38,8 @@ import * as FileSystem from "expo-file-system";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import axiosConfig from "../helpers/axiosConfig";
+import { Amenities } from "../helpers/arrays";
+import Checkbox from "expo-checkbox";
 
 const imgDir = FileSystem.documentDirectory + "images/";
 
@@ -56,9 +59,16 @@ const EditSharedForm = ({ property }) => {
   );
   const [images, setImages] = useState([]);
   const [serverImages, setServerImages] = useState(property?.images);
-  const [uploadedImages, setUploadedImages] = useState([]);
   const [serverErrors, setServerErrors] = useState(null);
   const [validationErrors, setValidationErrors] = useState(null);
+  const [roomAttributesValidationErrors, setRoomAttributesValidationErrors] =
+    useState({});
+  const [currentOccupants, setCurrentOccupants] = useState(
+    property?.current_occupants
+  );
+  const [availableRooms, setAvailableRooms] = useState(
+    property?.available_rooms
+  );
 
   const {
     control,
@@ -67,6 +77,7 @@ const EditSharedForm = ({ property }) => {
     setError,
     clearErrors,
     setValue,
+    getValues,
     reset,
   } = useForm({
     mode: "onBlur",
@@ -106,7 +117,7 @@ const EditSharedForm = ({ property }) => {
       new_flatmate_references: property.flatmate?.new_flatmate_references
         ? true
         : false,
-      current_flatmate_age: property?.current_flatmate_age.toString() || "",
+      current_flatmate_age: property?.current_flatmate_age?.toString() || "",
       current_flatmate_smoker: property?.current_flatmate_smoker || "",
       current_flatmate_pets: property?.current_flatmate_pets || "",
       current_flatmate_occupation: property?.current_flatmate_occupation || "",
@@ -139,19 +150,44 @@ const EditSharedForm = ({ property }) => {
     try {
       await stepOneSchema.validate(data);
       await stepTwoSchema.validate(data);
-      await stepThreeSchema.validate(data);
+      const isValid = await validateDynamicInputs(data.rooms);
+      if (!isValid) {
+        return;
+      }
       await stepFourSchema.validate(data);
-      await stepFiveCurrentFlatmateSchema.validate(data);
-      await stepFiveNewFlatmateSchema.validate(data);
+      if (data.current_occupants > 0) {
+        await stepFiveCurrentFlatmateSchema.validate(data);
+      }
+      if (data.available_rooms > 0) {
+        await stepFiveNewFlatmateSchema.validate(data);
+      }
       // Call uploadImage and store the response data
       await stepSixSchema.validate(data);
       const imagesData = await uploadImage();
+      //Modifying room data prior to submitting to the server
+      const modifiedRooms = data.rooms.map((room) => {
+        // Convert available_from to 'Y-m-d' format
+        const availableFrom = new Date(room.available_from);
+        const formattedAvailableFrom = availableFrom
+          .toISOString()
+          .split("T")[0];
+
+        // Replace true with 1 and false with 0
+        const modifiedRoom = {
+          ...room,
+          available_from: formattedAvailableFrom,
+          room_references: room.room_references ? 1 : 0,
+          short_term: room.short_term ? 1 : 0,
+        };
+
+        return modifiedRoom;
+      });
       // Combine the data with the uploaded images
       const combinedData = {
         ...data,
+        rooms: modifiedRooms,
         images: imagesData, // Add the images data to combinedData
       };
-      console.log(combinedData);
       // If validation succeeds on all above steps
       await axiosConfig
         .put(`/shareds/${property.id}`, combinedData, {
@@ -174,6 +210,26 @@ const EditSharedForm = ({ property }) => {
         type: "manual",
         message: error.message,
       });
+    }
+  };
+
+  const validateDynamicInputs = async (items) => {
+    try {
+      await stepThreeSchema.validate(items, {
+        abortEarly: false,
+      });
+      return true;
+    } catch (errors) {
+      const validationErrors = {};
+      errors.inner.forEach((error) => {
+        const { path, message } = error;
+        const [index, inputName] = path.split(".");
+        validationErrors[`rooms.${index}.${inputName}`] = (
+          <Text>{message}</Text>
+        );
+      });
+      setRoomAttributesValidationErrors(validationErrors);
+      return false;
     }
   };
 
@@ -229,16 +285,15 @@ const EditSharedForm = ({ property }) => {
   const uploadImage = async () => {
     if (images.length === 0) {
       return null;
-    } else {
-      const formData = new FormData();
-      images.map((item, index) => {
-        formData.append("images[]", {
-          uri: Platform.OS === "android" ? item : item.replace("file://", ""),
-          name: "image/jpeg",
-          type: item.split("/").pop(),
-        });
-      });
     }
+    const formData = new FormData();
+    images.map((item, index) => {
+      formData.append("images[]", {
+        uri: Platform.OS === "android" ? item : item.replace("file://", ""),
+        name: "image/jpeg",
+        type: item.split("/").pop(),
+      });
+    });
 
     try {
       const response = await axiosConfig.post("/upload", formData, {
@@ -301,33 +356,82 @@ const EditSharedForm = ({ property }) => {
         />
       </AccordionItem>
       <AccordionItem title="Property Information">
-        <StepTwoShared control={control} setValue={setValue} />
+        <StepTwoSharedEdit
+          control={control}
+          setValue={setValue}
+          setAvailableRooms={setAvailableRooms}
+          setCurrentOccupants={setCurrentOccupants}
+        />
       </AccordionItem>
       <AccordionItem title="Property Details">
         <StepThreeShared
           control={control}
           setValue={setValue}
-          selectedAmenities={selectedAmenities}
-          data={property.availability}
-          toggleAmenity={toggleAmenity}
+          getValues={getValues}
+          backendData={property.rooms}
+          roomAttributesValidationErrors={roomAttributesValidationErrors}
         />
       </AccordionItem>
       <AccordionItem title="Advertiser Information">
         <StepFour control={control} />
       </AccordionItem>
-      <AccordionItem title="Current Flatmate Information">
-        <CurrentFlatmate control={control} setValue={setValue} />
-      </AccordionItem>
-      <AccordionItem title="New Flatmate Information">
-        <StepFive control={control} setValue={setValue} />
-      </AccordionItem>
+      {getValues("current_occupants") > 0 && (
+        <AccordionItem title="Current Flatmate Information">
+          <CurrentFlatmate control={control} setValue={setValue} />
+        </AccordionItem>
+      )}
+      {getValues("available_rooms") > 0 && (
+        <AccordionItem title="New Flatmate Information">
+          <StepFive control={control} setValue={setValue} />
+        </AccordionItem>
+      )}
       <AccordionItem title="Upload Images">
         <>
           {serverErrors && (
             <Text className="text-sm text-red-500">{serverErrors}</Text>
           )}
-          <View className="p-2 mt-5">
-            <View className="relative">
+          <View className="p-2">
+            <View className="">
+              <Controller
+                control={control}
+                name="amenities"
+                render={({
+                  field: { value, onChange, onBlur },
+                  fieldState,
+                }) => (
+                  <>
+                    <View className="">
+                      {Amenities.map((amenity) => (
+                        <View
+                          key={amenity.key}
+                          className="flex flex-row items-center space-x-2"
+                        >
+                          <Checkbox
+                            value={selectedAmenities?.includes(amenity.key)}
+                            onValueChange={() => toggleAmenity(amenity.key)}
+                            style={styles.checkbox}
+                            color={
+                              selectedAmenities?.includes(amenity.key)
+                                ? "#4630EB"
+                                : undefined
+                            }
+                          />
+                          <Text className="mt-3">{amenity.value}</Text>
+                        </View>
+                      ))}
+                    </View>
+                    <View className="flex flex-row">
+                      {fieldState.error && (
+                        <Text className="mt-2 ml-4 text-sm text-red-500">
+                          {fieldState.error.message}
+                        </Text>
+                      )}
+                    </View>
+                  </>
+                )}
+              />
+            </View>
+            <View className="relative mt-7">
               <CustomInput
                 name="title"
                 control={control}
@@ -455,3 +559,10 @@ const EditSharedForm = ({ property }) => {
 };
 
 export default EditSharedForm;
+
+const styles = StyleSheet.create({
+  checkbox: {
+    marginTop: 12,
+    marginLeft: 6,
+  },
+});
