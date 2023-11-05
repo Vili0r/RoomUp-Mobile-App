@@ -191,7 +191,10 @@ const Profile = ({ handleScroll }) => {
     {
       id: 9,
       label: "View My Roommate listing",
-      onPress: () => console.log("flatmate"),
+      onPress: () =>
+        navigation.navigate("My Roommate Listings Screen", {
+          token: user.token,
+        }),
       icon: (
         <MaterialCommunityIcons
           name="human-male-female"

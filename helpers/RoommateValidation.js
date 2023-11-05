@@ -61,7 +61,18 @@ const stepTwoNewFlatmateSchema = yup.object().shape({
   new_flatmate_gender: yup.string().required("Gender field is required"),
 });
 
+const stepTwoHobbiesSchema = yup.object().shape({
+  hobbies: yup
+    .array()
+    .min(1, "At least one hobby is required")
+    .required("Hobbies are required"),
+});
+
 const stepTwoPersonalInformationSchema = yup.object().shape({
+  hobbies: yup
+    .array()
+    .min(1, "At least one hobby is required")
+    .required("Hobbies are required"),
   age: yup
     .number()
     .typeError("That doesn't look like an age")
@@ -85,25 +96,17 @@ const stepThreeSchema = yup.object().shape({
 });
 
 const stepFourSchema = yup.object().shape({
+  amenities: yup
+    .array()
+    .min(1, "At least one amenity is required")
+    .required("Amenities are required"),
   title: yup.string().min(10).max(50).required(),
   description: yup.string().min(50).max(500).required(),
-  photos: yup
-    .array()
-    .max(maxFiles, `You can upload up to ${maxFiles} images`)
-    .of(
-      yup
-        .mixed()
-        .test("fileFormat", "Unsupported file format", (value) =>
-          supportedFormats.includes(value.type)
-        )
-        .test("fileSize", "File size is too large", (value) =>
-          value ? value.size <= 1048576 : true
-        )
-    ),
 });
 
 export {
   stepOneSchema,
+  stepTwoHobbiesSchema,
   stepTwoNewFlatmateSchema,
   stepTwoPersonalInformationSchema,
   stepThreeSchema,

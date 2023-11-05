@@ -48,6 +48,7 @@ import FlatmateStepTwoRoommateScreen from "../screens/Roommate/FlatmateStepTwoRo
 import AdvertiserStepThreeRoommateScreen from "../screens/Roommate/AdvertiserStepThreeRoommateScreen";
 import ConfirmStepFourRoommateScreen from "../screens/Roommate/ConfirmStepFourRoommateScreen";
 import EditRoommateScreen from "../screens/EditRoommateScreen";
+import MyRoommateListingsScreen from "../screens/MyRoommateListingsScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -185,6 +186,11 @@ const RootNavigator = () => {
         name="Edit Roommate Screen"
         component={EditRoommateScreen}
         options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="My Roommate Listings Screen"
+        component={MyRoommateListingsScreen}
+        options={{ headerShown: true, title: "My Property Listings" }}
       />
     </Stack.Navigator>
   );

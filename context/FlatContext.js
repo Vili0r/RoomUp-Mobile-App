@@ -37,6 +37,7 @@ export const FlatContextProvider = ({ children }) => {
         },
       })
       .then((response) => {
+        Alert.alert("Listing was added successfully");
         navigation.navigate("My Properties Screen", {
           token: user.token,
         });

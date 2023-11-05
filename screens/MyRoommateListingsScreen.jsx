@@ -2,15 +2,15 @@ import { View, Text, TouchableOpacity, StatusBar } from "react-native";
 import React, { useLayoutEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axiosConfig from "../helpers/axiosConfig";
-import { MyProperties } from "../components";
+import { MyRoommateListings } from "../components";
 import LottieView from "lottie-react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-const MyPropertiesScreen = ({ route, navigation }) => {
+const MyRoommateListingsScreen = ({ route, navigation }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTransparent: false,
-      headerTitle: "Property",
+      headerTitle: "Listings",
       headerTintColor: "black",
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.navigate("Account Screen")}>
@@ -20,19 +20,19 @@ const MyPropertiesScreen = ({ route, navigation }) => {
     });
   }, []);
 
-  const fetchMyPropertiesListings = async () => {
-    const response = await axiosConfig.get(`/my-properties`, {
+  const fetchMyRoommateListings = async () => {
+    const response = await axiosConfig.get(`/roommates`, {
       headers: {
         Authorization: `Bearer ${route.params.token}`,
       },
     });
     // Access the data from response.data using object destructuring
-    return response.data;
+    return response.data.roommates;
   };
 
   const { data, isLoading } = useQuery(
-    ["myPropertiesListings"],
-    fetchMyPropertiesListings
+    ["myRoommateListings"],
+    fetchMyRoommateListings
   );
 
   return (
@@ -57,7 +57,11 @@ const MyPropertiesScreen = ({ route, navigation }) => {
                 List your property
               </Text>
               <TouchableOpacity
-                onPress={() => navigation.navigate("Add Property Screen")}
+                onPress={() =>
+                  navigation.navigate("AddRoommateRoot", {
+                    screen: "Property",
+                  })
+                }
                 className="flex flex-row justify-center py-3 mt-10 bg-yellow-400 rounded-xl"
               >
                 <Text className="text-xl font-bold text-center text-gray-700">
@@ -67,11 +71,11 @@ const MyPropertiesScreen = ({ route, navigation }) => {
             </View>
           </>
         ) : (
-          <MyProperties properties={data} isLoading={isLoading} />
+          <MyRoommateListings listings={data} isLoading={isLoading} />
         )}
       </View>
     </View>
   );
 };
 
-export default MyPropertiesScreen;
+export default MyRoommateListingsScreen;

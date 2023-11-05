@@ -1,12 +1,11 @@
 import {
   Text,
   TouchableOpacity,
-  View,
   StatusBar,
   StyleSheet,
   SafeAreaView,
 } from "react-native";
-import React, { useState, useLayoutEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { stepOneSchema } from "../../helpers/RoommateValidation.js";

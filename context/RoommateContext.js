@@ -33,7 +33,8 @@ export const RoommateContextProvider = ({ children }) => {
         },
       })
       .then((response) => {
-        navigation.navigate("My Properties Screen", {
+        Alert.alert("Listing was added successfully");
+        navigation.navigate("My Roommate Listings Screen", {
           token: user.token,
         });
       })

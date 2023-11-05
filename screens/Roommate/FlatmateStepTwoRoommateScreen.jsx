@@ -5,11 +5,17 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { AccordionItem, PersonalInformation, StepFive } from "../../components";
+import {
+  AccordionItem,
+  Hobbies,
+  PersonalInformation,
+  StepFive,
+} from "../../components";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
+  stepTwoHobbiesSchema,
   stepTwoNewFlatmateSchema,
   stepTwoPersonalInformationSchema,
 } from "../../helpers/RoommateValidation";
@@ -18,6 +24,9 @@ import { useRoommateContext } from "../../context/RoommateContext";
 
 const FlatmateStepTwoRoommateScreen = ({ navigation }) => {
   const { flatmateStepTwo, setFlatmateStepTwo } = useRoommateContext();
+  const [selectedHobbies, setSelectedHobbies] = useState(
+    flatmateStepTwo?.hobbies ?? []
+  );
   const {
     control,
     handleSubmit,
@@ -29,8 +38,9 @@ const FlatmateStepTwoRoommateScreen = ({ navigation }) => {
     reset,
   } = useForm({
     mode: "onBlur",
-    resolver: yupResolver(stepTwoNewFlatmateSchema),
+    resolver: yupResolver(stepTwoHobbiesSchema),
     defaultValues: {
+      hobbies: flatmateStepTwo?.hobbies,
       new_flatmate_smoker: flatmateStepTwo?.new_flatmate_smoker || "",
       new_flatmate_min_age:
         flatmateStepTwo?.new_flatmate_min_age.toString() || "",
@@ -54,9 +64,11 @@ const FlatmateStepTwoRoommateScreen = ({ navigation }) => {
   });
 
   const hanldeNext = async () => {
+    setValue("hobbies", selectedHobbies);
     const data = getValues();
     try {
       clearErrors();
+      await stepTwoHobbiesSchema.validate(data);
       await stepTwoPersonalInformationSchema.validate(data);
       await stepTwoNewFlatmateSchema.validate(data);
       setFlatmateStepTwo(data);
@@ -73,10 +85,25 @@ const FlatmateStepTwoRoommateScreen = ({ navigation }) => {
     }
   };
 
+  const toggleHobbies = (hobby) => {
+    if (selectedHobbies.includes(hobby)) {
+      setSelectedHobbies(selectedHobbies.filter((item) => item !== hobby));
+    } else {
+      setSelectedHobbies([...selectedHobbies, hobby]);
+    }
+    setValue("hobbies", selectedHobbies);
+  };
+
   return (
     <ScrollView style={styles.container}>
       <StatusBar />
-
+      <AccordionItem title="Your Hobbies">
+        <Hobbies
+          control={control}
+          selectedHobbies={selectedHobbies}
+          toggleHobbies={toggleHobbies}
+        />
+      </AccordionItem>
       <AccordionItem title="Your Information">
         <PersonalInformation control={control} setValue={setValue} />
       </AccordionItem>
@@ -106,6 +133,7 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     flexGrow: 1,
     backgroundColor: "white",
+    marginBottom: 10,
   },
   checkbox: {
     marginTop: 10,
