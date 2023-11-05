@@ -131,7 +131,10 @@ const Profile = ({ handleScroll }) => {
     {
       id: 3,
       label: "Add Roommate Listing",
-      onPress: () => navigation.navigate("Add Roommate Screen"),
+      onPress: () =>
+        navigation.navigate("AddRoommateRoot", {
+          screen: "Property",
+        }),
       icon: (
         <MaterialCommunityIcons
           name="human-male-female"

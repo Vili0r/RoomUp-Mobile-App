@@ -35,7 +35,7 @@ const stepOneSchema = yup.object().shape({
     .required("Budget is required"),
 });
 
-const stepTwoSchema = yup.object().shape({
+const stepTwoNewFlatmateSchema = yup.object().shape({
   new_flatmate_min_age: yup
     .number()
     .typeError("That doesn't look like an age")
@@ -59,7 +59,9 @@ const stepTwoSchema = yup.object().shape({
     .string()
     .required("Occupation field is required"),
   new_flatmate_gender: yup.string().required("Gender field is required"),
+});
 
+const stepTwoPersonalInformationSchema = yup.object().shape({
   age: yup
     .number()
     .typeError("That doesn't look like an age")
@@ -100,4 +102,10 @@ const stepFourSchema = yup.object().shape({
     ),
 });
 
-export { stepOneSchema, stepTwoSchema, stepThreeSchema, stepFourSchema };
+export {
+  stepOneSchema,
+  stepTwoNewFlatmateSchema,
+  stepTwoPersonalInformationSchema,
+  stepThreeSchema,
+  stepFourSchema,
+};

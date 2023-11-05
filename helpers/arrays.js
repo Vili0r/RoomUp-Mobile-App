@@ -217,6 +217,13 @@ export const roomSize = [
   { value: 2, label: "Double" },
 ];
 
+export const searchingFor = [
+  { value: "", label: "Select searching for" },
+  { value: 1, label: "Me" },
+  { value: 2, label: "Me and my partner" },
+  { value: 3, label: "Me and my friend" },
+];
+
 export const hobbies = [
   { value: 1, label: "Reading" },
   { value: 2, label: "Writing" },

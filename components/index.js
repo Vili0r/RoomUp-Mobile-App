@@ -37,3 +37,5 @@ export { default as EditSharedForm } from "./EditSharedForm";
 export { default as RoomCard } from "./RoomCard";
 export { default as EditRoomForm } from "./EditRoomForm";
 export { default as StepTwoSharedEdit } from "./StepTwoSharedEdit";
+export { default as StepOneRoommate } from "./StepOneRoommate";
+export { default as PersonalInformation } from "./PersonalInformation";

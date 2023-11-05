@@ -22,7 +22,6 @@ import UpdatePasswordScreen from "../screens/Auth/UpdatePasswordScreen";
 import AccountSettingsScreen from "../screens/AccountSettingsScreen";
 import AdvancedFilterScreen from "../screens/AdvancedFilterScreen";
 import MyPropertiesScreen from "../screens/MyPropertiesScreen";
-import AddRoommateScreen from "../screens/AddRoommateScreen";
 import MessageAdvertiserScreen from "../screens/MessageAdvertiserScreen";
 import IncomingMessagesScreen from "../screens/IncomingMessagesScreen";
 import ChatScreen from "../screens/ChatScreen";
@@ -40,9 +39,15 @@ import FlatmateStepFiveSharedScreen from "../screens/Shared/FlatmateStepFiveShar
 import ConfirmStepSixSharedScreen from "../screens/Shared/ConfirmStepSixSharedScreen";
 import { FlatContextProvider } from "../context/FlatContext";
 import { SharedContextProvider } from "../context/SharedContext";
+import { RoommateContextProvider } from "../context/RoommateContext";
 import EditFlatScreen from "../screens/EditFlatScreen";
 import EditSharedScreen from "../screens/EditSharedScreen";
 import EditRoomScreen from "../screens/EditRoomScreen";
+import PropertyStepOneRoommateScreen from "../screens/Roommate/PropertyStepOneRoommateScreen";
+import FlatmateStepTwoRoommateScreen from "../screens/Roommate/FlatmateStepTwoRoommateScreen";
+import AdvertiserStepThreeRoommateScreen from "../screens/Roommate/AdvertiserStepThreeRoommateScreen";
+import ConfirmStepFourRoommateScreen from "../screens/Roommate/ConfirmStepFourRoommateScreen";
+import EditRoommateScreen from "../screens/EditRoommateScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -152,9 +157,9 @@ const RootNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="Add Roommate Screen"
-        component={AddRoommateScreen}
-        options={{ headerShown: true, title: "Add a Roommate Listing" }}
+        name="AddRoommateRoot"
+        component={AddRoommateStack}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="Chat Screen"
@@ -174,6 +179,11 @@ const RootNavigator = () => {
       <Stack.Screen
         name="Edit Room Screen"
         component={EditRoomScreen}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="Edit Roommate Screen"
+        component={EditRoommateScreen}
         options={{ headerShown: true }}
       />
     </Stack.Navigator>
@@ -352,5 +362,42 @@ const AddSharedStack = () => {
         />
       </AddSharedSatckNavigator.Navigator>
     </SharedContextProvider>
+  );
+};
+
+const AddRoommateSatckNavigator = createNativeStackNavigator();
+
+const AddRoommateStack = () => {
+  return (
+    <RoommateContextProvider>
+      <AddRoommateSatckNavigator.Navigator initialRouteName="Property">
+        <AddRoommateSatckNavigator.Screen
+          name="Property"
+          component={PropertyStepOneRoommateScreen}
+        />
+
+        <AddRoommateSatckNavigator.Screen
+          name="Flatmate"
+          component={FlatmateStepTwoRoommateScreen}
+          options={{
+            headerTitle: "Flatmate",
+          }}
+        />
+        <AddRoommateSatckNavigator.Screen
+          name="Advertiser"
+          component={AdvertiserStepThreeRoommateScreen}
+          options={{
+            headerTitle: "Advertiser info",
+          }}
+        />
+        <AddRoommateSatckNavigator.Screen
+          name="Confirm"
+          component={ConfirmStepFourRoommateScreen}
+          options={{
+            headerTitle: "Confirm",
+          }}
+        />
+      </AddRoommateSatckNavigator.Navigator>
+    </RoommateContextProvider>
   );
 };

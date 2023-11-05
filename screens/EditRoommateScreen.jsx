@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const AddRoommateScreen = () => {
+const EditRoommateScreen = () => {
   return (
     <View>
-      <Text>AddRoommateScreen</Text>
+      <Text>EditRoommateScreen</Text>
     </View>
   );
 };
 
-export default AddRoommateScreen;
+export default EditRoommateScreen;
