@@ -224,11 +224,9 @@ const Profile = ({ handleScroll }) => {
     },
   ];
 
-  const avatarUrl =
-    user.avatar !==
-    "https://www.gravatar.com/avatar/000000000000000000000000000000?d=mp"
-      ? `http://127.0.0.1:8000/${user.avatar}`
-      : "https://www.gravatar.com/avatar/000000000000000000000000000000?d=mp";
+  const avatarUrl = user.avatar.startsWith("https://")
+    ? user.avatar
+    : `http://127.0.0.1:8000/${user.avatar}`;
 
   return (
     <View className="p-3">

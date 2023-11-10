@@ -102,7 +102,6 @@ const ChatScreen = ({ route }) => {
         add();
       })
       .catch((error) => {
-        console.log(error.response);
         setServerError(error.response.data.message);
         const key = Object.keys(error.response.data.errors)[0];
         setServerError(error.response.data.errors[key][0]);

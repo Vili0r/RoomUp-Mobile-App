@@ -30,7 +30,7 @@ const AllProperties = () => {
   const [selectedFilters, setSelectedFilters] = useState(null);
 
   const setAuthToken = () => {
-    if (user && user.token) {
+    if (user && user?.token) {
       axiosConfig.defaults.headers.common[
         "Authorization"
       ] = `Bearer ${user.token}`;

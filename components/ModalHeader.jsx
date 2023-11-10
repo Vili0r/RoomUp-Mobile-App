@@ -10,7 +10,7 @@ const ModalHeader = ({ xShown, text, onPress, component }) => {
       <View
         className={`${
           component === "login-register"
-            ? "border-b-[#6f63ed] border-b-2"
+            ? ""
             : "border-b-gray-800 border-b-[1px]"
         } "flex-row items-center justify-center p-4`}
       >

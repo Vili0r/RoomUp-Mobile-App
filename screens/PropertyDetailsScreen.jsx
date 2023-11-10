@@ -11,14 +11,14 @@ const PropertyDetailsScreen = () => {
   const id = route.params?.id;
   const index = route.params?.index;
 
-  const fetchSinglePropertyDetails = async () => {
+  const fetchSinglePropertyDetails = async (model, id) => {
     const response = await axiosConfig.get(`/property/${model}/${id}`);
     return response.data;
   };
 
   const singlePropertyDetailsQuery = useQuery({
-    queryKey: ["singlePropertyDetails"],
-    queryFn: fetchSinglePropertyDetails,
+    queryKey: ["singlePropertyDetails", model, id],
+    queryFn: () => fetchSinglePropertyDetails(model, id),
   });
 
   return (

@@ -5,7 +5,10 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "gr.roomup.RoomUp",
+    "scheme": [
+      "gr.roomup.RoomUp",
+      "fb733345738609829"
+    ],
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -16,7 +19,9 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "gr.roomup.RoomUp",
+      "usesAppleSignIn": true
     },
     "android": {
       "package": "gr.roomup.RoomUp",
@@ -33,6 +38,7 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
+      "expo-apple-authentication",
       [
         "expo-image-picker",
         {
@@ -40,6 +46,11 @@
           "cameraPermission": "Allow ${PRODUCT_NAME} to access your camera."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "cdb7d3e5-f639-4795-ae2b-44cb49262c59"
+      }
+    }
   }
 }

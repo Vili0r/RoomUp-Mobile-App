@@ -14,13 +14,119 @@ import { ModalHeader } from "../../components";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import axiosConfig from "../../helpers/axiosConfig";
 import * as SecureStore from "expo-secure-store";
+import * as Facebook from "expo-auth-session/providers/facebook";
+import * as Google from "expo-auth-session/providers/google";
+import * as AppleAuthentication from "expo-apple-authentication";
+import * as WebBrowser from "expo-web-browser";
+import { useMutation } from "@tanstack/react-query";
 
+WebBrowser.maybeCompleteAuthSession();
 const LoginScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { setUser } = useContext(AuthContext);
+
+  const [_, __, fbPromptAsync] = Facebook.useAuthRequest({
+    clientId: "733345738609829",
+  });
+
+  const [___, ____, googlePromptAsync] = Google.useAuthRequest({
+    iosClientId:
+      "51453922065-r4rebu0usq1776e4qh9qvsdag6dk77uh.apps.googleusercontent.com",
+  });
+
+  const facebookAuthentication = useMutation(async () => {
+    const response = await fbPromptAsync();
+    if (response.type === "success") {
+      const { access_token } = response.params;
+
+      setIsLoading(true);
+      await axiosConfig
+        .post("/auth/facebook/social-login", {
+          token: access_token,
+          device_name: "mobile",
+        })
+        .then((res) => {
+          const userResponse = {
+            token: res.data.token,
+            id: res.data.user.id,
+            first_name: res.data.user.first_name,
+            email: res.data.user.email,
+            avatar: res.data.user.avatar,
+          };
+          setUser(userResponse);
+          setError(null);
+          SecureStore.setItemAsync("user", JSON.stringify(userResponse));
+          setIsLoading(false);
+
+          navigation.goBack(); // Go back to the previous screen
+        })
+        .catch((error) => {
+          setError(error.response.data.message);
+          setIsLoading(false);
+          const key = Object.keys(error.response.data.errors)[0];
+          setError(error.response.data.errors[key][0]);
+        });
+    }
+  });
+
+  const googleAuthentication = useMutation(async () => {
+    const response = await googlePromptAsync();
+    if (response.type === "success") {
+      const { access_token } = response.params;
+      console.log(access_token);
+
+      setIsLoading(true);
+      await axiosConfig
+        .post("/auth/google/social-login", {
+          token: access_token,
+          device_name: "mobile",
+        })
+        .then((res) => {
+          const userResponse = {
+            token: res.data.token,
+            id: res.data.user.id,
+            first_name: res.data.user.first_name,
+            email: res.data.user.email,
+            avatar: res.data.user.avatar,
+          };
+          setUser(userResponse);
+          setError(null);
+          SecureStore.setItemAsync("user", JSON.stringify(userResponse));
+          setIsLoading(false);
+
+          navigation.goBack(); // Go back to the previous screen
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
+          setError(error.response.data.message);
+          setIsLoading(false);
+          const key = Object.keys(error.response.data.errors)[0];
+          setError(error.response.data.errors[key][0]);
+        });
+    }
+  });
+
+  const appleAuthentication = useMutation(async () => {
+    try {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+      console.log(credential);
+    } catch (e) {
+      if (e.code === "ERR_REQUEST_CANCELED") {
+        console.log(e);
+        // handle that the user canceled the sign-in flow
+      } else {
+        // handle other errors
+      }
+    }
+  });
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -123,19 +229,28 @@ const LoginScreen = ({ navigation }) => {
             Or
           </Text>
           <View className="flex-row justify-center space-x-12">
-            <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
+            <TouchableOpacity
+              onPress={() => googleAuthentication.mutate()}
+              className="p-2 bg-gray-100 rounded-2xl"
+            >
               <Image
                 source={require("../../assets/icons/google.png")}
                 className="w-10 h-10"
               />
             </TouchableOpacity>
-            <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
+            <TouchableOpacity
+              onPress={() => appleAuthentication.mutate()}
+              className="p-2 bg-gray-100 rounded-2xl"
+            >
               <Image
                 source={require("../../assets/icons/apple.png")}
                 className="w-10 h-10"
               />
             </TouchableOpacity>
-            <TouchableOpacity className="p-2 bg-gray-100 rounded-2xl">
+            <TouchableOpacity
+              onPress={() => facebookAuthentication.mutate()}
+              className="p-2 bg-gray-100 rounded-2xl"
+            >
               <Image
                 source={require("../../assets/icons/facebook.png")}
                 className="w-10 h-10"

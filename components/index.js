@@ -44,3 +44,4 @@ export { default as StepFourRoommate } from "./StepFourRoommate";
 export { default as MyRoommateListings } from "./MyRoommateListings";
 export { default as MyRoommateCard } from "./MyRoommateCard";
 export { default as EditRoommateForm } from "./EditRoommateForm";
+export { default as PropertyLocation } from "./PropertyLocation";

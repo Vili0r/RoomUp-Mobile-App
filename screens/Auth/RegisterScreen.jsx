@@ -240,28 +240,32 @@ const RegisterScreen = ({ navigation }) => {
           )}
 
           {step == "1" && (
-            <View className="space-y-2 form">
-              <View className="">
-                <Text className="mb-2 ml-4 text-gray-700">First Name</Text>
+            <View className="">
+              <View className="relative">
                 <CustomInput
                   name="first_name"
                   control={control}
-                  placeholder="First Name"
+                  placeholder=""
                 />
+                <Text
+                  htmlFor="first_name"
+                  className="absolute left-0 px-1 ml-3 text-sm text-gray-500 transition-all duration-100 ease-in-out origin-left transform -translate-y-1/2 bg-white pointer-events-none -top-3 font-popp peer-placeholder-shown:top-1/2 peer-placeholder-shown:ml-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-0 peer-focus:ml-3 peer-focus:text-sm peer-focus:text-gray-800"
+                >
+                  First Name
+                </Text>
               </View>
-              <View className="mt-2">
-                <Text className="mt-2 mb-2 ml-4 text-gray-700">Last Name</Text>
+              <View className="relative mt-7">
                 <CustomInput
                   name="last_name"
                   control={control}
-                  placeholder="Last Name"
+                  placeholder=""
                 />
+                <Text className="absolute left-0 px-1 ml-3 text-sm text-gray-500 transition-all duration-100 ease-in-out origin-left transform -translate-y-1/2 bg-white pointer-events-none -top-3 font-popp peer-placeholder-shown:top-1/2 peer-placeholder-shown:ml-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-0 peer-focus:ml-3 peer-focus:text-sm peer-focus:text-gray-800">
+                  Last Name
+                </Text>
               </View>
 
-              <View className="mt-2">
-                <Text className="mt-2 mb-2 ml-2 text-gray-700">
-                  Email Address
-                </Text>
+              <View className="relative mt-7">
                 <Controller
                   control={control}
                   name="email"
@@ -271,11 +275,11 @@ const RegisterScreen = ({ navigation }) => {
                   }) => (
                     <>
                       <TextInput
-                        className="p-4 text-gray-700 bg-gray-100 rounded-2xl"
+                        className="w-full px-3 py-3 border border-gray-300 rounded-md peer"
                         onChangeText={onChange}
                         value={value}
                         onBlur={onBlur}
-                        placeholder="Email"
+                        placeholder=""
                         placeholderTextColor="gray"
                         textContentType="emailAddress"
                         keyboardType="email-address"
@@ -291,29 +295,33 @@ const RegisterScreen = ({ navigation }) => {
                     </>
                   )}
                 />
+                <Text className="absolute left-0 px-1 ml-3 text-sm text-gray-500 transition-all duration-100 ease-in-out origin-left transform -translate-y-1/2 bg-white pointer-events-none -top-3 font-popp peer-placeholder-shown:top-1/2 peer-placeholder-shown:ml-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-0 peer-focus:ml-3 peer-focus:text-sm peer-focus:text-gray-800">
+                  Email Address
+                </Text>
               </View>
 
-              <View className="mt-2">
-                <Text className="mt-2 mb-2 ml-4 text-gray-700">Password</Text>
-
+              <View className="relative mt-7">
                 <CustomInput
                   name="password"
                   control={control}
-                  placeholder="Password"
+                  placeholder=""
                   secureTextEntry
                 />
+                <Text className="absolute left-0 px-1 ml-3 text-sm text-gray-500 transition-all duration-100 ease-in-out origin-left transform -translate-y-1/2 bg-white pointer-events-none -top-3 font-popp peer-placeholder-shown:top-1/2 peer-placeholder-shown:ml-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-0 peer-focus:ml-3 peer-focus:text-sm peer-focus:text-gray-800">
+                  Password
+                </Text>
               </View>
 
-              <View className="mb-2">
-                <Text className="mt-2 mb-2 ml-4 text-gray-700">
-                  Confirm Password
-                </Text>
+              <View className="relative mt-7">
                 <CustomInput
                   name="password_confirmation"
                   control={control}
-                  placeholder="Password Confirmation"
+                  placeholder=""
                   secureTextEntry
                 />
+                <Text className="absolute left-0 px-1 ml-3 text-sm text-gray-500 transition-all duration-100 ease-in-out origin-left transform -translate-y-1/2 bg-white pointer-events-none -top-3 font-popp peer-placeholder-shown:top-1/2 peer-placeholder-shown:ml-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-0 peer-focus:ml-3 peer-focus:text-sm peer-focus:text-gray-800">
+                  Confirm Password
+                </Text>
               </View>
             </View>
           )}
@@ -333,8 +341,7 @@ const RegisterScreen = ({ navigation }) => {
                 )}
               </View>
 
-              <View className="space-y-2 form">
-                <Text className="ml-4 text-gray-700 ">Birthdate</Text>
+              <View className="relative mt-4">
                 {showPicker && (
                   <DateTimePicker
                     mode="date"
@@ -371,11 +378,11 @@ const RegisterScreen = ({ navigation }) => {
                       <>
                         <Pressable onPress={toggleDatepicker}>
                           <TextInput
-                            className="p-4 mt-0 text-gray-700 bg-gray-100 rounded-2xl"
+                            className="w-full px-3 py-3 border border-gray-300 rounded-md peer"
                             onChangeText={onChange}
                             value={value}
                             onBlur={onBlur}
-                            placeholder="Birthdate"
+                            placeholder=""
                             placeholderTextColor="gray"
                             autoCapitalize="none"
                             editable={false}
@@ -394,6 +401,9 @@ const RegisterScreen = ({ navigation }) => {
                     )}
                   />
                 )}
+                <Text className="absolute left-0 px-1 ml-3 text-sm text-gray-500 transition-all duration-100 ease-in-out origin-left transform -translate-y-1/2 bg-white pointer-events-none -top-3 font-popp peer-placeholder-shown:top-1/2 peer-placeholder-shown:ml-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-0 peer-focus:ml-3 peer-focus:text-sm peer-focus:text-gray-800">
+                  Birthdate
+                </Text>
 
                 <View className="mt-2">
                   <Controller
@@ -476,7 +486,7 @@ const RegisterScreen = ({ navigation }) => {
             className="flex flex-row items-center justify-center py-3 mt-5 space-x-3 bg-yellow-400 rounded-xl"
           >
             <Text className="font-bold text-center text-gray-700 font-xl">
-              Next step
+              Register
             </Text>
             <Feather name="arrow-right" size={20} color="black" />
           </TouchableOpacity>

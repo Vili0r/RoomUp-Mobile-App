@@ -3,12 +3,12 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import moment from "moment";
 import ParallaxScrollView from "./ParallaxScrollView";
 import AdvertisedBy from "./AdvertisedBy";
 import SinglePropertyFooter from "./SinglePropertyFooter";
 import PropertyDetailsAmenities from "./PropertyDetailsAmenities";
+import PropertyLocation from "./PropertyLocation";
 import { useNavigation } from "@react-navigation/native";
 
 const SinglePropertyDetails = ({ property, imageIndex }) => {
@@ -147,11 +147,11 @@ const SinglePropertyDetails = ({ property, imageIndex }) => {
             )}
           </View>
 
-          {/* {property.owner ? (
+          {property.owner ? (
             <PropertyLocation address={property.owner.address} />
           ) : (
             <PropertyLocation address={property.address} />
-          )} */}
+          )}
 
           <View className="flex border-0 border-t-2 mt-7 border-t-gray-200">
             <Text className="mt-5 text-xl font-bold text-gray-700">

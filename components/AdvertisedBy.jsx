@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { callPhoneNumber } from "../helpers/callPhoneNumber";
@@ -11,13 +11,10 @@ const AdvertisedBy = ({ advertiser, occupation }) => {
         Advertised by
       </Text>
 
-      <View className="flex flex-row mt-8">
-        <Image
-          className="object-cover w-16 h-16 mx-2 rounded-full shrink-0 ring-4 ring-gray-300 dark:ring-gray-700"
-          source={{
-            uri: "https://www.gravatar.com/avatar/000000000000000000000000000000?d=mp",
-          }}
-        />
+      <View className="flex flex-row mt-5">
+        <View className="flex items-center justify-center w-[52px] h-[52px] text-black bg-gray-300 rounded-md">
+          <Text className="text-lg uppercase">{advertiser.initials}</Text>
+        </View>
         <View className="grid mx-2">
           <Text className="font-semibold text-gray-800 font-popp">
             {advertiser.first_name}
@@ -35,7 +32,7 @@ const AdvertisedBy = ({ advertiser, occupation }) => {
         </View>
       </View>
 
-      <View className="flex flex-row mt-2 space-x-1">
+      <View className="flex flex-row mt-3 space-x-1">
         <Text className="flex flex-row gap-2">
           <Feather name="star" size={24} color="black" />
           <Text className="text-sm font-popp">744 reviews</Text>
