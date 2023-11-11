@@ -11,7 +11,12 @@ import PropertyLocation from "./PropertyLocation";
 import { useNavigation } from "@react-navigation/native";
 import ParallaxScrollView from "./ParallaxScrollView";
 
-const SinglePropertyDetails = ({ property, imageIndex }) => {
+const SinglePropertyDetails = ({
+  property,
+  imageIndex,
+  isFavourited,
+  handleToggleFavourite,
+}) => {
   const navigation = useNavigation();
   const imageUrl =
     property.images[imageIndex] &&
@@ -50,13 +55,20 @@ const SinglePropertyDetails = ({ property, imageIndex }) => {
           >
             <Ionicons name="share-outline" size={22} color={"#000"} />
           </TouchableOpacity>
-          <TouchableOpacity className="w-[40px] h-[40px] rounded-[20px] bg-white justify-center items-center">
-            <Ionicons name="heart-outline" size={22} color={"#000"} />
+          <TouchableOpacity
+            onPress={handleToggleFavourite}
+            className="w-[40px] h-[40px] rounded-[20px] bg-white justify-center items-center"
+          >
+            {isFavourited ? (
+              <Ionicons name="heart" size={22} color={"#ed5353"} />
+            ) : (
+              <Ionicons name="heart-outline" size={22} color={"#000"} />
+            )}
           </TouchableOpacity>
         </View>
       ),
     });
-  }, []);
+  }, [isFavourited]);
 
   return (
     <>

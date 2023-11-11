@@ -17,7 +17,12 @@ import PropertyDetailsAmenities from "./PropertyDetailsAmenities";
 import { useNavigation } from "@react-navigation/native";
 import ParallaxScrollView from "./ParallaxScrollView";
 
-const SingleRoommateDetails = ({ listing, imageIndex }) => {
+const SingleRoommateDetails = ({
+  listing,
+  imageIndex,
+  isFavourited,
+  handleToggleFavourite,
+}) => {
   const navigation = useNavigation();
   const imageUrl =
     listing.images[imageIndex] &&
@@ -55,13 +60,20 @@ const SingleRoommateDetails = ({ listing, imageIndex }) => {
           >
             <Ionicons name="share-outline" size={22} color={"#000"} />
           </TouchableOpacity>
-          <TouchableOpacity className="w-[40px] h-[40px] rounded-[20px] bg-white justify-center items-center">
-            <Ionicons name="heart-outline" size={22} color={"#000"} />
+          <TouchableOpacity
+            onPress={handleToggleFavourite}
+            className="w-[40px] h-[40px] rounded-[20px] bg-white justify-center items-center"
+          >
+            {isFavourited ? (
+              <Ionicons name="heart" size={22} color={"#ed5353"} />
+            ) : (
+              <Ionicons name="heart-outline" size={22} color={"#000"} />
+            )}
           </TouchableOpacity>
         </View>
       ),
     });
-  }, []);
+  }, [isFavourited]);
 
   return (
     <>
@@ -109,11 +121,12 @@ const SingleRoommateDetails = ({ listing, imageIndex }) => {
             <Text className="flex gap-1 font-semibold underline">
               <Ionicons name="location-outline" size={24} color="gray" />
 
-              <Text className="text-base font-semibold text-gray-700">
+              <Text className="text-base font-semibold text-gray-700 capitalize">
                 {listing.area},
               </Text>
 
-              <Text className="text-base font-semibold text-gray-700">
+              <Text className="text-base font-semibold text-gray-700 capitalize">
+                {" "}
                 {listing.city}
               </Text>
             </Text>
