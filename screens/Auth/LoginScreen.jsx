@@ -225,9 +225,13 @@ const LoginScreen = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <Text className="py-5 text-xl font-bold text-center text-gray-700">
-            Or
-          </Text>
+          <View className="flex-row items-center gap-4">
+            <View className="flex-1 border-b border-b-gray-400"></View>
+            <Text className="py-5 text-lg font-bold text-center text-gray-700">
+              Or
+            </Text>
+            <View className="flex-1 border-b border-b-gray-400"></View>
+          </View>
           <View className="flex-row justify-center space-x-12">
             <TouchableOpacity
               onPress={() => googleAuthentication.mutate()}

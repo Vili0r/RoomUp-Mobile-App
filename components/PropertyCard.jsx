@@ -17,6 +17,7 @@ const WIDTH = Dimensions.get("screen").width - LISTMARGIN * 2;
 import { useNavigation } from "@react-navigation/native";
 import axiosConfig from "../helpers/axiosConfig";
 import { AuthContext } from "../context/AuthProvider";
+import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 
 const PropertyCard = ({ item: property, toggleFavourite, style }) => {
   const { user } = useContext(AuthContext);
@@ -75,18 +76,29 @@ const PropertyCard = ({ item: property, toggleFavourite, style }) => {
     });
   };
 
+  const handleSingleListing = () => {
+    if (property.model === "roommate") {
+      navigation.navigate("Roommate Details Screen", {
+        id: property.id,
+        index: activeIndex,
+      });
+    } else {
+      navigation.navigate("Property Details Screen", {
+        id: property.id,
+        model: property.model,
+        index: activeIndex,
+      });
+    }
+  };
+
   return (
     <View className="flex flex-row mb-8 group" style={[style]}>
-      <View className="flex flex-col w-full gap-2">
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("Property Details Screen", {
-              id: property.id,
-              model: property.model,
-              index: activeIndex,
-            })
-          }
-        >
+      <Animated.View
+        className="flex flex-col w-full gap-2"
+        entering={FadeInRight}
+        exiting={FadeOutLeft}
+      >
+        <TouchableOpacity onPress={handleSingleListing}>
           <View className="relative w-full overflow-hidden aspect-square rounded-xl">
             <FlatList
               ref={(ref) => (flatListRef.current = ref)}
@@ -222,7 +234,7 @@ const PropertyCard = ({ item: property, toggleFavourite, style }) => {
             </Text>
           </View>
         </View>
-      </View>
+      </Animated.View>
     </View>
   );
 };

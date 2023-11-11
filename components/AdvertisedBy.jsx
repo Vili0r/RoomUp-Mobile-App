@@ -37,7 +37,7 @@ const AdvertisedBy = ({ advertiser, occupation }) => {
           <Feather name="star" size={24} color="black" />
           <Text className="text-sm font-popp">744 reviews</Text>
         </Text>
-        <Text>&middot;</Text>
+        <Text className="font-bold">·</Text>
         <Text className="flex flex-row gap-2">
           <Ionicons name="shield-checkmark-outline" size={24} color="black" />
           <Text className="text-sm font-popp">Identity certified</Text>

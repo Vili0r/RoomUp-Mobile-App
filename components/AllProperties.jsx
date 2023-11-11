@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
   Pressable,
   TextInput,
-  Button,
 } from "react-native";
 import PropertyCard from "./PropertyCard";
 import Map from "./Map";
@@ -16,6 +15,7 @@ import axiosConfig from "../helpers/axiosConfig";
 import axios from "axios";
 import { AuthContext } from "../context/AuthProvider";
 import { useNavigation } from "@react-navigation/native";
+import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 
 const AllProperties = () => {
   const navigation = useNavigation();
@@ -204,6 +204,7 @@ const AllProperties = () => {
       axiosConfig
         .get(`/header-filter?search_type=${propertyType}`)
         .then((response) => {
+          setMapShow(false);
           setData(response.data.data);
           setIsLoading(false);
           setIsRefreshing(false);
@@ -299,7 +300,11 @@ const AllProperties = () => {
       {mapShow ? (
         <Map properties={data} />
       ) : (
-        <View className="p-2 ml-[7px] mb-14">
+        <Animated.View
+          className="p-2 ml-[7px] mb-14"
+          entering={FadeInRight}
+          exiting={FadeOutLeft}
+        >
           {isLoading ? (
             <ActivityIndicator className="mt-2" size="large" color="gray" />
           ) : (
@@ -325,7 +330,7 @@ const AllProperties = () => {
               }
             />
           )}
-        </View>
+        </Animated.View>
       )}
       {!isLoading && !mapShow && (
         <TouchableOpacity

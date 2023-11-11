@@ -49,10 +49,11 @@ import AdvertiserStepThreeRoommateScreen from "../screens/Roommate/AdvertiserSte
 import ConfirmStepFourRoommateScreen from "../screens/Roommate/ConfirmStepFourRoommateScreen";
 import EditRoommateScreen from "../screens/EditRoommateScreen";
 import MyRoommateListingsScreen from "../screens/MyRoommateListingsScreen";
+import RoommateDetailsScreen from "../screens/RoommateDetailsScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { setUser } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
 
   useEffect(() => {
     //check if user is logged in
@@ -118,6 +119,11 @@ const RootNavigator = () => {
         <Stack.Screen
           name="Property Details Screen"
           component={PropertyDetailsScreen}
+          options={{ headerShown: true }}
+        />
+        <Stack.Screen
+          name="Roommate Details Screen"
+          component={RoommateDetailsScreen}
           options={{ headerShown: true }}
         />
         <Stack.Screen
