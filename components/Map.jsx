@@ -1,14 +1,36 @@
 import { View, TouchableOpacity, Platform } from "react-native";
-import React, { useState, useEffect } from "react";
-import MapView from "react-native-maps";
+import React, { useState, useContext } from "react";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import MapMarker from "./MapMarker";
 import { useNavigation } from "@react-navigation/native";
 import MapPropertyCard from "./MapPropertyCard";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import axiosConfig from "../helpers/axiosConfig";
+import { AuthContext } from "../context/AuthProvider";
 
+const INITIAL_REGION = {
+  latitude: 38.2,
+  longitude: 23.2,
+  latitudeDelts: 2,
+  longitudeDelta: 2,
+};
 const Map = ({ properties }) => {
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const { user } = useContext(AuthContext);
   const navigation = useNavigation();
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const [data, setData] = useState([]);
+  const [serverErrors, setServerErrors] = useState(null);
+
+  const setAuthToken = () => {
+    if (user && user?.token) {
+      axiosConfig.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${user.token}`;
+    } else {
+      delete axiosConfig.defaults.headers.common["Authorization"];
+    }
+  };
+
   const handleMarkerPress = (index) => {
     setActiveIndex(index);
     navigation.setOptions({ tabBarStyle: { display: "none" } });
@@ -22,11 +44,42 @@ const Map = ({ properties }) => {
     if (Platform.OS === "android") unFocusProperty();
   };
 
+  const onRegionChange = async (region) => {
+    console.log(region);
+    setAuthToken();
+    await axiosConfig
+      .post(
+        `/map-search`,
+        {
+          lat: region.latitude,
+          long: region.longitude,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      )
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        setServerErrors(error.response.data.message);
+        const key = Object.keys(error.response.data.errors)[0];
+        setServerErrors(error.response.data.errors[key][0]);
+      });
+  };
+
   return (
     <View className="flex-1 mt-4 overflow-hidden">
       <MapView
         style={{ height: "100%", width: "100%" }}
         onPress={handleMapPress}
+        provider={PROVIDER_GOOGLE}
+        showsUserLocation
+        showsMyLocationButton
+        initialRegion={INITIAL_REGION}
+        onRegionChangeComplete={onRegionChange}
       >
         {properties &&
           properties.map((item, index) => (

@@ -28,6 +28,7 @@ const AllProperties = () => {
   const [search, setSearch] = useState("");
   const [mapShow, setMapShow] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState(null);
+  const [flatmate, setFlatmate] = useState("");
 
   const setAuthToken = () => {
     if (user && user?.token) {
@@ -171,6 +172,7 @@ const AllProperties = () => {
     setAuthToken();
 
     if (propertyType === 1 || propertyType === 2 || propertyType === 3) {
+      setFlatmate("");
       axiosConfig
         .get(`/header-filter?filter[type]=${propertyType}`)
         .then((response) => {
@@ -186,6 +188,7 @@ const AllProperties = () => {
           setIsRefreshing(false);
         });
     } else if (propertyType === "shareds") {
+      setFlatmate("");
       axiosConfig
         .get(`/header-filter?search_type=${propertyType}`)
         .then((response) => {
@@ -201,6 +204,7 @@ const AllProperties = () => {
           setIsRefreshing(false);
         });
     } else if (propertyType === "roommate") {
+      setFlatmate("roommate");
       axiosConfig
         .get(`/header-filter?search_type=${propertyType}`)
         .then((response) => {
@@ -332,7 +336,7 @@ const AllProperties = () => {
           )}
         </Animated.View>
       )}
-      {!isLoading && !mapShow && (
+      {!isLoading && !mapShow && flatmate === "" && (
         <TouchableOpacity
           onPress={() => setMapShow(!mapShow)}
           className="absolute bottom-[20px] right-[150px] items-center justify-center px-3 py-3 bg-gray-800 rounded-full"

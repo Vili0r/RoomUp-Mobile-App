@@ -180,19 +180,19 @@ const SinglePropertyDetails = ({
             <PropertyLocation address={property.address} />
           )}
 
-          <View className="flex border-0 border-t-2 mt-7 border-t-gray-200">
+          <View className="border-0 border-t-2 mt-7 border-t-gray-200">
             <Text className="mt-5 text-xl font-bold text-gray-700">
               Availability
             </Text>
-            <View className="flex flex-col gap-2 font-[450px] mt-2 text-neutral-500 text-base">
-              <Text className="flex items-center gap-2 capitalize">
+            <View className="gap-2 font-[450px] mt-2 text-neutral-500 text-base">
+              <Text className="capitalize ">
                 <Feather name="minimize" size={20} />
                 {property.owner
                   ? property.minimum_stay
                   : property.availability?.minimum_stay}
               </Text>
 
-              <Text className="flex gap-2 capitalize">
+              <Text className="capitalize">
                 <Feather name="maximize" size={20} />
 
                 {property.owner
@@ -200,13 +200,13 @@ const SinglePropertyDetails = ({
                   : property.availability?.maximum_stay}
               </Text>
 
-              <Text className="flex gap-2 capitalize">
+              <Text className="capitalize">
                 <Ionicons name="calendar-outline" size={20} />
                 {property.owner
                   ? property.days_available
                   : property.availability?.days_available}
               </Text>
-              <Text className="flex gap-2 capitalize">
+              <Text className="capitalize">
                 <MaterialIcons name="short-text" size={20} />
                 {property.owner
                   ? property.short_term
