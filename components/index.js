@@ -46,3 +46,6 @@ export { default as MyRoommateCard } from "./MyRoommateCard";
 export { default as EditRoommateForm } from "./EditRoommateForm";
 export { default as PropertyLocation } from "./PropertyLocation";
 export { default as SingleRoommateDetails } from "./SingleRoommateDetails";
+export { default as ModalFilterProperties } from "./ModalFilterProperties";
+export { default as ModalFilterRoommate } from "./ModalFilterRoommate";
+export { default as RangeSlider } from "./RangeSlider";

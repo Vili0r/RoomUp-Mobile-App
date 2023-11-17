@@ -81,7 +81,7 @@ const SingleRoommateDetails = ({
         backgroundColor={"#fff"}
         style={{ flex: 1 }}
         parallaxHeaderHeight={300}
-        stickyHeaderHeight={65}
+        stickyHeaderHeight={100}
         contentBackgroundColor={"#fff"}
         renderBackground={() => (
           <Image
@@ -96,7 +96,7 @@ const SingleRoommateDetails = ({
         renderStickyHeader={() => (
           <View
             key="sticky-header"
-            className="bg-white ml-[50px] mt-1"
+            className="bg-white ml-[50px] mt-[50px]"
             style={{
               justifyContent: "flex-end",
             }}

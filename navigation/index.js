@@ -119,17 +119,29 @@ const RootNavigator = () => {
         <Stack.Screen
           name="Property Details Screen"
           component={PropertyDetailsScreen}
-          options={{ headerShown: true }}
+          options={{
+            headerShown: true,
+            animation: "fade",
+            presentation: "transparentModal",
+          }}
         />
         <Stack.Screen
           name="Roommate Details Screen"
           component={RoommateDetailsScreen}
-          options={{ headerShown: true }}
+          options={{
+            headerShown: true,
+            animation: "fade",
+            presentation: "transparentModal",
+          }}
         />
         <Stack.Screen
           name="Advanced Filter Screen"
           component={AdvancedFilterScreen}
-          options={{ headerShown: true }}
+          options={{
+            presentation: "transparentModal",
+            animation: "fade",
+            headerTransparent: true,
+          }}
         />
         <Stack.Screen
           name="Message Advertiser Screen"

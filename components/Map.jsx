@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, Platform } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import MapMarker from "./MapMarker";
 import { useNavigation } from "@react-navigation/native";
@@ -18,7 +18,7 @@ const Map = ({ properties }) => {
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [data, setData] = useState([]);
+  const [listings, setListings] = useState(null);
   const [serverErrors, setServerErrors] = useState(null);
 
   const setAuthToken = () => {
@@ -45,14 +45,15 @@ const Map = ({ properties }) => {
   };
 
   const onRegionChange = async (region) => {
-    console.log(region);
+    // console.log("map_lat", region.latitude);
+    // console.log("map_long", region.longitude);
     setAuthToken();
     await axiosConfig
       .post(
         `/map-search`,
         {
-          lat: region.latitude,
-          long: region.longitude,
+          latitude: region.latitude,
+          longitude: region.longitude,
         },
         {
           headers: {
@@ -61,7 +62,7 @@ const Map = ({ properties }) => {
         }
       )
       .then((response) => {
-        setData(response.data);
+        setListings(response.data);
       })
       .catch((error) => {
         setServerErrors(error.response.data.message);
@@ -88,6 +89,16 @@ const Map = ({ properties }) => {
               lat={item.owner ? item.owner.address?.lat : item.address.lat}
               long={item.owner ? item.owner.address?.long : item.address.long}
               color={activeIndex === index ? "rgb(250 204 21)" : "black"}
+              onPress={() => handleMarkerPress(index)}
+            />
+          ))}
+        {listings?.length > 0 &&
+          listings?.map((item, index) => (
+            <MapMarker
+              key={item.id}
+              lat={item.owner ? item.owner.address?.lat : item.address.lat}
+              long={item.owner ? item.owner.address?.long : item.address.long}
+              color={activeIndex === index ? "rgb(200 204 21)" : "blue"}
               onPress={() => handleMarkerPress(index)}
             />
           ))}

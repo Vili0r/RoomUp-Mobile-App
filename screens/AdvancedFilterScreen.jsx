@@ -1,35 +1,50 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { useLayoutEffect } from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useNavigation } from "@react-navigation/native";
+import React, { useLayoutEffect, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { BlurView } from "expo-blur";
+import { ModalFilterProperties, ModalFilterRoommate } from "../components";
 
-const AdvancedFilterScreen = () => {
-  const navigation = useNavigation();
+const AdvancedFilterScreen = ({ navigation }) => {
+  const [active, setActive] = useState(0);
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTransparent: true,
-      headerTitle: "Find your ideal home",
-      headerTintColor: "black",
+      headerTitle: () => (
+        <View className="flex-row justify-center gap-2">
+          <TouchableOpacity onPress={() => setActive(0)}>
+            <Text
+              className={`text-base font-bold ${
+                active === 0 ? "underline text-black" : "text-gray-600"
+              }`}
+            >
+              Stays
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setActive(1)}>
+            <Text
+              className={`text-base font-bold ${
+                active === 1 ? "underline text-black" : "text-gray-600"
+              }`}
+            >
+              Roommate
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ),
       headerLeft: () => (
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          className="w-[40px] h-[40px] rounded-[20px] text-white bg-black justify-center items-center"
+          className="p-1 bg-white border-[1px] border-gray-600 rounded-3xl"
         >
-          <Ionicons name="md-close" size={24} color="white" />
+          <Ionicons name="close-outline" size={22} />
         </TouchableOpacity>
       ),
     });
-  }, []);
+  }, [active]);
+
   return (
-    <KeyboardAwareScrollView
-      bounces={false}
-      style={{ flexGrow: 1, backgroundColor: "white" }} //style changed to contentContainerStyle
-      showsHorizontalScrollIndicator={false}
-      showsVerticalScrollIndicator={false}
-    >
-      <View className="flex-1 bg-white border-b-[1px] mt-14 broder-b"></View>
-    </KeyboardAwareScrollView>
+    <BlurView intensity={70} style={{ flex: 1, paddingTop: 100 }} tint="light">
+      {active === 0 ? <ModalFilterProperties /> : <ModalFilterRoommate />}
+    </BlurView>
   );
 };
 
