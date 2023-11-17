@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, Platform } from "react-native";
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import MapMarker from "./MapMarker";
 import { useNavigation } from "@react-navigation/native";

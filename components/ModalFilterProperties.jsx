@@ -6,8 +6,7 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import React, { useState } from "react";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import React, { useState, useContext } from "react";
 import RangeSlider from "../components/RangeSlider";
 import Animated, {
   SlideInDown,
@@ -17,9 +16,44 @@ import Animated, {
 import DatePicker from "react-native-modern-datepicker";
 import { Amenities } from "../helpers/arrays";
 import Checkbox from "expo-checkbox";
+import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import axiosConfig from "../helpers/axiosConfig";
+import { AuthContext } from "../context/AuthProvider";
+import { useNavigation } from "@react-navigation/native";
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
+
+const places = [
+  {
+    id: 1,
+    title: "Apartment",
+    icon: <MaterialIcons name="apartment" size={26} color="black" />,
+  },
+  {
+    id: 2,
+    title: "Full House",
+    icon: <MaterialIcons name="house" size={26} color="black" />,
+  },
+  {
+    id: 3,
+    title: "Property",
+    icon: (
+      <MaterialCommunityIcons
+        name="office-building-outline"
+        size={26}
+        color="black"
+      />
+    ),
+  },
+  {
+    id: 4,
+    title: "Room",
+    icon: <Ionicons name="bed-outline" size={26} color="black" />,
+  },
+];
 
 export const bedrooms = [
   { id: 1, title: "Studio/1" },
@@ -33,12 +67,153 @@ const MIN_DEFAULT = 10;
 const MAX_DEFAULT = 5000;
 
 const ModalFilterProperties = () => {
+  const { user } = useContext(AuthContext);
+  const navigation = useNavigation();
   const [openCard, setOpenCard] = useState(0);
   const today = new Date().toISOString().substring(0, 10);
   const [size, setSize] = useState("");
   const [minPrice, setMinPrice] = useState(MIN_DEFAULT);
   const [maxPrice, setMaxPrice] = useState(MAX_DEFAULT);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const [furnished, setFurnished] = useState(false);
+  const [shortTerm, setShortTerm] = useState(false);
+  const [pet, setPet] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().substring(0, 10)
+  );
+  const [search, setSearch] = useState("");
+  const [type, setType] = useState("");
+  const [serverErrors, setServerErrors] = useState(null);
+
+  const setAuthToken = () => {
+    if (user && user?.token) {
+      axiosConfig.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${user.token}`;
+    } else {
+      delete axiosConfig.defaults.headers.common["Authorization"];
+    }
+  };
+
+  const onClearAll = () => {
+    setOpenCard(0);
+    setSize("");
+    setMinPrice(MIN_DEFAULT);
+    setMaxPrice(MAX_DEFAULT);
+    setSelectedAmenities([]);
+    setFurnished(false);
+    setShortTerm(false);
+    setPet(false);
+    setSelectedDate(new Date().toISOString().substring(0, 10));
+    setSearch("");
+    setType("");
+  };
+
+  const handleSearch = () => {
+    setAuthToken();
+    let href = "/api/search?";
+
+    if (type !== "" && type !== 4) {
+      href += "filter[type]=" + type + "&";
+    }
+    if (size !== "") {
+      href += "filter[size]=" + size + "&";
+    }
+    if (minPrice !== 10 && minPrice !== "") {
+      href += "filter[min_price]=" + minPrice + "&";
+    }
+    if (maxPrice !== 5000 && maxPrice !== "") {
+      href += "filter[max_price]=" + maxPrice + "&";
+    }
+    if (selectedAmenities.length) {
+      href += "filter[amenity]=" + selectedAmenities + "&";
+    }
+    if (selectedDate !== "") {
+      href += "filter[available_from]=" + selectedDate + "&";
+    }
+    if (furnished !== "") {
+      if (furnished) {
+        href += "filter[furnished]=" + 1 + "&";
+      } else {
+        href += "filter[furnished]=" + 2 + "&";
+      }
+    }
+    if (pet !== "" && type === 4) {
+      if (!pet) {
+        href += "filter[current_flatmate_pets]=" + 1 + "&";
+      } else {
+        href += "filter[current_flatmate_pets]=" + 2 + "&";
+      }
+    }
+    if (pet !== "" && type !== 4) {
+      if (!pet) {
+        href += "filter[current_flatmate_pets]=" + 1 + "&";
+      } else {
+        href += "filter[current_flatmate_pets]=" + 2 + "&";
+      }
+    }
+    // if (gender !== "" && type === 4) {
+    //   href += "&filter[current_flatmate_gender]=" + gender + "&";
+    // }
+    // if (occupation !== "" && type === 4) {
+    //   href += "&filter[current_flatmate_occupation]=" + occupation + "&";
+    // }
+    // if (smoker !== "" && type === 4) {
+    //   href += "&filter[current_flatmate_smoker]=" + smoker + "&";
+    // }
+    if (type === 4) {
+      href += "filter[short_term]=" + shortTerm;
+    }
+    if (type !== 4) {
+      href += "filter[short_term]=" + shortTerm;
+    }
+
+    console.log(href);
+    // if (type === 4) {
+    //   axiosConfig
+    //     .get(
+    //       href,
+    //       {
+    //         search_type: "shareds",
+    //         search,
+    //       },
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${user.token}`,
+    //         },
+    //       }
+    //     )
+    //     .then((response) => {
+    //       setListings(response.data);
+    //     })
+    //     .catch((error) => {
+    //       setServerErrors(error.response.data.message);
+    //       const key = Object.keys(error.response.data.errors)[0];
+    //       setServerErrors(error.response.data.errors[key][0]);
+    //     });
+    // } else {
+    //   axiosConfig
+    //     .get(
+    //       href,
+    //       {
+    //         search,
+    //       },
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${user.token}`,
+    //         },
+    //       }
+    //     )
+    //     .then((response) => {
+    //       setListings(response.data);
+    //     })
+    //     .catch((error) => {
+    //       setServerErrors(error.response.data.message);
+    //       const key = Object.keys(error.response.data.errors)[0];
+    //       setServerErrors(error.response.data.errors[key][0]);
+    //     });
+    // }
+  };
 
   const toggleAmenity = (amenity) => {
     if (selectedAmenities.includes(amenity)) {
@@ -49,10 +224,6 @@ const ModalFilterProperties = () => {
       setSelectedAmenities([...selectedAmenities, amenity]);
     }
   };
-  const onClearAll = () => {
-    setOpenCard(0);
-  };
-  const handleSearch = () => {};
 
   return (
     <>
@@ -98,8 +269,29 @@ const ModalFilterProperties = () => {
                   className="flex-1 p-2 bg-white"
                   placeholder="Search location"
                   placeholderTextColor="#5E5D5E"
+                  onChangeText={(value) => setSearch(value)}
                 />
               </View>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={{ paddingBottom: 20, marginTop: 10 }}
+              >
+                {places.map((place, index) => (
+                  <AnimatedTouchableOpacity
+                    onPress={() => setType(place.id)}
+                    key={place.id}
+                    entering={FadeIn.duration(200)}
+                    exiting={FadeOut.duration(200)}
+                    className={`${
+                      type === place.id ? "border-black" : "border-gray-200"
+                    } justify-center h-[100px] w-[120px] border-[1px] rounded-xl items-center mr-2 mt-3`}
+                  >
+                    {place.icon}
+                    <Text className="mb-2 text-base ">{place.title}</Text>
+                  </AnimatedTouchableOpacity>
+                ))}
+              </ScrollView>
             </Animated.View>
           )}
         </View>
@@ -135,116 +327,18 @@ const ModalFilterProperties = () => {
                   borderColor: "transparent",
                 }}
                 current={today}
-                selected={today}
+                selected={selectedDate}
+                onSelectedChange={(date) => setSelectedDate(date)}
                 mode={"calendar"}
               />
             </Animated.View>
           )}
         </View>
-        {/* Who
-      <View style={styles.card}>
-        {openCard != 2 && (
-          <AnimatedTouchableOpacity
-            onPress={() => setOpenCard(2)}
-            className="flex-row justify-between p-5"
-            entering={FadeIn.duration(200)}
-            exiting={FadeOut.duration(200)}
-          >
-            <Text className="font-medium text-gray-500">Who</Text>
-            <Text className="font-medium text-gray-800">Add guest</Text>
-          </AnimatedTouchableOpacity>
-        )}
-        {openCard === 2 && (
-          <>
-            <Text className="p-5 text-2xl font-bold">Who's moving?</Text>
-          </>
-        )}
-        {openCard === 2 && (
-          <Animated.View
-            entering={FadeIn}
-            exiting={FadeOut}
-            className="px-5 pb-5"
-          >
-            <View className="px-5 pb-5">
-              {groups.map((item, index) => (
-                <View
-                  key={index}
-                  style={[
-                    styles.guestItem,
-                    index + 1 < guestsGropus.length ? styles.itemBorder : null,
-                  ]}
-                >
-                  <View>
-                    <Text style={{ fontSize: 14 }}>{item.name}</Text>
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: "#898686",
-                      }}
-                    >
-                      {item.text}
-                    </Text>
-                  </View>
-
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 10,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <TouchableOpacity
-                      onPress={() => {
-                        const newGroups = [...groups];
-                        newGroups[index].count =
-                          newGroups[index].count > 0
-                            ? newGroups[index].count - 1
-                            : 0;
-
-                        setGroups(newGroups);
-                      }}
-                    >
-                      <Ionicons
-                        name="remove-circle-outline"
-                        size={26}
-                        color={groups[index].count > 0 ? "#898686" : "#cdcdcd"}
-                      />
-                    </TouchableOpacity>
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        minWidth: 18,
-                        textAlign: "center",
-                      }}
-                    >
-                      {item.count}
-                    </Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        const newGroups = [...groups];
-                        newGroups[index].count++;
-                        setGroups(newGroups);
-                      }}
-                    >
-                      <Ionicons
-                        name="add-circle-outline"
-                        size={26}
-                        color="#898686"
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              ))}
-            </View>
-          </Animated.View>
-        )}
-      </View> */}
         {/* Property size */}
         <View style={styles.card}>
-          {openCard != 3 && (
+          {openCard != 2 && (
             <AnimatedTouchableOpacity
-              onPress={() => setOpenCard(3)}
+              onPress={() => setOpenCard(2)}
               className="flex-row justify-between p-5"
               entering={FadeIn.duration(200)}
               exiting={FadeOut.duration(200)}
@@ -253,12 +347,12 @@ const ModalFilterProperties = () => {
               <Text className="font-medium text-gray-800">Any size</Text>
             </AnimatedTouchableOpacity>
           )}
-          {openCard === 3 && (
+          {openCard === 2 && (
             <>
               <Text className="p-5 text-2xl font-bold">Bedrooms?</Text>
             </>
           )}
-          {openCard === 3 && (
+          {openCard === 2 && (
             <Animated.View
               entering={FadeIn}
               exiting={FadeOut}
@@ -292,9 +386,9 @@ const ModalFilterProperties = () => {
         </View>
         {/* Property price */}
         <View style={styles.card}>
-          {openCard != 4 && (
+          {openCard != 3 && (
             <AnimatedTouchableOpacity
-              onPress={() => setOpenCard(4)}
+              onPress={() => setOpenCard(3)}
               className="flex-row justify-between p-5"
               entering={FadeIn.duration(200)}
               exiting={FadeOut.duration(200)}
@@ -303,12 +397,12 @@ const ModalFilterProperties = () => {
               <Text className="font-medium text-gray-800">Any price</Text>
             </AnimatedTouchableOpacity>
           )}
-          {openCard === 4 && (
+          {openCard === 3 && (
             <>
               <Text className="p-5 text-2xl font-bold">Price?</Text>
             </>
           )}
-          {openCard === 4 && (
+          {openCard === 3 && (
             <Animated.View
               entering={FadeIn}
               exiting={FadeOut}
@@ -340,9 +434,9 @@ const ModalFilterProperties = () => {
         </View>
         {/* Amenities */}
         <View style={styles.card}>
-          {openCard != 5 && (
+          {openCard != 4 && (
             <AnimatedTouchableOpacity
-              onPress={() => setOpenCard(5)}
+              onPress={() => setOpenCard(4)}
               className="flex-row justify-between p-5"
               entering={FadeIn.duration(200)}
               exiting={FadeOut.duration(200)}
@@ -351,12 +445,12 @@ const ModalFilterProperties = () => {
               <Text className="font-medium text-gray-800">Any amenities</Text>
             </AnimatedTouchableOpacity>
           )}
-          {openCard === 5 && (
+          {openCard === 4 && (
             <>
               <Text className="p-5 text-2xl font-bold">Amenities?</Text>
             </>
           )}
-          {openCard === 5 && (
+          {openCard === 4 && (
             <Animated.View
               entering={FadeIn}
               exiting={FadeOut}
@@ -383,6 +477,62 @@ const ModalFilterProperties = () => {
             </Animated.View>
           )}
         </View>
+        {/* Details */}
+        <View style={styles.card}>
+          {openCard != 5 && (
+            <AnimatedTouchableOpacity
+              onPress={() => setOpenCard(5)}
+              className="flex-row justify-between p-5"
+              entering={FadeIn.duration(200)}
+              exiting={FadeOut.duration(200)}
+            >
+              <Text className="font-medium text-gray-500">Details</Text>
+              <Text className="font-medium text-gray-800">
+                Additional details
+              </Text>
+            </AnimatedTouchableOpacity>
+          )}
+          {openCard === 5 && (
+            <>
+              <Text className="p-5 text-2xl font-bold">Check details?</Text>
+            </>
+          )}
+          {openCard === 5 && (
+            <Animated.View
+              entering={FadeIn}
+              exiting={FadeOut}
+              className="px-5 pb-10"
+            >
+              <View className="flex flex-row justify-between pb-2 space-y-2">
+                <Text className="text-lg">Furnished</Text>
+                <Checkbox
+                  value={furnished}
+                  onValueChange={() => setFurnished(!furnished)}
+                  style={styles.checkbox}
+                  color={furnished ? "#04030c" : undefined}
+                />
+              </View>
+              <View className="flex flex-row justify-between pb-2 space-y-2">
+                <Text className="text-lg">Short Term</Text>
+                <Checkbox
+                  value={shortTerm}
+                  onValueChange={() => setShortTerm(!shortTerm)}
+                  style={styles.checkbox}
+                  color={shortTerm ? "#04030c" : undefined}
+                />
+              </View>
+              <View className="flex flex-row justify-between pb-2 space-y-2">
+                <Text className="text-lg">Pet's allowed</Text>
+                <Checkbox
+                  value={pet}
+                  onValueChange={() => setPet(!pet)}
+                  style={styles.checkbox}
+                  color={pet ? "#04030c" : undefined}
+                />
+              </View>
+            </Animated.View>
+          )}
+        </View>
       </ScrollView>
       {/* Footer */}
       <Animated.View
@@ -402,7 +552,6 @@ const ModalFilterProperties = () => {
             <Text className="text-lg font-semibold text-white">Search</Text>
           </TouchableOpacity>
         </View>
-        {/* </View> */}
       </Animated.View>
     </>
   );
@@ -438,5 +587,9 @@ const styles = StyleSheet.create({
   itemBorder: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: "#898686",
+  },
+  checkbox: {
+    marginTop: 12,
+    marginLeft: 6,
   },
 });
