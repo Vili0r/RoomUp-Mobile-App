@@ -17,6 +17,7 @@ import Animated, {
 import DatePicker from "react-native-modern-datepicker";
 import { hobbies } from "../helpers/arrays";
 import Checkbox from "expo-checkbox";
+import { useNavigation } from "@react-navigation/native";
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -37,45 +38,90 @@ export const Occupations = [
   { id: 2, title: "Professional" },
 ];
 
-const ModalFilterRoommate = () => {
+const ModalFilterRoommate = ({ selectedFilters }) => {
+  const navigation = useNavigation();
   const [openCard, setOpenCard] = useState(0);
   const today = new Date().toISOString().substring(0, 10);
   const [size, setSize] = useState("");
   const [minBudget, setMinBudget] = useState(MIN_DEFAULT);
   const [maxBudget, setMaxBudget] = useState(MAX_DEFAULT);
   const [selectedHobbies, setSelectedHobbies] = useState([]);
-  const [furnished, setFurnished] = useState(false);
+  const [furnished, setFurnished] = useState("");
+  const [furnishedCheckbox, setFurnishedCheckbox] = useState(false);
   const [shortTerm, setShortTerm] = useState(false);
-  const [pet, setPet] = useState(false);
+  const [pet, setPet] = useState("");
+  const [petCheckbox, setPetCheckbox] = useState(false);
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().substring(0, 10)
   );
   const [search, setSearch] = useState("");
-  const [smoker, setSmoker] = useState(false);
+  const [smoker, setSmoker] = useState("");
+  const [smokerCheckbox, setSmokerCheckbox] = useState(false);
   const [minAge, setMinAge] = useState("");
   const [maxAge, setMaxAge] = useState("");
   const [gender, setGender] = useState("");
   const [occupation, setOccupation] = useState("");
-
+  console.log(selectedFilters);
   const onClearAll = () => {
     setOpenCard(0);
     setSize("");
     setMinBudget(MIN_DEFAULT);
     setMaxBudget(MAX_DEFAULT);
     setSelectedHobbies([]);
-    setFurnished(false);
+    setFurnished("");
+    setFurnishedCheckbox(false);
     setShortTerm(false);
-    setPet(false);
-    setSmoker(false);
+    setPet("");
+    setPetCheckbox(false);
+    setSmoker("");
+    setSmokerCheckbox(false);
     setSelectedDate(new Date().toISOString().substring(0, 10));
     setSearch("");
     setMinAge("");
     setMaxAge("");
   };
 
-  const handleSearch = () => {
-    let href = "/api/roommate-search?";
+  const toggleHobby = (hobby) => {
+    if (selectedHobbies.includes(hobby)) {
+      setSelectedHobbies(selectedHobbies.filter((item) => item !== hobby));
+    } else {
+      setSelectedHobbies([...selectedHobbies, hobby]);
+    }
+  };
 
+  const handleFurnishedCheckbox = (value) => {
+    setFurnishedCheckbox(value);
+    if (value) {
+      setFurnished(1);
+    } else {
+      setFurnished(2);
+    }
+  };
+
+  const handlePetCheckbox = (value) => {
+    setPetCheckbox(value);
+    if (!value) {
+      setPet(1);
+    } else {
+      setPet(2);
+    }
+  };
+
+  const handleSmokerCheckbox = (value) => {
+    setSmokerCheckbox(value);
+    if (!value) {
+      setSmoker(1);
+    } else {
+      setSmoker(2);
+    }
+  };
+
+  const handleSearch = () => {
+    let href = "/roommate-search?";
+
+    if (search !== "") {
+      href += "search=" + search + "&";
+    }
     if (size !== "") {
       href += "filter[size]=" + size + "&";
     }
@@ -88,15 +134,8 @@ const ModalFilterRoommate = () => {
     if (selectedHobbies.length) {
       href += "&filter[hobby]=" + selectedHobbies + "&";
     }
-    if (selectedDate !== "") {
-      href += "&filter[available_from]=" + selectedDate + "&";
-    }
     if (furnished) {
-      if (furnished) {
-        href += "filter[furnished]=" + 1 + "&";
-      } else {
-        href += "filter[furnished]=" + 2 + "&";
-      }
+      href += "filter[furnished]=" + furnished + "&";
     }
     if (minAge !== "") {
       href += "filter[min_age]=" + minAge + "&";
@@ -108,11 +147,7 @@ const ModalFilterRoommate = () => {
       href += "filter[room_size]=" + size + "&";
     }
     if (pet !== "") {
-      if (!pet) {
-        href += "filter[pets]=" + 1 + "&";
-      } else {
-        href += "filter[pets]=" + 2 + "&";
-      }
+      href += "filter[pets]=" + pet + "&";
     }
     if (gender !== "") {
       href += "filter[gender]=" + gender + "&";
@@ -121,24 +156,16 @@ const ModalFilterRoommate = () => {
       href += "filter[occupation]=" + occupation + "&";
     }
     if (smoker !== "") {
-      if (!pet) {
-        href += "filter[smoker]=" + 1 + "&";
-      } else {
-        href += "filter[smoker]=" + 2 + "&";
-      }
+      href += "filter[smoker]=" + smoker + "&";
     }
     if (shortTerm) {
       href += "&filter[short_term]=" + shortTerm + "&";
     }
-    console.log(href);
-  };
+    href += "filter[available_from]=" + selectedDate;
 
-  const toggleHobby = (hobby) => {
-    if (selectedHobbies.includes(hobby)) {
-      setSelectedHobbies(selectedHobbies.filter((item) => item !== hobby));
-    } else {
-      setSelectedHobbies([...selectedHobbies, hobby]);
-    }
+    navigation.navigate("Search Screen", {
+      href,
+    });
   };
 
   return (
@@ -400,10 +427,10 @@ const ModalFilterRoommate = () => {
               <View className="flex flex-row justify-between pb-2 space-y-2">
                 <Text className="text-lg">Furnished</Text>
                 <Checkbox
-                  value={furnished}
-                  onValueChange={() => setFurnished(!furnished)}
+                  value={furnishedCheckbox}
+                  onValueChange={(value) => handleFurnishedCheckbox(value)}
                   style={styles.checkbox}
-                  color={furnished ? "#04030c" : undefined}
+                  color={furnishedCheckbox ? "#04030c" : undefined}
                 />
               </View>
               <View className="flex flex-row justify-between pb-2 space-y-2">
@@ -418,19 +445,19 @@ const ModalFilterRoommate = () => {
               <View className="flex flex-row justify-between pb-2 space-y-2">
                 <Text className="text-lg">Pet's allowed</Text>
                 <Checkbox
-                  value={pet}
-                  onValueChange={() => setPet(!pet)}
+                  value={petCheckbox}
+                  onValueChange={(value) => handlePetCheckbox(value)}
                   style={styles.checkbox}
-                  color={pet ? "#04030c" : undefined}
+                  color={petCheckbox ? "#04030c" : undefined}
                 />
               </View>
               <View className="flex flex-row justify-between pb-2 space-y-2">
                 <Text className="text-lg">Smoker</Text>
                 <Checkbox
-                  value={smoker}
-                  onValueChange={() => setSmoker(!smoker)}
+                  value={smokerCheckbox}
+                  onValueChange={(value) => handleSmokerCheckbox(value)}
                   style={styles.checkbox}
-                  color={smoker ? "#04030c" : undefined}
+                  color={smokerCheckbox ? "#04030c" : undefined}
                 />
               </View>
             </Animated.View>

@@ -1,5 +1,4 @@
 export { default as AdvertisedBy } from "./AdvertisedBy";
-export { default as AllProperties } from "./AllProperties";
 export { default as PropertyCard } from "./PropertyCard";
 export { default as PropertyDetailsAmenities } from "./PropertyDetailsAmenities";
 export { default as Select } from "./Select";
@@ -49,3 +48,4 @@ export { default as SingleRoommateDetails } from "./SingleRoommateDetails";
 export { default as ModalFilterProperties } from "./ModalFilterProperties";
 export { default as ModalFilterRoommate } from "./ModalFilterRoommate";
 export { default as RangeSlider } from "./RangeSlider";
+export { default as AnimatedListHeader } from "./AnimatedListHeader";

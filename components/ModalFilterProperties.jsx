@@ -6,7 +6,7 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import RangeSlider from "../components/RangeSlider";
 import Animated, {
   SlideInDown,
@@ -19,8 +19,6 @@ import Checkbox from "expo-checkbox";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import axiosConfig from "../helpers/axiosConfig";
-import { AuthContext } from "../context/AuthProvider";
 import { useNavigation } from "@react-navigation/native";
 
 const AnimatedTouchableOpacity =
@@ -66,8 +64,7 @@ export const bedrooms = [
 const MIN_DEFAULT = 10;
 const MAX_DEFAULT = 5000;
 
-const ModalFilterProperties = () => {
-  const { user } = useContext(AuthContext);
+const ModalFilterProperties = ({ selectedFilters }) => {
   const navigation = useNavigation();
   const [openCard, setOpenCard] = useState(0);
   const today = new Date().toISOString().substring(0, 10);
@@ -75,46 +72,72 @@ const ModalFilterProperties = () => {
   const [minPrice, setMinPrice] = useState(MIN_DEFAULT);
   const [maxPrice, setMaxPrice] = useState(MAX_DEFAULT);
   const [selectedAmenities, setSelectedAmenities] = useState([]);
-  const [furnished, setFurnished] = useState(false);
+  const [furnished, setFurnished] = useState("");
+  const [furnishedCheckbox, setFurnishedCheckbox] = useState(false);
   const [shortTerm, setShortTerm] = useState(false);
-  const [pet, setPet] = useState(false);
+  const [pet, setPet] = useState("");
+  const [petCheckbox, setPetCheckbox] = useState(false);
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().substring(0, 10)
   );
   const [search, setSearch] = useState("");
   const [type, setType] = useState("");
-  const [serverErrors, setServerErrors] = useState(null);
-
-  const setAuthToken = () => {
-    if (user && user?.token) {
-      axiosConfig.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${user.token}`;
-    } else {
-      delete axiosConfig.defaults.headers.common["Authorization"];
-    }
-  };
-
+  console.log(selectedFilters);
   const onClearAll = () => {
     setOpenCard(0);
     setSize("");
     setMinPrice(MIN_DEFAULT);
     setMaxPrice(MAX_DEFAULT);
     setSelectedAmenities([]);
-    setFurnished(false);
+    setFurnished("");
+    setFurnishedCheckbox(false);
     setShortTerm(false);
-    setPet(false);
+    setPet("");
+    setPetCheckbox(false);
     setSelectedDate(new Date().toISOString().substring(0, 10));
     setSearch("");
     setType("");
   };
 
+  const toggleAmenity = (amenity) => {
+    if (selectedAmenities.includes(amenity)) {
+      setSelectedAmenities(
+        selectedAmenities.filter((item) => item !== amenity)
+      );
+    } else {
+      setSelectedAmenities([...selectedAmenities, amenity]);
+    }
+  };
+
+  const handleFurnishedCheckbox = (value) => {
+    setFurnishedCheckbox(value);
+    if (value) {
+      setFurnished(1);
+    } else {
+      setFurnished(2);
+    }
+  };
+
+  const handlePetCheckbox = (value) => {
+    setPetCheckbox(value);
+    if (!value) {
+      setPet(1);
+    } else {
+      setPet(2);
+    }
+  };
+
   const handleSearch = () => {
-    setAuthToken();
-    let href = "/api/search?";
+    let href = "/search?";
 
     if (type !== "" && type !== 4) {
       href += "filter[type]=" + type + "&";
+    }
+    if (type === 4) {
+      href += "search_type=shareds&";
+    }
+    if (search !== "") {
+      href += "search=" + search + "&";
     }
     if (size !== "") {
       href += "filter[size]=" + size + "&";
@@ -128,30 +151,19 @@ const ModalFilterProperties = () => {
     if (selectedAmenities.length) {
       href += "filter[amenity]=" + selectedAmenities + "&";
     }
-    if (selectedDate !== "") {
-      href += "filter[available_from]=" + selectedDate + "&";
-    }
     if (furnished !== "") {
-      if (furnished) {
-        href += "filter[furnished]=" + 1 + "&";
-      } else {
-        href += "filter[furnished]=" + 2 + "&";
-      }
+      href += "filter[furnished]=" + furnished + "&";
     }
     if (pet !== "" && type === 4) {
-      if (!pet) {
-        href += "filter[current_flatmate_pets]=" + 1 + "&";
-      } else {
-        href += "filter[current_flatmate_pets]=" + 2 + "&";
-      }
+      href += "filter[current_flatmate_pets]=" + pet + "&";
     }
     if (pet !== "" && type !== 4) {
-      if (!pet) {
-        href += "filter[current_flatmate_pets]=" + 1 + "&";
-      } else {
-        href += "filter[current_flatmate_pets]=" + 2 + "&";
-      }
+      href += "filter[new_flatmate_pets]=" + pet + "&";
     }
+    if (shortTerm) {
+      href += "&filter[short_term]=" + shortTerm + "&";
+    }
+    href += "filter[available_from]=" + selectedDate;
     // if (gender !== "" && type === 4) {
     //   href += "&filter[current_flatmate_gender]=" + gender + "&";
     // }
@@ -161,68 +173,10 @@ const ModalFilterProperties = () => {
     // if (smoker !== "" && type === 4) {
     //   href += "&filter[current_flatmate_smoker]=" + smoker + "&";
     // }
-    if (type === 4) {
-      href += "filter[short_term]=" + shortTerm;
-    }
-    if (type !== 4) {
-      href += "filter[short_term]=" + shortTerm;
-    }
 
-    console.log(href);
-    // if (type === 4) {
-    //   axiosConfig
-    //     .get(
-    //       href,
-    //       {
-    //         search_type: "shareds",
-    //         search,
-    //       },
-    //       {
-    //         headers: {
-    //           Authorization: `Bearer ${user.token}`,
-    //         },
-    //       }
-    //     )
-    //     .then((response) => {
-    //       setListings(response.data);
-    //     })
-    //     .catch((error) => {
-    //       setServerErrors(error.response.data.message);
-    //       const key = Object.keys(error.response.data.errors)[0];
-    //       setServerErrors(error.response.data.errors[key][0]);
-    //     });
-    // } else {
-    //   axiosConfig
-    //     .get(
-    //       href,
-    //       {
-    //         search,
-    //       },
-    //       {
-    //         headers: {
-    //           Authorization: `Bearer ${user.token}`,
-    //         },
-    //       }
-    //     )
-    //     .then((response) => {
-    //       setListings(response.data);
-    //     })
-    //     .catch((error) => {
-    //       setServerErrors(error.response.data.message);
-    //       const key = Object.keys(error.response.data.errors)[0];
-    //       setServerErrors(error.response.data.errors[key][0]);
-    //     });
-    // }
-  };
-
-  const toggleAmenity = (amenity) => {
-    if (selectedAmenities.includes(amenity)) {
-      setSelectedAmenities(
-        selectedAmenities.filter((item) => item !== amenity)
-      );
-    } else {
-      setSelectedAmenities([...selectedAmenities, amenity]);
-    }
+    navigation.navigate("Search Screen", {
+      href,
+    });
   };
 
   return (
@@ -506,10 +460,10 @@ const ModalFilterProperties = () => {
               <View className="flex flex-row justify-between pb-2 space-y-2">
                 <Text className="text-lg">Furnished</Text>
                 <Checkbox
-                  value={furnished}
-                  onValueChange={() => setFurnished(!furnished)}
+                  value={furnishedCheckbox}
+                  onValueChange={(value) => handleFurnishedCheckbox(value)}
                   style={styles.checkbox}
-                  color={furnished ? "#04030c" : undefined}
+                  color={furnishedCheckbox ? "#04030c" : undefined}
                 />
               </View>
               <View className="flex flex-row justify-between pb-2 space-y-2">
@@ -524,10 +478,10 @@ const ModalFilterProperties = () => {
               <View className="flex flex-row justify-between pb-2 space-y-2">
                 <Text className="text-lg">Pet's allowed</Text>
                 <Checkbox
-                  value={pet}
-                  onValueChange={() => setPet(!pet)}
+                  value={petCheckbox}
+                  onValueChange={(value) => handlePetCheckbox(value)}
                   style={styles.checkbox}
-                  color={pet ? "#04030c" : undefined}
+                  color={petCheckbox ? "#04030c" : undefined}
                 />
               </View>
             </Animated.View>

@@ -92,7 +92,7 @@ const Map = ({ properties }) => {
               onPress={() => handleMarkerPress(index)}
             />
           ))}
-        {listings?.length > 0 &&
+        {/* {listings?.length > 0 &&
           listings?.map((item, index) => (
             <MapMarker
               key={item.id}
@@ -101,13 +101,13 @@ const Map = ({ properties }) => {
               color={activeIndex === index ? "rgb(200 204 21)" : "blue"}
               onPress={() => handleMarkerPress(index)}
             />
-          ))}
+          ))} */}
       </MapView>
       {activeIndex > -1 && (
         <>
           {Platform.OS === "ios" && (
             <TouchableOpacity
-              className="bg-gray-900/50 rounded-full top-[10px] left-[10px] absolute p-2"
+              className="bg-gray-900/50 rounded-full top-[100px] left-[10px] absolute p-2"
               onPress={unFocusProperty}
             >
               <MaterialCommunityIcons name="close" color="white" size={24} />

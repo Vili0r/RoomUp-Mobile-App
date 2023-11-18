@@ -92,7 +92,7 @@ const PropertyCard = ({ item: property, toggleFavourite, style }) => {
   };
 
   return (
-    <View className="flex flex-row mb-8 group" style={[style]}>
+    <View className="flex flex-row mb-7 group" style={[style]}>
       <Animated.View
         className="flex flex-col w-full gap-2"
         entering={FadeInRight}
