@@ -3,11 +3,8 @@ import React, { useLayoutEffect, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { BlurView } from "expo-blur";
 import { ModalFilterProperties, ModalFilterRoommate } from "../components";
-import { useRoute } from "@react-navigation/native";
 
 const AdvancedFilterScreen = ({ navigation }) => {
-  const route = useRoute();
-  const selectedFilters = route.params?.selectedFilters;
   const [active, setActive] = useState(0);
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -46,11 +43,7 @@ const AdvancedFilterScreen = ({ navigation }) => {
 
   return (
     <BlurView intensity={70} style={{ flex: 1, paddingTop: 100 }} tint="light">
-      {active === 0 ? (
-        <ModalFilterProperties selectedFilters={selectedFilters} />
-      ) : (
-        <ModalFilterRoommate electedFilters={selectedFilters} />
-      )}
+      {active === 0 ? <ModalFilterProperties /> : <ModalFilterRoommate />}
     </BlurView>
   );
 };

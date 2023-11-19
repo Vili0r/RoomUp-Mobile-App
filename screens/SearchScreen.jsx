@@ -19,9 +19,12 @@ import { AuthContext } from "../context/AuthProvider";
 import { FadeInRight, FadeOutLeft } from "react-native-reanimated";
 import { HEADERHEIGHT } from "../helpers/constants";
 import { useRoute } from "@react-navigation/native";
+import { useSelectedFiltersContext } from "../context/SelectedFiltersContext";
 
 const SearchScreen = () => {
   const { user } = useContext(AuthContext);
+  const { setSelctedPropertyFilterQueries, setSelctedRoommateFilterQueries } =
+    useSelectedFiltersContext();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -84,7 +87,16 @@ const SearchScreen = () => {
         setIsLoading(false);
         setIsRefreshing(false);
         setNextPage(response.data.pagination.links.next);
-        setSelectedFilters(response.data.selectedListingQueries);
+        setSelectedFilters(null);
+        if (response.data.selectedPropertyQueries) {
+          setSelctedPropertyFilterQueries(
+            response.data.selectedPropertyQueries
+          );
+        } else if (response.data.selectedRoommateQueries) {
+          setSelctedRoommateFilterQueries(
+            response.data.selectedRoommateQueries
+          );
+        }
       })
       .catch((err) => {
         console.log(err);

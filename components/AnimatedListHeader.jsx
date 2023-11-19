@@ -69,10 +69,7 @@ const AnimatedListHeader = ({
   const filterButtons = [
     {
       iconName: "sliders",
-      onPress: () =>
-        navigation.navigate("Advanced Filter Screen", {
-          selectedFilters,
-        }),
+      onPress: () => navigation.navigate("Advanced Filter Screen"),
     },
     {
       filterId: "shareds",

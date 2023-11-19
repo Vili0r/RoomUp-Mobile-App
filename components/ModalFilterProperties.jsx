@@ -20,6 +20,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useSelectedFiltersContext } from "../context/SelectedFiltersContext";
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -64,25 +65,54 @@ export const bedrooms = [
 const MIN_DEFAULT = 10;
 const MAX_DEFAULT = 5000;
 
-const ModalFilterProperties = ({ selectedFilters }) => {
+const ModalFilterProperties = () => {
+  const { selectedPropertyFilterQueries } = useSelectedFiltersContext();
   const navigation = useNavigation();
   const [openCard, setOpenCard] = useState(0);
   const today = new Date().toISOString().substring(0, 10);
-  const [size, setSize] = useState("");
-  const [minPrice, setMinPrice] = useState(MIN_DEFAULT);
-  const [maxPrice, setMaxPrice] = useState(MAX_DEFAULT);
-  const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const [size, setSize] = useState(
+    selectedPropertyFilterQueries?.filter?.size ?? ""
+  );
+  const [minPrice, setMinPrice] = useState(
+    selectedPropertyFilterQueries?.filter?.min_price ?? MIN_DEFAULT
+  );
+  const [maxPrice, setMaxPrice] = useState(
+    selectedPropertyFilterQueries?.filter?.max_price ?? MAX_DEFAULT
+  );
+  const amenitiesArray =
+    selectedPropertyFilterQueries?.filter?.amenity ?? ""
+      ? selectedPropertyFilterQueries.filter.amenity.split(",").map(Number)
+      : [];
+
+  const [selectedAmenities, setSelectedAmenities] = useState(
+    amenitiesArray ?? []
+  );
   const [furnished, setFurnished] = useState("");
-  const [furnishedCheckbox, setFurnishedCheckbox] = useState(false);
+  const [furnishedCheckbox, setFurnishedCheckbox] = useState(
+    selectedPropertyFilterQueries?.filter?.furnished === "1" ? true : false
+  );
   const [shortTerm, setShortTerm] = useState(false);
   const [pet, setPet] = useState("");
-  const [petCheckbox, setPetCheckbox] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().substring(0, 10)
+  const [petCheckbox, setPetCheckbox] = useState(
+    selectedPropertyFilterQueries?.filter?.new_flatmate_pets === "2"
+      ? true
+      : false
   );
-  const [search, setSearch] = useState("");
-  const [type, setType] = useState("");
-  console.log(selectedFilters);
+  const [selectedDate, setSelectedDate] = useState(
+    selectedPropertyFilterQueries?.filter?.available_from ??
+      new Date().toISOString().substring(0, 10)
+  );
+  const [search, setSearch] = useState(
+    selectedPropertyFilterQueries?.search ?? ""
+  );
+  const [type, setType] = useState(
+    selectedPropertyFilterQueries?.filter?.type
+      ? selectedPropertyFilterQueries?.filter?.type
+      : selectedPropertyFilterQueries?.search_type === "shareds"
+      ? 4
+      : ""
+  );
+  console.log("backend Property", selectedPropertyFilterQueries);
   const onClearAll = () => {
     setOpenCard(0);
     setSize("");

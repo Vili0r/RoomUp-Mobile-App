@@ -18,6 +18,7 @@ import DatePicker from "react-native-modern-datepicker";
 import { hobbies } from "../helpers/arrays";
 import Checkbox from "expo-checkbox";
 import { useNavigation } from "@react-navigation/native";
+import { useSelectedFiltersContext } from "../context/SelectedFiltersContext";
 
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
@@ -38,30 +39,62 @@ export const Occupations = [
   { id: 2, title: "Professional" },
 ];
 
-const ModalFilterRoommate = ({ selectedFilters }) => {
+const ModalFilterRoommate = () => {
+  const { selectedRoommateFilterQueries } = useSelectedFiltersContext();
   const navigation = useNavigation();
   const [openCard, setOpenCard] = useState(0);
   const today = new Date().toISOString().substring(0, 10);
-  const [size, setSize] = useState("");
-  const [minBudget, setMinBudget] = useState(MIN_DEFAULT);
-  const [maxBudget, setMaxBudget] = useState(MAX_DEFAULT);
-  const [selectedHobbies, setSelectedHobbies] = useState([]);
-  const [furnished, setFurnished] = useState("");
-  const [furnishedCheckbox, setFurnishedCheckbox] = useState(false);
-  const [shortTerm, setShortTerm] = useState(false);
-  const [pet, setPet] = useState("");
-  const [petCheckbox, setPetCheckbox] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(
-    new Date().toISOString().substring(0, 10)
+  const [size, setSize] = useState(
+    selectedRoommateFilterQueries?.filter?.room_size ?? ""
   );
-  const [search, setSearch] = useState("");
+  const [minBudget, setMinBudget] = useState(
+    selectedRoommateFilterQueries?.filter?.min_budget ?? MIN_DEFAULT
+  );
+  const [maxBudget, setMaxBudget] = useState(
+    selectedRoommateFilterQueries?.filter?.max_budget ?? MAX_DEFAULT
+  );
+  const hobbiesArray =
+    selectedRoommateFilterQueries?.filter?.amenity ?? ""
+      ? selectedRoommateFilterQueries.filter.amenity.split(",").map(Number)
+      : [];
+  const [selectedHobbies, setSelectedHobbies] = useState(hobbiesArray ?? []);
+  const [furnished, setFurnished] = useState("");
+  const [furnishedCheckbox, setFurnishedCheckbox] = useState(
+    selectedRoommateFilterQueries?.filter?.furnished === "1" ? true : false
+  );
+  const [shortTerm, setShortTerm] = useState(
+    selectedRoommateFilterQueries?.filter?.short_term
+      ? JSON.parse(selectedRoommateFilterQueries?.filter?.short_term)
+      : false
+  );
+  const [pet, setPet] = useState("");
+  const [petCheckbox, setPetCheckbox] = useState(
+    selectedRoommateFilterQueries?.filter?.pets === "2" ? true : false
+  );
+  const [selectedDate, setSelectedDate] = useState(
+    selectedRoommateFilterQueries?.filter?.available_from ??
+      new Date().toISOString().substring(0, 10)
+  );
+  const [search, setSearch] = useState(
+    selectedRoommateFilterQueries?.filter?.search ?? ""
+  );
   const [smoker, setSmoker] = useState("");
-  const [smokerCheckbox, setSmokerCheckbox] = useState(false);
-  const [minAge, setMinAge] = useState("");
-  const [maxAge, setMaxAge] = useState("");
-  const [gender, setGender] = useState("");
-  const [occupation, setOccupation] = useState("");
-  console.log(selectedFilters);
+  const [smokerCheckbox, setSmokerCheckbox] = useState(
+    selectedRoommateFilterQueries?.filter?.smoker === "2" ? true : false
+  );
+  const [minAge, setMinAge] = useState(
+    selectedRoommateFilterQueries?.filter?.min_age?.toString() ?? ""
+  );
+  const [maxAge, setMaxAge] = useState(
+    selectedRoommateFilterQueries?.filter?.max_age?.toString() ?? ""
+  );
+  const [gender, setGender] = useState(
+    selectedRoommateFilterQueries?.filter?.gender ?? ""
+  );
+  const [occupation, setOccupation] = useState(
+    selectedRoommateFilterQueries?.filter?.occupation ?? ""
+  );
+  console.log("backend roommate", selectedRoommateFilterQueries);
   const onClearAll = () => {
     setOpenCard(0);
     setSize("");
@@ -132,7 +165,7 @@ const ModalFilterRoommate = ({ selectedFilters }) => {
       href += "filter[max_budget]=" + maxBudget + "&";
     }
     if (selectedHobbies.length) {
-      href += "&filter[hobby]=" + selectedHobbies + "&";
+      href += "filter[hobbies]=" + selectedHobbies + "&";
     }
     if (furnished) {
       href += "filter[furnished]=" + furnished + "&";
@@ -159,7 +192,7 @@ const ModalFilterRoommate = ({ selectedFilters }) => {
       href += "filter[smoker]=" + smoker + "&";
     }
     if (shortTerm) {
-      href += "&filter[short_term]=" + shortTerm + "&";
+      href += "filter[short_term]=" + shortTerm + "&";
     }
     href += "filter[available_from]=" + selectedDate;
 
@@ -495,6 +528,7 @@ const ModalFilterRoommate = ({ selectedFilters }) => {
                 <View className="border-gray-300 border-[1px] p-2 rounded-lg">
                   <Text className="font-extralight">Minimum Age</Text>
                   <TextInput
+                    value={minAge}
                     className="flex-1 p-2 bg-white"
                     placeholder=""
                     placeholderTextColor="#5E5D5E"
@@ -505,6 +539,7 @@ const ModalFilterRoommate = ({ selectedFilters }) => {
                 <View className="border-gray-300 border-[1px] p-2 rounded-lg">
                   <Text className="font-extralight">Maximum Age</Text>
                   <TextInput
+                    value={maxAge}
                     className="flex-1 p-2 bg-white"
                     placeholder=""
                     placeholderTextColor="#5E5D5E"

@@ -40,6 +40,7 @@ import ConfirmStepSixSharedScreen from "../screens/Shared/ConfirmStepSixSharedSc
 import { FlatContextProvider } from "../context/FlatContext";
 import { SharedContextProvider } from "../context/SharedContext";
 import { RoommateContextProvider } from "../context/RoommateContext";
+import { SelectedFiltersContextProvider } from "../context/SelectedFiltersContext";
 import EditFlatScreen from "../screens/EditFlatScreen";
 import EditSharedScreen from "../screens/EditSharedScreen";
 import EditRoomScreen from "../screens/EditRoomScreen";
@@ -89,127 +90,129 @@ const Stack = createNativeStackNavigator();
 
 const RootNavigator = () => {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Root"
-        component={BottomTabNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
+    <SelectedFiltersContextProvider>
+      <Stack.Navigator>
         <Stack.Screen
-          name="Login Screen"
-          component={LoginScreen}
+          name="Root"
+          component={BottomTabNavigator}
+          options={{ headerShown: false }}
+        />
+        <Stack.Group screenOptions={{ presentation: "modal" }}>
+          <Stack.Screen
+            name="Login Screen"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Register Screen"
+            component={RegisterScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Update Password Screen"
+            component={UpdatePasswordScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Forgot Password Screen"
+            component={ForgotPasswordScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Property Details Screen"
+            component={PropertyDetailsScreen}
+            options={{
+              headerShown: true,
+              animation: "fade",
+              presentation: "transparentModal",
+            }}
+          />
+          <Stack.Screen
+            name="Roommate Details Screen"
+            component={RoommateDetailsScreen}
+            options={{
+              headerShown: true,
+              animation: "fade",
+              presentation: "transparentModal",
+            }}
+          />
+          <Stack.Screen
+            name="Advanced Filter Screen"
+            component={AdvancedFilterScreen}
+            options={{
+              presentation: "transparentModal",
+              animation: "fade",
+              headerTransparent: true,
+            }}
+          />
+          <Stack.Screen
+            name="Message Advertiser Screen"
+            component={MessageAdvertiserScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Incoming Messages Screen"
+            component={IncomingMessagesScreen}
+            options={{ headerShown: false }}
+          />
+        </Stack.Group>
+        <Stack.Screen
+          name="Account Settings Screen"
+          component={AccountSettingsScreen}
+          options={{ headerShown: true, title: "Change Personal Information" }}
+        />
+        <Stack.Screen
+          name="My Properties Screen"
+          component={MyPropertiesScreen}
+          options={{ headerShown: true, title: "My Property Listings" }}
+        />
+        <Stack.Screen
+          name="AddPropertyRoot"
+          component={AddPropertyStack}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Register Screen"
-          component={RegisterScreen}
+          name="AddSharedRoot"
+          component={AddSharedStack}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Update Password Screen"
-          component={UpdatePasswordScreen}
+          name="AddRoommateRoot"
+          component={AddRoommateStack}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Forgot Password Screen"
-          component={ForgotPasswordScreen}
-          options={{ headerShown: false }}
+          name="Chat Screen"
+          component={ChatScreen}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
-          name="Property Details Screen"
-          component={PropertyDetailsScreen}
-          options={{
-            headerShown: true,
-            animation: "fade",
-            presentation: "transparentModal",
-          }}
+          name="Edit Flat Screen"
+          component={EditFlatScreen}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
-          name="Roommate Details Screen"
-          component={RoommateDetailsScreen}
-          options={{
-            headerShown: true,
-            animation: "fade",
-            presentation: "transparentModal",
-          }}
+          name="Edit Shared Screen"
+          component={EditSharedScreen}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
-          name="Advanced Filter Screen"
-          component={AdvancedFilterScreen}
-          options={{
-            presentation: "transparentModal",
-            animation: "fade",
-            headerTransparent: true,
-          }}
+          name="Edit Room Screen"
+          component={EditRoomScreen}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
-          name="Message Advertiser Screen"
-          component={MessageAdvertiserScreen}
-          options={{ headerShown: false }}
+          name="Edit Roommate Screen"
+          component={EditRoommateScreen}
+          options={{ headerShown: true }}
         />
         <Stack.Screen
-          name="Incoming Messages Screen"
-          component={IncomingMessagesScreen}
-          options={{ headerShown: false }}
+          name="My Roommate Listings Screen"
+          component={MyRoommateListingsScreen}
+          options={{ headerShown: true, title: "My Property Listings" }}
         />
-      </Stack.Group>
-      <Stack.Screen
-        name="Account Settings Screen"
-        component={AccountSettingsScreen}
-        options={{ headerShown: true, title: "Change Personal Information" }}
-      />
-      <Stack.Screen
-        name="My Properties Screen"
-        component={MyPropertiesScreen}
-        options={{ headerShown: true, title: "My Property Listings" }}
-      />
-      <Stack.Screen
-        name="AddPropertyRoot"
-        component={AddPropertyStack}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="AddSharedRoot"
-        component={AddSharedStack}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="AddRoommateRoot"
-        component={AddRoommateStack}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="Chat Screen"
-        component={ChatScreen}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="Edit Flat Screen"
-        component={EditFlatScreen}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="Edit Shared Screen"
-        component={EditSharedScreen}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="Edit Room Screen"
-        component={EditRoomScreen}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="Edit Roommate Screen"
-        component={EditRoommateScreen}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="My Roommate Listings Screen"
-        component={MyRoommateListingsScreen}
-        options={{ headerShown: true, title: "My Property Listings" }}
-      />
-    </Stack.Navigator>
+      </Stack.Navigator>
+    </SelectedFiltersContextProvider>
   );
 };
 
