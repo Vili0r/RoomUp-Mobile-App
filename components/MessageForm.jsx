@@ -45,7 +45,6 @@ const MessageForm = ({ property }) => {
         }
       )
       .then((res) => {
-        console.log(res);
         setError(null);
         setIsLoading(false);
         navigation.goBack(); // Go back to the previous screen

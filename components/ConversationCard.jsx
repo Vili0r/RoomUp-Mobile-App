@@ -9,13 +9,13 @@ const ConversationCard = ({ item: conversation }) => {
 
   const imageUrl =
     conversation.user_id === user.id
-      ? conversation.message.owner.receiver.avatar !==
+      ? conversation.message.owner?.receiver?.avatar !==
         "https://www.gravatar.com/avatar/000000000000000000000000000000?d=mp"
-        ? conversation.message.owner.receiver.avatar
+        ? conversation.message?.owner?.receiver?.avatar
         : "https://www.gravatar.com/avatar/000000000000000000000000000000?d=mp"
-      : conversation.sender.avatar !==
+      : conversation?.sender?.avatar !==
         "https://www.gravatar.com/avatar/000000000000000000000000000000?d=mp"
-      ? conversation.sender.avatar
+      ? conversation?.sender?.avatar
       : "https://www.gravatar.com/avatar/000000000000000000000000000000?d=mp";
   return (
     <View className="flex flex-row p-4 mt-4">

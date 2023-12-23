@@ -76,7 +76,7 @@ const ModalFilterRoommate = () => {
       new Date().toISOString().substring(0, 10)
   );
   const [search, setSearch] = useState(
-    selectedRoommateFilterQueries?.filter?.search ?? ""
+    selectedRoommateFilterQueries?.search ?? ""
   );
   const [smoker, setSmoker] = useState("");
   const [smokerCheckbox, setSmokerCheckbox] = useState(
@@ -94,7 +94,7 @@ const ModalFilterRoommate = () => {
   const [occupation, setOccupation] = useState(
     selectedRoommateFilterQueries?.filter?.occupation ?? ""
   );
-  console.log("backend roommate", selectedRoommateFilterQueries);
+
   const onClearAll = () => {
     setOpenCard(0);
     setSize("");
@@ -242,6 +242,7 @@ const ModalFilterRoommate = () => {
                   color="#000"
                 />
                 <TextInput
+                  value={search}
                   className="flex-1 p-2 bg-white"
                   placeholder="Search City or Area"
                   placeholderTextColor="#5E5D5E"

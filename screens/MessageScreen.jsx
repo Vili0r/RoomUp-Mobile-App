@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import React, { useContext } from "react";
 import LottieView from "lottie-react-native";
@@ -29,9 +30,12 @@ const MessageScreen = () => {
   };
 
   //Use useQuery to fetch user data with the token
-  const { isLoading, error, data } = useQuery(
+  const { isLoading, error, data, refetch } = useQuery(
     ["getConversations"],
-    fetchConversations
+    fetchConversations,
+    {
+      refetchOnMount: true,
+    }
   );
 
   return (
@@ -76,6 +80,9 @@ const MessageScreen = () => {
                 ItemSeparatorComponent={() => (
                   <View className="border-b border-gray-200"></View>
                 )}
+                refreshControl={
+                  <RefreshControl refreshing={isLoading} onRefresh={refetch} />
+                }
               />
             )}
           </>

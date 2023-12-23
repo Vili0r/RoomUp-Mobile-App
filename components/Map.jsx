@@ -1,5 +1,5 @@
 import { View, TouchableOpacity, Platform } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import MapMarker from "./MapMarker";
 import { useNavigation } from "@react-navigation/native";
@@ -8,12 +8,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import axiosConfig from "../helpers/axiosConfig";
 import { AuthContext } from "../context/AuthProvider";
 
-const INITIAL_REGION = {
-  latitude: 38.2,
-  longitude: 23.2,
-  latitudeDelts: 2,
-  longitudeDelta: 2,
-};
+// const INITIAL_REGION = {
+//   latitude: 38.2,
+//   longitude: 23.2,
+//   latitudeDelts: 2,
+//   longitudeDelta: 2,
+// };
 const Map = ({ properties }) => {
   const { user } = useContext(AuthContext);
   const navigation = useNavigation();
@@ -43,6 +43,10 @@ const Map = ({ properties }) => {
   const handleMapPress = () => {
     if (Platform.OS === "android") unFocusProperty();
   };
+
+  useEffect(() => {
+    // This useEffect will be triggered whenever listings change
+  }, [listings]);
 
   const onRegionChange = async (region) => {
     // console.log("map_lat", region.latitude);
@@ -82,7 +86,7 @@ const Map = ({ properties }) => {
         initialRegion={INITIAL_REGION}
         onRegionChangeComplete={onRegionChange}
       >
-        {properties &&
+        {/* {properties &&
           properties.map((item, index) => (
             <MapMarker
               key={item.id}
@@ -91,8 +95,8 @@ const Map = ({ properties }) => {
               color={activeIndex === index ? "rgb(250 204 21)" : "black"}
               onPress={() => handleMarkerPress(index)}
             />
-          ))}
-        {/* {listings?.length > 0 &&
+          ))} */}
+        {listings?.length > 0 &&
           listings?.map((item, index) => (
             <MapMarker
               key={item.id}
@@ -101,7 +105,7 @@ const Map = ({ properties }) => {
               color={activeIndex === index ? "rgb(200 204 21)" : "blue"}
               onPress={() => handleMarkerPress(index)}
             />
-          ))} */}
+          ))}
       </MapView>
       {activeIndex > -1 && (
         <>

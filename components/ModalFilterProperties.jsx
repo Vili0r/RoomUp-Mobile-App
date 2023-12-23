@@ -107,12 +107,12 @@ const ModalFilterProperties = () => {
   );
   const [type, setType] = useState(
     selectedPropertyFilterQueries?.filter?.type
-      ? selectedPropertyFilterQueries?.filter?.type
+      ? parseInt(selectedPropertyFilterQueries?.filter?.type, 10)
       : selectedPropertyFilterQueries?.search_type === "shareds"
       ? 4
       : ""
   );
-  console.log("backend Property", selectedPropertyFilterQueries);
+
   const onClearAll = () => {
     setOpenCard(0);
     setSize("");
@@ -250,6 +250,7 @@ const ModalFilterProperties = () => {
                   color="#000"
                 />
                 <TextInput
+                  value={search}
                   className="flex-1 p-2 bg-white"
                   placeholder="Search location"
                   placeholderTextColor="#5E5D5E"
