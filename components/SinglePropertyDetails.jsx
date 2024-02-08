@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useContext } from "react";
 import { View, Text, Image, TouchableOpacity, Share } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Feather from "@expo/vector-icons/Feather";
@@ -10,6 +10,8 @@ import PropertyDetailsAmenities from "./PropertyDetailsAmenities";
 import PropertyLocation from "./PropertyLocation";
 import { useNavigation } from "@react-navigation/native";
 import ParallaxScrollView from "./ParallaxScrollView";
+import { AntDesign } from "@expo/vector-icons";
+import { AuthContext } from "../context/AuthProvider";
 
 const SinglePropertyDetails = ({
   property,
@@ -18,6 +20,7 @@ const SinglePropertyDetails = ({
   handleToggleFavourite,
 }) => {
   const navigation = useNavigation();
+  const { user } = useContext(AuthContext);
   const imageUrl =
     property.images[imageIndex] &&
     `http://127.0.0.1:8000/storage/${property.images[imageIndex]}`;
@@ -31,6 +34,19 @@ const SinglePropertyDetails = ({
       });
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const handleReportListing = () => {
+    if (!user) {
+      navigation.navigate("Login Screen");
+    } else {
+      navigation.navigate("Report Listing Screen", {
+        id: property.id,
+        type: property.model,
+        title:
+          property.model === "room" ? property.owner.title : property.title,
+      });
     }
   };
 
@@ -243,6 +259,21 @@ const SinglePropertyDetails = ({
                   : property.transport?.station}
               </Text>
             </View>
+          </View>
+
+          <View className="flex border-0 border-t-2 mt-7 border-t-gray-200">
+            <Text className="mt-5 text-xl font-bold text-gray-700">
+              More Information
+            </Text>
+
+            <TouchableOpacity
+              onPress={handleReportListing}
+              className="flex-row w-1/2 gap-2 p-3 mt-3 capitalize border-2 border-gray-100 rounded-md"
+            >
+              <AntDesign name="exclamationcircleo" size={24} color="black" />
+
+              <Text className="text-base font-medium">Report Listing</Text>
+            </TouchableOpacity>
           </View>
 
           {property.owner ? (

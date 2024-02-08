@@ -51,6 +51,7 @@ import ConfirmStepFourRoommateScreen from "../screens/Roommate/ConfirmStepFourRo
 import EditRoommateScreen from "../screens/EditRoommateScreen";
 import MyRoommateListingsScreen from "../screens/MyRoommateListingsScreen";
 import RoommateDetailsScreen from "../screens/RoommateDetailsScreen";
+import ReportListingScreen from "../screens/ReportListingScreen";
 
 export default Navigation = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -148,6 +149,11 @@ const RootNavigator = () => {
           <Stack.Screen
             name="Message Advertiser Screen"
             component={MessageAdvertiserScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Report Listing Screen"
+            component={ReportListingScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen

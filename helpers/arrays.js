@@ -306,3 +306,18 @@ export const lookingFor = [
     value: "I would like to find people to form share",
   },
 ];
+
+export const reasonForReporting = [
+  { value: "", label: "Reason" },
+  { value: 1, label: "Property information is incorrect" },
+  { value: 2, label: "Property price is incorrect" },
+  { value: 3, label: "Property address is incorrect" },
+  { value: 4, label: "Property is no longer available" },
+  { value: 5, label: "Advertiser is not contactable" },
+  { value: 6, label: "Problem with photos or video" },
+  { value: 7, label: "Inappropriate Content" },
+  { value: 8, label: "Duplicate Listing" },
+  { value: 9, label: "Safety Concern" },
+  { value: 10, label: "Scam" },
+  { value: 11, label: "Other" },
+];
