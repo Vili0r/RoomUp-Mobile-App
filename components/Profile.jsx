@@ -23,6 +23,7 @@ import axiosConfig from "../helpers/axiosConfig";
 import * as ImagePicker from "expo-image-picker";
 import BottomSheet from "./BottomSheet";
 import * as SecureStore from "expo-secure-store";
+import { useQuery } from "@tanstack/react-query";
 
 const Profile = ({ handleScroll }) => {
   const navigation = useNavigation();
@@ -158,23 +159,29 @@ const Profile = ({ handleScroll }) => {
       onPress: () => console.log("terms"),
       icon: <Entypo name="open-book" size={28} color="gray" />,
     },
+    {
+      id: 6,
+      label: "Customer Support",
+      onPress: () => handleCustomerSupport(),
+      icon: <AntDesign name="customerservice" size={28} color="gray" />,
+    },
   ];
 
   const rentingButtons = [
     {
-      id: 6,
+      id: 7,
       label: "Favourite Properties",
       onPress: () => navigation.navigate("Saved Screen"),
       icon: <MaterialCommunityIcons name="home-heart" size={28} color="gray" />,
     },
     {
-      id: 7,
+      id: 8,
       label: "Messages",
       onPress: () => navigation.navigate("Incoming Messages Screen"),
       icon: <AntDesign name="message1" size={28} color="gray" />,
     },
     {
-      id: 8,
+      id: 9,
       label: "View My Properties",
       onPress: () =>
         navigation.navigate("My Properties Screen", {
@@ -189,7 +196,7 @@ const Profile = ({ handleScroll }) => {
       ),
     },
     {
-      id: 9,
+      id: 10,
       label: "View My Roommate listing",
       onPress: () =>
         navigation.navigate("My Roommate Listings Screen", {
@@ -207,7 +214,7 @@ const Profile = ({ handleScroll }) => {
 
   const accountButtons = [
     {
-      id: 10,
+      id: 11,
       label: "Account Settings",
       onPress: () =>
         navigation.navigate("Account Settings Screen", {
@@ -217,7 +224,7 @@ const Profile = ({ handleScroll }) => {
       icon: <Ionicons name="settings-outline" size={28} color="gray" />,
     },
     {
-      id: 11,
+      id: 12,
       label: "Update Password",
       onPress: () => navigation.navigate("Update Password Screen"),
       icon: <MaterialCommunityIcons name="lock-reset" size={28} color="gray" />,
@@ -227,6 +234,24 @@ const Profile = ({ handleScroll }) => {
   const avatarUrl = user.avatar.startsWith("https://")
     ? user.avatar
     : `http://127.0.0.1:8000/${user.avatar}`;
+
+  const handleCustomerSupport = () => {
+    axiosConfig
+      .get("/customer-support", {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((res) => {
+        navigation.navigate("Chat Screen", {
+          id: res.data.id,
+          title: "Customer Support",
+        });
+      })
+      .catch((error) => {
+        Alert.alert("An error occurred, try again!");
+      });
+  };
 
   return (
     <View className="p-3">
