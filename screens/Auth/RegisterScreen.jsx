@@ -28,7 +28,7 @@ import { genders, lookingFor } from "../../helpers/arrays";
 const RegisterScreen = ({ navigation }) => {
   const stepOneSchema = yup.object().shape({
     first_name: yup.string().required("First Name is required"),
-    last_name: yup.string().required("last Name is required"),
+    last_name: yup.string().required("Last Name is required"),
     email: yup.string().email().required("Email is required"),
     password: yup.string().min(6).max(20).required("Password is required"),
     password_confirmation: yup

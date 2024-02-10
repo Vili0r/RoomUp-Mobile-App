@@ -19,10 +19,25 @@ import { useQuery } from "@tanstack/react-query";
 import { EditFlatForm } from "../components";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AuthContext } from "../context/AuthProvider";
+import { useStripe } from "@stripe/stripe-react-native";
+import * as yup from "yup";
 
 const EditFlatScreen = ({ route, navigation }) => {
   const { id, token } = route.params;
   const { user } = useContext(AuthContext);
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+
+  const schema = yup.object().shape({
+    fullName: yup.string().max(50).required("Contact Name is required"),
+    details: yup.string().max(500).required("Details is required"),
+    phoneNumber: yup
+      .string()
+      .min(8, "Phone number must be at least 8 digits")
+      .max(12, "Phone number cannot be more than 15 digits")
+      .matches(/^\d+$/, "Phone number can only contain digits")
+      .required("Telephone number is required"),
+    email: yup.string().email().required("Email is required"),
+  });
   const fetchEditFlat = async (id) => {
     const response = await axiosConfig.get(`/flats/${id}/edit`, {
       headers: {
@@ -48,11 +63,14 @@ const EditFlatScreen = ({ route, navigation }) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [serverErrors, setServerErrors] = useState(null);
-  const [error, setError] = useState(null);
-  const [fullName, setFullName] = useState(user.first_name, user.last_name);
-  const [email, setEmail] = useState("");
-  const [details, setDetails] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [formValues, setFormValues] = useState({
+    fullName: user.first_name,
+    phoneNumber: "",
+    email: "",
+    details: "",
+  });
+  const [clientSecretKey, setClientSecretKey] = useState("");
+  const [errors, setErrors] = useState({});
 
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
@@ -120,17 +138,85 @@ const EditFlatScreen = ({ route, navigation }) => {
       });
   };
 
+  const onCheckout = async () => {
+    // 1. Validate fields
+    try {
+      // Validate the fullName
+      await schema.validate(formValues, { abortEarly: false });
+
+      // 2. Send request to server
+      const { paymentIntent } = await fetchPaymentSheetParams(token);
+      // 3. Initialize the Payment sheet
+      const initResponse = await initPaymentSheet({
+        merchantDisplayName: "RoomUp",
+        paymentIntentClientSecret: paymentIntent,
+      });
+
+      if (initResponse.error) {
+        Alert.alert("Something went wrong");
+        return;
+      }
+
+      // 4. Present the Payment Sheet from Stripe
+      const paymentResponse = await presentPaymentSheet();
+      if (paymentResponse.error) {
+        Alert.alert(
+          `Error code: ${paymentResponse.error.code}`,
+          paymentResponse.error.message
+        );
+        return;
+      }
+
+      // 5. If payment ok -> create the order
+      handleBookVirtualTour();
+    } catch (error) {
+      // Collect and set validation errors
+      const validationErrors = {};
+      if (error.inner) {
+        error.inner.forEach((err) => {
+          validationErrors[err.path] = err.message;
+        });
+      } else {
+        validationErrors[error.path] = error.message;
+      }
+      setErrors(validationErrors);
+    }
+  };
+
+  const fetchPaymentSheetParams = async (token) => {
+    try {
+      const response = await axiosConfig.post(
+        "/virtual-tour/payment-intent",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const { clientSecret } = response.data;
+      setClientSecretKey(clientSecret);
+      return {
+        paymentIntent: clientSecret,
+      };
+    } catch (error) {
+      Alert.alert("Something went wrong");
+    }
+  };
+
   const handleBookVirtualTour = async () => {
     await axiosConfig
       .post(
-        "/report-listing/store",
+        "/virtual-tour/success",
         {
-          contact_name: fullName,
-          contact_number: phoneNumber,
-          email,
-          details,
+          contact_name: formValues.fullName,
+          contact_number: formValues.phoneNumber,
+          email: formValues.email,
+          details: formValues.details,
           owner_id: id,
           owner_type: "flat",
+          payment_session_id: clientSecretKey,
         },
         {
           headers: {
@@ -139,13 +225,14 @@ const EditFlatScreen = ({ route, navigation }) => {
         }
       )
       .then((res) => {
-        setError(null);
-        navigation.goBack(); // Go back to the previous screen
+        navigation.navigate("My Properties Screen");
+        Alert.alert("Payment completed successfully!");
       })
       .catch((error) => {
-        setError(error.response.data.message);
-        const key = Object.keys(error.response.data.errors)[0];
-        setError(error.response.data.errors[key][0]);
+        Alert.alert(
+          `Error code: ${error.response.data.errors[key][0]}`,
+          error.response.data.message
+        );
       });
   };
 
@@ -232,13 +319,14 @@ const EditFlatScreen = ({ route, navigation }) => {
         text="Book a Virtual Tour"
         modalHeight="0.6"
       >
-        {error && <Text className="text-sm text-red-500">{error}</Text>}
-        <View className="p-2 mt-5 space-y-2 form">
+        <View className="p-2 space-y-2 form">
           <View className="relative mb-5">
             <TextInput
               className="w-full px-3 py-3 border border-gray-300 rounded-md peer"
-              onChangeText={setFullName}
-              value={fullName}
+              onChangeText={(value) =>
+                setFormValues((prev) => ({ ...prev, fullName: value }))
+              }
+              value={formValues.fullName}
               placeholder="Full Name"
               placeholderTextColor="gray"
               autoCapitalize="none"
@@ -251,8 +339,10 @@ const EditFlatScreen = ({ route, navigation }) => {
           <View className="relative mb-3">
             <TextInput
               className="w-full px-3 py-3 border border-gray-300 rounded-md peer"
-              onChangeText={setEmail}
-              value={email}
+              onChangeText={(value) =>
+                setFormValues((prev) => ({ ...prev, email: value }))
+              }
+              value={formValues.email}
               placeholderTextColor="gray"
               textContentType="emailAddress"
               keyboardType="email-address"
@@ -261,24 +351,34 @@ const EditFlatScreen = ({ route, navigation }) => {
             <Text className="absolute left-0 px-1 ml-3 text-sm text-gray-500 transition-all duration-100 ease-in-out origin-left transform -translate-y-1/2 bg-white pointer-events-none -top-3 font-popp peer-placeholder-shown:top-1/2 peer-placeholder-shown:ml-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-0 peer-focus:ml-3 peer-focus:text-sm peer-focus:text-gray-800">
               Email Address
             </Text>
+            {errors.email && (
+              <Text className="text-red-500">{errors.email}</Text>
+            )}
           </View>
           <View className="relative mb-3">
             <TextInput
               className="w-full px-3 py-3 border border-gray-300 rounded-md peer"
-              onChangeText={setPhoneNumber}
-              value={phoneNumber}
+              onChangeText={(value) =>
+                setFormValues((prev) => ({ ...prev, phoneNumber: value }))
+              }
+              value={formValues.phoneNumber}
               placeholderTextColor="gray"
               autoCapitalize="none"
             />
             <Text className="absolute left-0 px-1 ml-3 text-sm text-gray-500 transition-all duration-100 ease-in-out origin-left transform -translate-y-1/2 bg-white pointer-events-none -top-3 font-popp peer-placeholder-shown:top-1/2 peer-placeholder-shown:ml-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-0 peer-focus:ml-3 peer-focus:text-sm peer-focus:text-gray-800">
               Phone Number
             </Text>
+            {errors.email && (
+              <Text className="text-red-500">{errors.phoneNumber}</Text>
+            )}
           </View>
           <View className="relative">
             <TextInput
               className="w-full px-3 py-3 border border-gray-300 rounded-md peer"
-              onChangeText={setDetails}
-              value={details}
+              onChangeText={(value) =>
+                setFormValues((prev) => ({ ...prev, details: value }))
+              }
+              value={formValues.details}
               placeholderTextColor="gray"
               autoCapitalize="none"
               multiline
@@ -288,11 +388,14 @@ const EditFlatScreen = ({ route, navigation }) => {
             <Text className="absolute left-0 px-1 ml-3 text-sm text-gray-500 transition-all duration-100 ease-in-out origin-left transform -translate-y-1/2 bg-white pointer-events-none -top-3 font-popp peer-placeholder-shown:top-1/2 peer-placeholder-shown:ml-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-0 peer-focus:ml-3 peer-focus:text-sm peer-focus:text-gray-800">
               Details
             </Text>
+            {errors.email && (
+              <Text className="text-red-500">{errors.details}</Text>
+            )}
           </View>
         </View>
         <TouchableOpacity
-          onPress={handleBookVirtualTour}
-          className="flex flex-row self-center justify-center w-2/5 py-2 text-center border-2 rounded-full select-none mt-7 px-7 border-balck"
+          onPress={onCheckout}
+          className="flex flex-row self-center justify-center w-3/5 py-2 text-center border-2 rounded-full select-none mt-7 px-7 border-balck"
         >
           {isUpdating && (
             <ActivityIndicator className="mr-2" size="small" color="black" />
